@@ -21,7 +21,7 @@ namespace NControl.Controls.Demo.FormsApp.Droid
 			global::Xamarin.Forms.Forms.Init (this, bundle);
 			NControls.Init ();
 
-			LoadApplication (new App ());
+			LoadApplication (new MyApp ());
 		}
 	}
 }

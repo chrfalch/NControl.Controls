@@ -16,7 +16,7 @@ namespace NControl.Controls.Demo.FormsApp.iOS
 			global::Xamarin.Forms.Forms.Init ();
 			NControls.Init ();
 
-			LoadApplication (new App ());
+			LoadApplication (new MyApp ());
 
 			return base.FinishedLaunching (app, options);
 		}

@@ -6,16 +6,16 @@ using System.Linq;
 
 namespace NControl.Controls.Demo.FormsApp
 {
-	public class App : Application
+	public class MyApp : Application
 	{
-		public App ()
+		public MyApp ()
 		{
-			var ControlList = typeof(RoundCornerView).GetTypeInfo ().Assembly.DefinedTypes				
+			var controlList = typeof(RoundCornerView).GetTypeInfo ().Assembly.DefinedTypes				
 				.Where(t => !t.IsAbstract)
 				.Select (t => t.Name).ToArray ();
 
 			var listView = new ListView {
-				ItemsSource = ControlList,
+				ItemsSource = controlList,
 			};
 
 			var startPage = new ContentPage {
