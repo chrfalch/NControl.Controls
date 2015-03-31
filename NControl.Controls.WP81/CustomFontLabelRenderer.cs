@@ -21,7 +21,7 @@ namespace NControl.Controls.WP81
         /// Raises the element changed event.
         /// </summary>
         /// <param name="e">E.</param>
-        protected override async void OnElementChanged(ElementChangedEventArgs<Xamarin.Forms.Label> e)
+        protected override void OnElementChanged(ElementChangedEventArgs<Xamarin.Forms.Label> e)
         {
             base.OnElementChanged(e);
 

@@ -1,5 +1,6 @@
 ﻿using System;
-
+using NControl.Abstractions;
+using NGraphics;
 using Xamarin.Forms;
 using System.Reflection;
 using System.Linq;
@@ -20,7 +21,18 @@ namespace NControl.Controls.Demo.FormsApp
 
 			var startPage = new ContentPage {
 				Title = "NControl.Controls",
-				Content = listView
+                Content = new StackLayout
+                {
+                    Children =
+                    {
+                        new NControlView
+                        {
+                            HeightRequest = 55,
+                            DrawingFunction = (canvas, rect) => canvas.DrawRectangle(rect, null, Brushes.Blue)
+                        },
+                        listView
+                    }
+                }
 			};
 
 			listView.ItemSelected += async (sender, e) => {

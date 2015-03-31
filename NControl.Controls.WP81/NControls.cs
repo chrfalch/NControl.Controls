@@ -9,8 +9,7 @@
         /// Init this instance to 
         /// </summary>
         public static void Init()
-        {
-            global::NControl.WP81.NControlViewRenderer.Init();
+        {            
         }
     }
 }

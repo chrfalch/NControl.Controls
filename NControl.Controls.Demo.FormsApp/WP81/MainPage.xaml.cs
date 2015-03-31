@@ -1,4 +1,5 @@
 ﻿using Microsoft.Phone.Controls;
+using NControl.Controls.WP81;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.WinPhone;
 
@@ -12,9 +13,10 @@ namespace NControl.Controls.Demo.FormsApp.WP81
 
             SupportedOrientations = SupportedPageOrientation.PortraitOrLandscape;
 
-            Forms.Init();                        
-            Controls.WP81.NControls.Init();
-
+            Forms.Init();
+            NControl.WP81.NControlViewRenderer.Init();
+            NControls.Init();
+            
             LoadApplication(new FormsApp.MyApp());
         }      
     }
