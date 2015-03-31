@@ -10,7 +10,7 @@
         /// </summary>
         public static void Init()
         {
-            NControls.WP81.NControlViewRenderer.Init();
+            global::NControl.WP81.NControlViewRenderer.Init();
         }
     }
 }
