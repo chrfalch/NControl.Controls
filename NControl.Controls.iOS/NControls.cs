@@ -12,7 +12,7 @@ namespace NControl.Controls.iOS
 		/// </summary>
 		public static void Init()
 		{
-			NControl.Plugins.iOS.NControlViewRenderer.Init ();
+			NControl.iOS.NControlViewRenderer.Init ();
 		}
 	}
 }

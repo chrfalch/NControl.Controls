@@ -1,10 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>10.0.20506</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{F8A2BB2F-BA3F-4FAD-B0C2-E004F8580717}</ProjectGuid>
     <ProjectTypeGuids>{C089C8C0-30E0-4E22-80C0-CE093F111A43};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
@@ -95,25 +93,17 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="README_FIRST.txt" />
-    <Content Include="Toolkit.Content\ApplicationBar.Add.png" />
-    <Content Include="Toolkit.Content\ApplicationBar.Cancel.png" />
-    <Content Include="Toolkit.Content\ApplicationBar.Check.png" />
-    <Content Include="Toolkit.Content\ApplicationBar.Delete.png" />
-    <Content Include="Toolkit.Content\ApplicationBar.Select.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Reference Include="Microsoft.Phone.Controls.Toolkit, Version=8.0.1.0, Culture=neutral, PublicKeyToken=b772ad94eb9ca604, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\WPtoolkit.4.2013.08.16\lib\wp8\Microsoft.Phone.Controls.Toolkit.dll</HintPath>
     </Reference>
-    <Reference Include="NControl.Abstractions, Version=0.1.5564.36569, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NControl.0.2.0\lib\wp81\NControl.Abstractions.dll</HintPath>
+    <Reference Include="NControl.Abstractions">
+      <HintPath>..\packages\NControl.0.2.4\lib\wp81\NControl.Abstractions.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="NControl.WP81, Version=0.2.5564.36569, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NControl.0.2.0\lib\wp81\NControl.WP81.dll</HintPath>
+    <Reference Include="NControl.WP81">
+      <HintPath>..\packages\NControl.0.2.4\lib\wp81\NControl.WP81.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="NGraphics, Version=1.0.5553.24958, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

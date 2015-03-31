@@ -12,7 +12,7 @@ namespace NControl.Controls.Droid
 		/// </summary>
 		public static void Init()
 		{
-			NControl.Plugins.Droid.NControlViewRenderer.Init ();
+			NControl.Droid.NControlViewRenderer.Init ();
 		}
 	}
 }
