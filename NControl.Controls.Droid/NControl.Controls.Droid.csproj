@@ -72,6 +72,7 @@
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="NControls.cs" />
     <Compile Include="CustomFontLabelRenderer.cs" />
+    <Compile Include="ExtendedEntryRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

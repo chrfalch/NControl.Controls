@@ -18,23 +18,8 @@ namespace NControl.Controls
 			FontSize = 18;
 			XAlign = TextAlignment.Center;
 			YAlign = TextAlignment.Center;
+			FontDataResourcePath = typeof(FontConstants).Namespace + ".fontawesome.ttf";
 		}
-
-		#region Font Registration
-
-		/// <summary>
-		/// Returns font data as a stream of bytes.
-		/// </summary>
-		/// <value>The font data.</value>
-		public override string FontDataResourcePath 
-		{
-			get 
-			{
-				return typeof(FontConstants).Namespace + ".fontawesome.ttf";
-			}
-		}
-
-		#endregion
 
 		#region IDemonstratableControl implementation
 

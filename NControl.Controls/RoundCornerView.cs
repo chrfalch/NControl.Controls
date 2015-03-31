@@ -53,6 +53,7 @@ namespace NControl.Controls
 		public void Initialize ()
 		{
 			BackgroundColor = Xamarin.Forms.Color.Red;
+			CornerRadius = 10;
 		    Invalidate();
 		}
 

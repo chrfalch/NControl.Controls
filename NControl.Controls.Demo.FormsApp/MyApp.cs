@@ -4,6 +4,7 @@ using NGraphics;
 using Xamarin.Forms;
 using System.Reflection;
 using System.Linq;
+using NControl.Controls.Demo.FormsApp.Resources.Fonts;
 
 namespace NControl.Controls.Demo.FormsApp
 {
@@ -12,7 +13,7 @@ namespace NControl.Controls.Demo.FormsApp
 		public MyApp ()
 		{
 			var controlList = typeof(RoundCornerView).GetTypeInfo ().Assembly.DefinedTypes				
-				.Where(t => !t.IsAbstract)
+				.Where(t => !t.IsAbstract && t.ImplementedInterfaces.Contains(typeof(IDemonstratableControl)))
 				.Select (t => t.Name).ToArray ();
 
 			var listView = new ListView {
@@ -25,10 +26,16 @@ namespace NControl.Controls.Demo.FormsApp
                 {
                     Children =
                     {
-                        new NControlView
+						new CustomFontLabel()
                         {
                             HeightRequest = 55,
-                            DrawingFunction = (canvas, rect) => canvas.DrawRectangle(rect, null, Brushes.Blue)
+							FontDataResourcePath = typeof(ClinkClankFont).Namespace + ".ClinkClank.ttf",
+							FontDataAssembly = typeof(ClinkClankFont).GetTypeInfo().Assembly,
+							Text = "DEMONSTRATION",
+							FontFamily = "Clink Clank",
+							XAlign = Xamarin.Forms.TextAlignment.Center,
+							YAlign = Xamarin.Forms.TextAlignment.Center,
+							FontSize = 24,
                         },
                         listView
                     }
@@ -52,8 +59,10 @@ namespace NControl.Controls.Demo.FormsApp
 				await startPage.Navigation.PushAsync(
 					new ContentPage{
 						Title = (string)listView.SelectedItem,
-						Padding = 25,
-						Content = control
+						Content = new ScrollView { 
+							Padding = 25,
+							Content = control 
+						}
 					});							
 			};
 
