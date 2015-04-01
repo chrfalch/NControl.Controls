@@ -31,10 +31,12 @@ namespace NControl.Controls.Demo.FormsApp
                             HeightRequest = 55,
 							FontDataResourcePath = typeof(ClinkClankFont).Namespace + ".ClinkClank.ttf",
 							FontDataAssembly = typeof(ClinkClankFont).GetTypeInfo().Assembly,
-							Text = "DEMONSTRATION",
+							Text = "Custom Font",
 							FontFamily = "Clink Clank",
+							BackgroundColor = Xamarin.Forms.Color.White,
 							XAlign = Xamarin.Forms.TextAlignment.Center,
 							YAlign = Xamarin.Forms.TextAlignment.Center,
+							TextColor = Xamarin.Forms.Color.Blue,
 							FontSize = 24,
                         },
                         listView
@@ -53,15 +55,16 @@ namespace NControl.Controls.Demo.FormsApp
 				
 				var control = (View)Activator.CreateInstance(type);
 				var demonstratable = control as IDemonstratableControl;
-				if(demonstratable != null)
+				if(demonstratable != null){					
 					demonstratable.Initialize();
+				}
 
 				await startPage.Navigation.PushAsync(
 					new ContentPage{
 						Title = (string)listView.SelectedItem,
 						Content = new ScrollView { 
 							Padding = 25,
-							Content = control 
+							Content = new StackLayout{Children={control}} 
 						}
 					});							
 			};

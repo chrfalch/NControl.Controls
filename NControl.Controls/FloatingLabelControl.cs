@@ -42,6 +42,9 @@ namespace NControl.Controls
 		public void Initialize ()
 		{
 			Placeholder = "My Placeholder";
+			Postfix = "USD";
+			Keyboard = Keyboard.Numeric;
+			HeightRequest = 55;
 		}
 
 		#endregion
@@ -326,6 +329,27 @@ namespace NControl.Controls
 		}
 
 		#endregion       
+
+		#region Drawing
+
+		/// <summary>
+		/// Draw the specified canvas and rect.
+		/// </summary>
+		/// <param name="canvas">Canvas.</param>
+		/// <param name="rect">Rect.</param>
+		public override void Draw (NGraphics.ICanvas canvas, NGraphics.Rect rect)
+		{
+			base.Draw (canvas, rect);
+
+			var bottom = Device.OnPlatform<double> (_textEntry.Bounds.Height + 4, 
+				_textEntry.Bounds.Height + 50, _textEntry.Bounds.Height + 4);
+
+			canvas.DrawPath (new NGraphics.PathOp[]{ 
+				new NGraphics.MoveTo(_textEntry.Bounds.Left-1, bottom),
+				new NGraphics.LineTo(rect.Width, bottom)
+			}, NGraphics.Pens.Gray);
+		}
+		#endregion
 	}
 }
 

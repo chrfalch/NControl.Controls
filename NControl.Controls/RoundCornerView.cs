@@ -54,6 +54,7 @@ namespace NControl.Controls
 		{
 			BackgroundColor = Xamarin.Forms.Color.Red;
 			CornerRadius = 10;
+			HeightRequest = 155;
 		    Invalidate();
 		}
 

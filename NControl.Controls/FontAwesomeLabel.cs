@@ -30,6 +30,7 @@ namespace NControl.Controls
 		{
 			Text = FASearch;
 			FontSize = 48;
+			HeightRequest = 125;
 		}
 
 		#endregion
