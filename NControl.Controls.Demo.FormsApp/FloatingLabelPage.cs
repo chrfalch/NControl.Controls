@@ -15,8 +15,8 @@ namespace NControl.Controls.Demo.FormsApp
 			base.OnAppearing ();
 
 			var entry1 = new FloatingLabelControl{ Placeholder = "Email", Keyboard = Keyboard.Email};
-			var entry2 = new FloatingLabelControl{ Placeholder = "First name"};
-			var entry3 = new FloatingLabelControl{ Placeholder = "Last name"};
+            var entry2 = new FloatingLabelControl { Placeholder = "First name", Keyboard = Keyboard.Text };
+            var entry3 = new FloatingLabelControl { Placeholder = "Last name", Keyboard = Keyboard.Text };
 			var entry4 = new FloatingLabelControl{ 
 				Placeholder = "Price", 
 				Keyboard = Keyboard.Numeric, 
@@ -31,11 +31,11 @@ namespace NControl.Controls.Demo.FormsApp
 				HorizontalOptions = LayoutOptions.FillAndExpand
 			};
 
-			var entry6 = new FloatingLabelControl{ 
-				Placeholder = "Age", 
-				Keyboard = Keyboard.Numeric, 
-				HorizontalOptions = LayoutOptions.FillAndExpand
-			};
+		    var entry6 = new FloatingLabelControl
+		    {
+                IsPassword = true,
+                Placeholder = "Enter your secret",
+		    };
 
 			Content = new ScrollView{
 				Content = new StackLayout {
@@ -53,9 +53,10 @@ namespace NControl.Controls.Demo.FormsApp
 							HorizontalOptions = LayoutOptions.FillAndExpand,
 							VerticalOptions = LayoutOptions.CenterAndExpand,
 							Children = {
-								entry4, entry5, entry6
+								entry4, entry5
 							}
-						}
+						},
+                        entry6
 					}
 				}
 			};

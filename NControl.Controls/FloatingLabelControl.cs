@@ -86,7 +86,7 @@ namespace NControl.Controls
 		/// </summary>
 		public FloatingLabelControl ()
 		{
-            HeightRequest = Device.OnPlatform<int>(50, 50, 85); ;
+            HeightRequest = Device.OnPlatform<int>(50, 50, 75); ;
 
 			// Create placeholder label
 			_floatingLabel = new Label {
@@ -95,9 +95,9 @@ namespace NControl.Controls
 				FontAttributes = FontAttributes.Bold,
 				XAlign = TextAlignment.Start,
 				YAlign = TextAlignment.Center,
-				FontSize = 10,
+                FontSize = Device.OnPlatform<int>(10, 10, 12),
 				Opacity = 0.0,
-				TextColor = Color.FromHex("#BBBBBB")
+                TextColor = PlaceholderColor
 			};
 
 			// Create textfield
@@ -109,14 +109,16 @@ namespace NControl.Controls
 				
             _textEntry.Focused += (object sender, FocusEventArgs e) =>
             {
-                _floatingLabel.TextColor = PlaceholderColor;
+                UpdatePlaceholderColor();
+             
                 if(Focused != null)
                     Focused(this, e);
             };
                 
             _textEntry.Unfocused += (object sender, FocusEventArgs e) =>
             {
-                _floatingLabel.TextColor = Color.FromHex("#BBBBBB");
+                UpdatePlaceholderColor();
+
                 if(Unfocused != null)
                     Unfocused(this, e);
             };
@@ -130,12 +132,13 @@ namespace NControl.Controls
                 XAlign = TextAlignment.End,
                 YAlign = TextAlignment.Center,
 				HorizontalOptions = LayoutOptions.End,
-                TextColor = Color.FromHex("#BBBBBB")
+                TextColor = Color.FromHex("#888888")
             };
 
 			// create stacklayout for entry and postfix
 			var entryAndPostFixLayout = new StackLayout {
 				BackgroundColor = Color.Transparent,
+                Padding = 0,                
 				Orientation = StackOrientation.Horizontal,
 				Children = {
 					_textEntry, _postFix,
@@ -147,14 +150,17 @@ namespace NControl.Controls
 
             // Position label
 		 	_layout.Children.Add (_floatingLabel, () => new Rectangle(
-				Device.OnPlatform<int>(0, 0, 0), 14, _layout.Width-20, _layout.Height-14));
+				Device.OnPlatform<int>(0, 0, 0), 
+                14, 
+                _layout.Width-20, 
+                _layout.Height-14));
 			            
 			// Position entry/postfix
 			_layout.Children.Add (entryAndPostFixLayout, () => 
 				new Rectangle(
-					Device.OnPlatform<int>(0, -12, -12), 
-					Device.OnPlatform<int>(12, 12, 12), 
-					_layout.Width - Device.OnPlatform<int>(0, -12, (string.IsNullOrWhiteSpace(Postfix) ? -30 : 0)), 
+					Device.OnPlatform<int>(0, -12, -15), 
+					Device.OnPlatform<int>(12, 12, 14), 
+					_layout.Width - Device.OnPlatform<int>(0, -12, (string.IsNullOrWhiteSpace(Postfix) ? -34 : 0)), 
 					_layout.Height - Device.OnPlatform<int>(12, 12, 2)));
 
 			Content = _layout;
@@ -209,9 +215,10 @@ namespace NControl.Controls
 		/// </summary>
 		public static BindableProperty KeyboardProperty = 
 			BindableProperty.Create<FloatingLabelControl, Keyboard> (p => p.Keyboard, Xamarin.Forms.Keyboard.Default,
-				BindingMode.Default, null, (bindable, oldValue, newValue) => 
-				(bindable as FloatingLabelControl)._textEntry.Keyboard = newValue
-			);
+                BindingMode.Default, null, (bindable, oldValue, newValue) => {
+                    var ctrl = (FloatingLabelControl)bindable;
+                    ctrl._textEntry.Keyboard = newValue;
+                });
 
 		/// <summary>
 		/// Gets or sets the keyboard type.
@@ -302,11 +309,11 @@ namespace NControl.Controls
 		/// <summary>
 		/// The placeholder color property.
 		/// </summary>
-		public static BindableProperty PlaceholderColorProperty = 
-			BindableProperty.Create<FloatingLabelControl, Color>(p => p.PlaceholderColor, Color.Blue,
+        public static BindableProperty PlaceholderFocusedColorProperty =
+            BindableProperty.Create<FloatingLabelControl, Color>(p => p.PlaceholderFocusedColor, Color.Accent,
                 BindingMode.Default, null, (bindable, oldValue, newValue) => {
                 var ctrl = (FloatingLabelControl)bindable;
-                ctrl.PlaceholderColor = newValue;	
+                ctrl.PlaceholderFocusedColor = newValue;	
             });
 
 
@@ -314,15 +321,41 @@ namespace NControl.Controls
 		/// Gets or sets the placeholder color.
 		/// </summary>
 		/// <value>The text.</value>
-		public Color PlaceholderColor
+		public Color PlaceholderFocusedColor
 		{
-			get { return (Color)GetValue (PlaceholderColorProperty); }
+			get { return (Color)GetValue (PlaceholderFocusedColorProperty); }
 			set
-            { 
-                SetValue(PlaceholderColorProperty, value); 
-                _floatingLabel.TextColor = value;
+            {
+                SetValue(PlaceholderFocusedColorProperty, value);
+                UpdatePlaceholderColor();
             }
 		}
+
+        /// <summary>
+        /// The placeholder color property.
+        /// </summary>
+        public static BindableProperty PlaceholderColorProperty =
+            BindableProperty.Create<FloatingLabelControl, Color>(p => p.PlaceholderColor, Color.FromHex("#777777"),
+                BindingMode.Default, null, (bindable, oldValue, newValue) =>
+                {
+                    var ctrl = (FloatingLabelControl)bindable;
+                    ctrl.PlaceholderColor = newValue;
+                });
+
+
+        /// <summary>
+        /// Gets or sets the placeholder color.
+        /// </summary>
+        /// <value>The text.</value>
+        public Color PlaceholderColor
+        {
+            get { return (Color)GetValue(PlaceholderColorProperty); }
+            set
+            {
+                SetValue(PlaceholderColorProperty, value);
+                UpdatePlaceholderColor();
+            }
+        }
 
 		/// <summary>
 		/// The is password property.
@@ -369,6 +402,18 @@ namespace NControl.Controls
 			}, NGraphics.Pens.Gray);
 		}
 		#endregion
-	}
+
+        #region Private Members
+
+        /// <summary>
+        /// Updates the placeholder color
+        /// </summary>
+	    private void UpdatePlaceholderColor()
+        {
+            _floatingLabel.TextColor = _textEntry.IsFocused ? PlaceholderFocusedColor : PlaceholderColor;
+        }
+
+	    #endregion
+    }
 }
 
