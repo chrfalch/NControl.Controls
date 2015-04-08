@@ -152,9 +152,9 @@ namespace NControl.Controls
 			// Position entry/postfix
 			_layout.Children.Add (entryAndPostFixLayout, () => 
 				new Rectangle(
-					Device.OnPlatform<int>(0, -12, 0), 
+					Device.OnPlatform<int>(0, -12, -12), 
 					Device.OnPlatform<int>(12, 12, 12), 
-					_layout.Width - Device.OnPlatform<int>(0, -12, 0), 
+					_layout.Width - Device.OnPlatform<int>(0, -12, (string.IsNullOrWhiteSpace(Postfix) ? -30 : 0)), 
 					_layout.Height - Device.OnPlatform<int>(12, 12, 2)));
 
 			Content = _layout;
@@ -361,7 +361,7 @@ namespace NControl.Controls
 			base.Draw (canvas, rect);
 
 			var bottom = Device.OnPlatform<double> (_textEntry.Bounds.Height + 4, 
-				_textEntry.Bounds.Height + 50, _textEntry.Bounds.Height + 4);
+				_textEntry.Bounds.Height + 50, Bounds.Height -4);
 
 			canvas.DrawPath (new NGraphics.PathOp[]{ 
 				new NGraphics.MoveTo(_textEntry.Bounds.Left-1, bottom),
