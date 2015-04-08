@@ -9,13 +9,13 @@ using NControl.Controls.WP81;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.WinPhone;
 
-[assembly: ExportRenderer(typeof(CustomFontLabel), typeof(CustomFontLabelRenderer))]
+[assembly: ExportRenderer(typeof(Label), typeof(FontAwareLabelRenderer))]
 namespace NControl.Controls.WP81
 {
     /// <summary>
     /// Custom font label renderer.
     /// </summary>
-    public class CustomFontLabelRenderer : LabelRenderer
+    public class FontAwareLabelRenderer : LabelRenderer
     {
         /// <summary>
         /// Raises the element changed event.
@@ -25,17 +25,20 @@ namespace NControl.Controls.WP81
         {
             base.OnElementChanged(e);
 
-            if (e.NewElement != null)
-            {
-                // Load font 
-                var label = (CustomFontLabel)e.NewElement;
-                var fontName = label.FontFamily;
-                var fontData = label.FontData;
-                var ms = new MemoryStream(fontData);
-                
-                Control.FontSource = new System.Windows.Documents.FontSource(ms);
-                Control.FontFamily = new FontFamily(fontName);
-            }
+			if (e.NewElement != null) 
+			{
+				var label = e.NewElement;
+				var fontName = label.FontFamily;
+				if (string.IsNullOrWhiteSpace (fontName))
+					return;
+
+				fontName = fontName.ToLowerInvariant ();
+			    if (NControls.Typefaces.ContainsKey(fontName))
+			    {
+                    Control.FontSource = NControls.Typefaces[fontName];
+                    Control.FontFamily = new FontFamily(fontName);			        
+			    }
+			}
         }
 
     }

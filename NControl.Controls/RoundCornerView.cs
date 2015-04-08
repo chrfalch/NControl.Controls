@@ -35,7 +35,7 @@ namespace NControl.Controls
     /// <summary>
     /// Rounded border control.
     /// </summary>
-	public class RoundCornerView: NControlView, IDemonstratableControl
+	public class RoundCornerView: NControlView
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="RoundCornerView"/> class.
@@ -44,21 +44,6 @@ namespace NControl.Controls
         {
             base.BackgroundColor = Xamarin.Forms.Color.Transparent;
         }
-
-		#region IDemonstratableControl implementation
-
-		/// <summary>
-		/// Initialize this instance.
-		/// </summary>
-		public void Initialize ()
-		{
-			BackgroundColor = Xamarin.Forms.Color.Red;
-			CornerRadius = 10;
-			HeightRequest = 155;
-		    Invalidate();
-		}
-
-		#endregion
 
         #region Properties
 

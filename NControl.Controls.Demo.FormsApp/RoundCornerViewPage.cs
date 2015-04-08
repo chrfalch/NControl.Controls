@@ -1,0 +1,48 @@
+﻿using System;
+using Xamarin.Forms;
+
+namespace NControl.Controls.Demo.FormsApp
+{
+	public class RoundCornerViewPage: ContentPage
+	{
+		public RoundCornerViewPage ()
+		{
+			Title = "RoundCornerView";
+		}
+
+		protected override void OnAppearing ()
+		{
+			base.OnAppearing ();
+		
+			var layout = new RelativeLayout ();
+
+			var border1 = new RoundCornerView {
+				BackgroundColor = Color.Red,
+				CornerRadius = 4,
+			};
+
+			var border2 = new RoundCornerView {
+				BackgroundColor = Color.Blue,
+				CornerRadius = 14,
+			};
+
+			var border3 = new RoundCornerView {
+				BackgroundColor = Color.Green,
+				CornerRadius = 12,
+			};
+
+			var border4 = new RoundCornerView {
+				BackgroundColor = Color.Yellow,
+				CornerRadius = 42,
+			};
+
+			layout.Children.Add (border1, () => new Rectangle (10, 10, (layout.Width / 2) - 20, (layout.Height / 2) - 20));
+			layout.Children.Add (border2, () => new Rectangle ((layout.Width / 2) + 10, 10, (layout.Width / 2) - 20, (layout.Height / 2) - 20));
+			layout.Children.Add (border3, () => new Rectangle (10, (layout.Height / 2) + 10, (layout.Width / 2) - 20, (layout.Height / 2) - 20));
+			layout.Children.Add (border4, () => new Rectangle ((layout.Width / 2) + 10, (layout.Height / 2) + 10, (layout.Width / 2) - 20, (layout.Height / 2) - 20));
+
+			Content = layout;
+		}
+	}
+}
+

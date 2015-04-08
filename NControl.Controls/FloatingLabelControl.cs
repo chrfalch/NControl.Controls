@@ -1,4 +1,31 @@
-﻿using System;
+﻿/************************************************************************
+ * 
+ * The MIT License (MIT)
+ * 
+ * Copyright (c) 2025 - Christian Falch
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining 
+ * a copy of this software and associated documentation files (the 
+ * "Software"), to deal in the Software without restriction, including 
+ * without limitation the rights to use, copy, modify, merge, publish, 
+ * distribute, sublicense, and/or sell copies of the Software, and to 
+ * permit persons to whom the Software is furnished to do so, subject 
+ * to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be 
+ * included in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+ * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
+ * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
+ * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * 
+ ************************************************************************/
+
+using System;
 using NControl.Abstractions;
 using Xamarin.Forms;
 using System.Threading.Tasks;
@@ -8,7 +35,7 @@ namespace NControl.Controls
 	/// <summary>
 	/// Float label control.
 	/// </summary>
-	public class FloatingLabelControl: NControlView, IDemonstratableControl
+	public class FloatingLabelControl: NControlView
 	{
 		#region Private Members
 
@@ -31,21 +58,6 @@ namespace NControl.Controls
         /// The layout.
         /// </summary>
         private RelativeLayout _layout;
-
-		#endregion
-
-		#region IDemonstratableControl implementation
-
-		/// <summary>
-		/// Initialize this instance.
-		/// </summary>
-		public void Initialize ()
-		{
-			Placeholder = "My Placeholder";
-			Postfix = "USD";
-			Keyboard = Keyboard.Numeric;
-			HeightRequest = 55;
-		}
 
 		#endregion
 
@@ -92,6 +104,7 @@ namespace NControl.Controls
 			_textEntry = new ExtendedEntry { 
 				Keyboard = this.Keyboard,
 				BackgroundColor = Color.Transparent,
+				HorizontalOptions = LayoutOptions.FillAndExpand,
 			};
 				
             _textEntry.Focused += (object sender, FocusEventArgs e) =>
@@ -112,30 +125,36 @@ namespace NControl.Controls
 
             // Postfix
             _postFix = new Label{
-                BackgroundColor = Color.Transparent,
+				BackgroundColor = Color.Transparent,
                 Text = Postfix,
                 XAlign = TextAlignment.End,
                 YAlign = TextAlignment.Center,
+				HorizontalOptions = LayoutOptions.End,
                 TextColor = Color.FromHex("#BBBBBB")
             };
+
+			// create stacklayout for entry and postfix
+			var entryAndPostFixLayout = new StackLayout {
+				BackgroundColor = Color.Transparent,
+				Orientation = StackOrientation.Horizontal,
+				Children = {
+					_textEntry, _postFix,
+				}
+			};
 
 			// Create layout
             _layout = new RelativeLayout { IsClippedToBounds = true };
 
-            var postfixWidth = 40;
-
-			// Position label
-		 	_layout.Children.Add (_floatingLabel, () => new Rectangle(10, 14, _layout.Width-20, _layout.Height-14));
-
-            // Position postfix
-            _layout.Children.Add (_postFix, () => new Rectangle(_layout.Width-postfixWidth, 
-                Device.OnPlatform<int>(12, 12, 12), postfixWidth, _layout.Height-12));
-
-			// Position text field
-			_layout.Children.Add (_textEntry, () => 
-				new Rectangle(Device.OnPlatform<int>(10, -2, 10), 
-					Device.OnPlatform<int>(12, 12, 12), _layout.Width-(10 +
-						(string.IsNullOrWhiteSpace(_postFix.Text) ? 0 : postfixWidth)), 
+            // Position label
+		 	_layout.Children.Add (_floatingLabel, () => new Rectangle(
+				Device.OnPlatform<int>(0, 0, 0), 14, _layout.Width-20, _layout.Height-14));
+			            
+			// Position entry/postfix
+			_layout.Children.Add (entryAndPostFixLayout, () => 
+				new Rectangle(
+					Device.OnPlatform<int>(0, -12, 0), 
+					Device.OnPlatform<int>(12, 12, 12), 
+					_layout.Width - Device.OnPlatform<int>(0, -12, 0), 
 					_layout.Height - Device.OnPlatform<int>(12, 12, 2)));
 
 			Content = _layout;

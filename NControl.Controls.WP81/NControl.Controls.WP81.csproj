@@ -82,12 +82,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="CustomFontLabelRenderer.cs" />
     <Compile Include="NControls.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="FontAwareLabelRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="FontAwareButtonRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NControl.Controls\NControl.Controls.csproj">

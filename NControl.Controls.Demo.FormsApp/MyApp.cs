@@ -4,7 +4,6 @@ using NGraphics;
 using Xamarin.Forms;
 using System.Reflection;
 using System.Linq;
-using NControl.Controls.Demo.FormsApp.Resources.Fonts;
 
 namespace NControl.Controls.Demo.FormsApp
 {
@@ -12,13 +11,18 @@ namespace NControl.Controls.Demo.FormsApp
 	{
 		public MyApp ()
 		{
-			var controlList = typeof(RoundCornerView).GetTypeInfo ().Assembly.DefinedTypes				
-				.Where(t => !t.IsAbstract && t.ImplementedInterfaces.Contains(typeof(IDemonstratableControl)))
-				.Select (t => t.Name).ToArray ();
+			var demoPageList = new ContentPage[] {
+				new RoundCornerViewPage(),
+				new FontAwesomeLabelPage(),
+				new FloatingLabelPage(),
+			};
 
 			var listView = new ListView {
-				ItemsSource = controlList,
+				ItemsSource = demoPageList,
 			};
+
+			listView.ItemTemplate = new DataTemplate (typeof(TextCell));
+			listView.ItemTemplate.SetBinding (TextCell.TextProperty, "Title");
 
 			var startPage = new ContentPage {
 				Title = "NControl.Controls",
@@ -26,11 +30,9 @@ namespace NControl.Controls.Demo.FormsApp
                 {
                     Children =
                     {
-						new CustomFontLabel()
+						new Label()
                         {
                             HeightRequest = 55,
-							FontDataResourcePath = typeof(ClinkClankFont).Namespace + ".ClinkClank.ttf",
-							FontDataAssembly = typeof(ClinkClankFont).GetTypeInfo().Assembly,
 							Text = "Custom Font",
 							FontFamily = "Clink Clank",
 							BackgroundColor = Xamarin.Forms.Color.White,
@@ -49,24 +51,9 @@ namespace NControl.Controls.Demo.FormsApp
 				if(listView.SelectedItem == null)
 					return;
 				
-				// Create control
-				var type = typeof(RoundCornerView).GetTypeInfo().Assembly.DefinedTypes.FirstOrDefault(
-					t => t.Name.EndsWith((string)listView.SelectedItem)).AsType();
-				
-				var control = (View)Activator.CreateInstance(type);
-				var demonstratable = control as IDemonstratableControl;
-				if(demonstratable != null){					
-					demonstratable.Initialize();
-				}
-
-				await startPage.Navigation.PushAsync(
-					new ContentPage{
-						Title = (string)listView.SelectedItem,
-						Content = new ScrollView { 
-							Padding = 25,
-							Content = new StackLayout{Children={control}} 
-						}
-					});							
+				// Show page
+				await startPage.Navigation.PushAsync(listView.SelectedItem as ContentPage);
+					
 			};
 
 			listView.ItemTapped += (sender, e) => listView.SelectedItem = null;

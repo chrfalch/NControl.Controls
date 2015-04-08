@@ -40,9 +40,6 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Mono.Android" />
-    <Reference Include="Xamarin.Android.Support.v4">
-      <HintPath>..\packages\Xamarin.Android.Support.v4.21.0.3.0\lib\MonoAndroid10\Xamarin.Android.Support.v4.dll</HintPath>
-    </Reference>
     <Reference Include="NGraphics">
       <HintPath>..\packages\NGraphics.0.2.2\lib\MonoAndroid10\NGraphics.dll</HintPath>
     </Reference>
@@ -67,12 +64,16 @@
     <Reference Include="NControl">
       <HintPath>..\packages\NControl.0.3.1\lib\MonoAndroid10\NControl.dll</HintPath>
     </Reference>
+    <Reference Include="Xamarin.Android.Support.v4">
+      <HintPath>..\packages\Xamarin.Android.Support.v4.22.0.0.0\lib\MonoAndroid10\Xamarin.Android.Support.v4.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="NControls.cs" />
-    <Compile Include="CustomFontLabelRenderer.cs" />
     <Compile Include="ExtendedEntryRenderer.cs" />
+    <Compile Include="FontAwareLabelRenderer.cs" />
+    <Compile Include="FontAwareButtonRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

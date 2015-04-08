@@ -11,7 +11,7 @@ using NControl.Controls.Droid;
 
 namespace NControl.Controls.Demo.FormsApp.Droid
 {
-	[Activity (Label = "NControl.Controls.Demo.FormsApp.Droid", Icon = "@drawable/icon", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
+	[Activity (Label = "NControl.Controls Demo", Icon = "@drawable/icon", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
 	public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsApplicationActivity
 	{
 		protected override void OnCreate (Bundle bundle)
