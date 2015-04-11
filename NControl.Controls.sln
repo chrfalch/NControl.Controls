@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Library", "Library", "{22E1FF9D-8646-4D0D-8E8F-001F26C8EDF9}"
+	ProjectSection(SolutionItems) = preProject
+		NControl.Controls.nuspec = NControl.Controls.nuspec
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NControl.Controls", "NControl.Controls\NControl.Controls.csproj", "{239D7367-336F-4372-93A1-5CC4BD2414FE}"
 EndProject

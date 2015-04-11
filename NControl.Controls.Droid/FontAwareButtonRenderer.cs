@@ -23,15 +23,26 @@ namespace NControl.Controls.Droid
 			base.OnElementChanged (e);
 
 			if (e.NewElement != null) 
-			{
-				var button = e.NewElement;
-				var fontName = button.FontFamily;
-				if (string.IsNullOrWhiteSpace (fontName))
-					return;
+				UpdateFont();
+		}
 
-				if(NControls.Typefaces.ContainsKey(fontName))
-					Control.SetTypeface(NControls.Typefaces[fontName], TypefaceStyle.Normal);
-			}
+		protected override void OnElementPropertyChanged (object sender, System.ComponentModel.PropertyChangedEventArgs e)
+		{
+			base.OnElementPropertyChanged (sender, e);
+
+			if(e.PropertyName == Label.FontFamilyProperty.PropertyName)
+				UpdateFont();
+		}
+
+		private void UpdateFont()
+		{
+			var fontName = Element.FontFamily;
+			if (string.IsNullOrWhiteSpace (fontName))
+				return;
+
+			fontName = fontName.ToLowerInvariant ();
+			if(NControls.Typefaces.ContainsKey(fontName))
+				Control.SetTypeface(NControls.Typefaces[fontName], TypefaceStyle.Normal);	
 		}
 	}
 }

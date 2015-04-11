@@ -42,22 +42,27 @@ namespace NControl.Controls
 		/// <summary>
 		/// The floating label.
 		/// </summary>
-		private Label _floatingLabel;
+		private readonly Label _floatingLabel;
 
 		/// <summary>
 		/// The text entry.
 		/// </summary>
-		private Entry _textEntry;
+		private readonly Entry _textEntry;
 
         /// <summary>
         /// The post fix.
         /// </summary>
-        private Label _postFix;
+        private readonly Label _postFix;
 
         /// <summary>
         /// The layout.
         /// </summary>
-        private RelativeLayout _layout;
+        private readonly RelativeLayout _layout;
+
+        /// <summary>
+        /// Entry and postfix layout
+        /// </summary>
+	    private readonly StackLayout _entryAndPostfixLayout;
 
 		#endregion
 
@@ -127,16 +132,18 @@ namespace NControl.Controls
 
             // Postfix
             _postFix = new Label{
-				BackgroundColor = Color.Transparent,
-                Text = Postfix,
+				BackgroundColor = Color.Transparent,                
                 XAlign = TextAlignment.End,
-                YAlign = TextAlignment.Center,
+                YAlign = TextAlignment.Center,                
 				HorizontalOptions = LayoutOptions.End,
-                TextColor = Color.FromHex("#888888")
+				TextColor = PostfixColor
             };
 
+		    UpdatePostFix();
+
 			// create stacklayout for entry and postfix
-			var entryAndPostFixLayout = new StackLayout {
+            _entryAndPostfixLayout = new StackLayout
+            {
 				BackgroundColor = Color.Transparent,
                 Padding = 0,                
 				Orientation = StackOrientation.Horizontal,
@@ -156,17 +163,17 @@ namespace NControl.Controls
                 _layout.Height-14));
 			            
 			// Position entry/postfix
-			_layout.Children.Add (entryAndPostFixLayout, () => 
+            _layout.Children.Add(_entryAndPostfixLayout, () => 
 				new Rectangle(
 					Device.OnPlatform<int>(0, -12, -15), 
 					Device.OnPlatform<int>(12, 12, 14), 
-					_layout.Width - Device.OnPlatform<int>(0, -12, (string.IsNullOrWhiteSpace(Postfix) ? -34 : 0)), 
+					_layout.Width - Device.OnPlatform<int>(0, -12, (string.IsNullOrWhiteSpace(Postfix) ? -34 : -15)), 
 					_layout.Height - Device.OnPlatform<int>(12, 12, 2)));
 
 			Content = _layout;
-		}
+		}	    
 
-		#region Text Handling
+	    #region Text Handling
 
 		/// <summary>
 		/// Texts the entry text changed.
@@ -204,6 +211,8 @@ namespace NControl.Controls
 			
 			yAnimation.WithConcurrent (alphaAnimation);
 			yAnimation.Commit (_floatingLabel, "AnimateLabel");
+
+			UpdatePlaceholderColor ();
 		}
 
 		#endregion
@@ -281,30 +290,81 @@ namespace NControl.Controls
 		}
 
         /// <summary>
-        /// The postfix property.
+        /// The postfix color property.
         /// </summary>
-        public static BindableProperty PostfixProperty = 
-            BindableProperty.Create<FloatingLabelControl, string>(p => p.Postfix, string.Empty,
+		public static BindableProperty PostfixColorProperty = 
+			BindableProperty.Create<FloatingLabelControl, Color>(p => p.PostfixColor, Color.FromHex("#CCCCCC"),
                 propertyChanged: (bindable, oldValue, newValue) =>{
                 var ctrl = (FloatingLabelControl)bindable;
-                ctrl.Postfix = newValue;
+                ctrl.PostfixColor = newValue;
             });
 
 
         /// <summary>
-        /// Gets or sets the Postfix.
+        /// Gets or sets the Postfix color.
         /// </summary>
         /// <value>The text.</value>
-        public string Postfix
+        public Color PostfixColor
         {
-            get { return (string)GetValue (PostfixProperty); }
+			get { return (Color)GetValue (PostfixColorProperty); }
             set 
             { 
-                SetValue (PostfixProperty, value); 
-                _postFix.Text = value;
-                _layout.ForceLayout();
+				SetValue (PostfixColorProperty, value); 
+				_postFix.TextColor = value;                
             }
         }
+
+		/// <summary>
+		/// The postfix property.
+		/// </summary>
+		public static BindableProperty PostfixProperty = 
+			BindableProperty.Create<FloatingLabelControl, string>(p => p.Postfix, string.Empty,
+				propertyChanged: (bindable, oldValue, newValue) =>{
+					var ctrl = (FloatingLabelControl)bindable;
+					ctrl.Postfix = newValue;
+				});
+
+
+		/// <summary>
+		/// Gets or sets the Postfix.
+		/// </summary>
+		/// <value>The text.</value>
+		public string Postfix
+		{
+			get { return (string)GetValue (PostfixProperty); }
+			set 
+			{ 
+				SetValue (PostfixProperty, value); 
+				_postFix.Text = value;
+				_layout.ForceLayout();
+                _entryAndPostfixLayout.ForceLayout();
+			}
+		}
+
+		/// <summary>
+		/// The postfix property.
+		/// </summary>
+		public static BindableProperty PostfixIconProperty = 
+			BindableProperty.Create<FloatingLabelControl, string>(p => p.PostfixIcon, string.Empty,
+				propertyChanged: (bindable, oldValue, newValue) =>{
+					var ctrl = (FloatingLabelControl)bindable;
+					ctrl.PostfixIcon = newValue;
+				});
+
+
+		/// <summary>
+		/// Gets or sets the Postfix.
+		/// </summary>
+		/// <value>The text.</value>
+		public string PostfixIcon
+		{
+			get { return (string)GetValue (PostfixIconProperty); }
+			set 
+			{ 
+				SetValue (PostfixIconProperty, value);
+                UpdatePostFix();
+			}
+		}
 
 		/// <summary>
 		/// The placeholder color property.
@@ -335,7 +395,7 @@ namespace NControl.Controls
         /// The placeholder color property.
         /// </summary>
         public static BindableProperty PlaceholderColorProperty =
-            BindableProperty.Create<FloatingLabelControl, Color>(p => p.PlaceholderColor, Color.FromHex("#777777"),
+            BindableProperty.Create<FloatingLabelControl, Color>(p => p.PlaceholderColor, Color.FromHex("#CCCCCC"),
                 BindingMode.Default, null, (bindable, oldValue, newValue) =>
                 {
                     var ctrl = (FloatingLabelControl)bindable;
@@ -399,11 +459,40 @@ namespace NControl.Controls
 			canvas.DrawPath (new NGraphics.PathOp[]{ 
 				new NGraphics.MoveTo(_textEntry.Bounds.Left-1, bottom),
 				new NGraphics.LineTo(rect.Width, bottom)
-			}, NGraphics.Pens.Gray);
+			}, new NGraphics.Pen(GetCurrentPlaceholderColor(), 0.5));
 		}
 		#endregion
 
         #region Private Members
+
+        /// <summary>
+        /// Update postfix label
+        /// </summary>
+        private void UpdatePostFix()
+        {
+            _postFix.Text = string.IsNullOrWhiteSpace(PostfixIcon) ? Postfix : PostfixIcon;
+            _postFix.FontFamily = string.IsNullOrWhiteSpace(PostfixIcon) ? null : "fontawesome";
+            //_postFix.FontSize = string.IsNullOrWhiteSpace(PostfixIcon)
+            //    ? Device.OnPlatform<int>(14, 14, 14)
+            //    : Device.OnPlatform<int>(18, 18, 18);
+
+            if (_layout == null)
+                return;
+
+            _layout.ForceLayout();
+            _entryAndPostfixLayout.ForceLayout();
+        }
+
+		/// <summary>
+		/// Gets the color of the current placeholder.
+		/// </summary>
+		/// <returns>The current placeholder color.</returns>
+		private NGraphics.Color GetCurrentPlaceholderColor()
+		{
+			return _textEntry.IsFocused && !string.IsNullOrWhiteSpace(_textEntry.Text) ? 
+				new NGraphics.Color (PlaceholderFocusedColor.R, PlaceholderFocusedColor.G, PlaceholderFocusedColor.B) :
+				new NGraphics.Color (PlaceholderColor.R, PlaceholderColor.G, PlaceholderColor.B);
+		}
 
         /// <summary>
         /// Updates the placeholder color
@@ -411,6 +500,7 @@ namespace NControl.Controls
 	    private void UpdatePlaceholderColor()
         {
             _floatingLabel.TextColor = _textEntry.IsFocused ? PlaceholderFocusedColor : PlaceholderColor;
+			Invalidate ();
         }
 
 	    #endregion

@@ -7,7 +7,7 @@
     <ProjectGuid>{239D7367-336F-4372-93A1-5CC4BD2414FE}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>NControl.Controls</RootNamespace>
-    <AssemblyName>NControl.Controls.Abstractions</AssemblyName>
+    <AssemblyName>NControl.Controls</AssemblyName>
     <TargetFrameworkProfile>Profile78</TargetFrameworkProfile>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>

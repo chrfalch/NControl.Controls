@@ -37,6 +37,13 @@ namespace NControl.Controls.Demo.FormsApp
                 Placeholder = "Enter your secret",
 		    };
 
+			var entry7 = new FloatingLabelControl
+			{				
+				Placeholder = "Enter location",
+				PostfixIcon = FontAwesomeLabel.FAMapMarker,
+				PostfixColor = Color.FromHex("#0000FF"),
+			};
+
 			Content = new ScrollView{
 				Content = new StackLayout {
 					Padding = 10,
@@ -44,19 +51,20 @@ namespace NControl.Controls.Demo.FormsApp
 					VerticalOptions = LayoutOptions.StartAndExpand,
 					Orientation = StackOrientation.Vertical,
 					Children = {
-						entry1, 
-						entry2, 
-						entry3, 
-						new StackLayout{
+                        //entry1, 
+                        //entry2, 
+                        //entry3, 
+                        //new StackLayout{
 							
-							Orientation = StackOrientation.Horizontal,
-							HorizontalOptions = LayoutOptions.FillAndExpand,
-							VerticalOptions = LayoutOptions.CenterAndExpand,
-							Children = {
-								entry4, entry5
-							}
-						},
-                        entry6
+                        //    Orientation = StackOrientation.Horizontal,
+                        //    HorizontalOptions = LayoutOptions.FillAndExpand,
+                        //    VerticalOptions = LayoutOptions.CenterAndExpand,
+                        //    Children = {
+                        //        entry4, entry5
+                        //    }
+                        //},
+                        //entry6,
+						entry7
 					}
 				}
 			};
