@@ -51,19 +51,19 @@ namespace NControl.Controls.Demo.FormsApp
 					VerticalOptions = LayoutOptions.StartAndExpand,
 					Orientation = StackOrientation.Vertical,
 					Children = {
-                        //entry1, 
-                        //entry2, 
-                        //entry3, 
-                        //new StackLayout{
+                        entry1, 
+                        entry2, 
+                        entry3, 
+                        new StackLayout{
 							
-                        //    Orientation = StackOrientation.Horizontal,
-                        //    HorizontalOptions = LayoutOptions.FillAndExpand,
-                        //    VerticalOptions = LayoutOptions.CenterAndExpand,
-                        //    Children = {
-                        //        entry4, entry5
-                        //    }
-                        //},
-                        //entry6,
+                            Orientation = StackOrientation.Horizontal,
+                            HorizontalOptions = LayoutOptions.FillAndExpand,
+                            VerticalOptions = LayoutOptions.CenterAndExpand,
+                            Children = {
+                                entry4, entry5
+                            }
+                        },
+                        entry6,
 						entry7
 					}
 				}

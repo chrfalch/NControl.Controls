@@ -12,9 +12,11 @@ namespace NControl.Controls.Demo.FormsApp
 		public MyApp ()
 		{
 			var demoPageList = new ContentPage[] {
+				new CustomFontPage(),
 				new RoundCornerViewPage(),
 				new FontAwesomeLabelPage(),
 				new FloatingLabelPage(),
+				new ActionButtonPage(),
 			};
 
 			var listView = new ListView {
@@ -26,24 +28,7 @@ namespace NControl.Controls.Demo.FormsApp
 
 			var startPage = new ContentPage {
 				Title = "NControl.Controls",
-                Content = new StackLayout
-                {
-                    Children =
-                    {
-						new Label()
-                        {
-                            HeightRequest = 55,
-							Text = "Custom Font",
-							FontFamily = "Clink Clank",
-							BackgroundColor = Xamarin.Forms.Color.White,
-							XAlign = Xamarin.Forms.TextAlignment.Center,
-							YAlign = Xamarin.Forms.TextAlignment.Center,
-							TextColor = Xamarin.Forms.Color.Blue,
-							FontSize = 24,
-                        },
-                        listView
-                    }
-                }
+                Content = listView                
 			};
 
 			listView.ItemSelected += async (sender, e) => {

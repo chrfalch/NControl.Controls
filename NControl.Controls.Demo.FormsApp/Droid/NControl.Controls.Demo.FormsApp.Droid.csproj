@@ -60,14 +60,14 @@
     <Reference Include="NGraphics.Android">
       <HintPath>..\..\packages\NGraphics.0.2.2\lib\MonoAndroid10\NGraphics.Android.dll</HintPath>
     </Reference>
-    <Reference Include="NControl.Droid">
-      <HintPath>..\..\packages\NControl.0.3.1\lib\MonoAndroid10\NControl.Droid.dll</HintPath>
-    </Reference>
-    <Reference Include="NControl">
-      <HintPath>..\..\packages\NControl.0.3.1\lib\MonoAndroid10\NControl.dll</HintPath>
-    </Reference>
     <Reference Include="Xamarin.Android.Support.v4">
       <HintPath>..\..\packages\Xamarin.Android.Support.v4.22.0.0.0\lib\MonoAndroid10\Xamarin.Android.Support.v4.dll</HintPath>
+    </Reference>
+    <Reference Include="NControl.Droid">
+      <HintPath>..\..\packages\NControl.0.3.2\lib\MonoAndroid10\NControl.Droid.dll</HintPath>
+    </Reference>
+    <Reference Include="NControl">
+      <HintPath>..\..\packages\NControl.0.3.2\lib\MonoAndroid10\NControl.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
