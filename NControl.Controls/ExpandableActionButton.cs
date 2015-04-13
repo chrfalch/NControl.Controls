@@ -31,6 +31,11 @@ namespace NControl.Controls
 		private readonly ToggleActionButton _mainButton;
 
 		/// <summary>
+		/// The layout.
+		/// </summary>
+		private readonly RelativeLayout _layout;
+
+		/// <summary>
 		/// The buttons.
 		/// </summary>
 		private readonly ObservableCollection<ActionButton> _buttons = 
@@ -47,39 +52,18 @@ namespace NControl.Controls
 			Direction = ExpandDirection.Up;
 
 			// Layout
-			var layout = new RelativeLayout ();
-			Content = layout;
+			_layout = new RelativeLayout ();
+			Content = _layout;
 
 			// Main button
 			_mainButton = new ToggleActionButton {
 				ButtonIcon = FontAwesomeLabel.FAEllipsisV,
 			};
 
-			AddButtonToLayout (_mainButton, layout);
-
-			// Calculate max
+			AddButtonToLayout (_mainButton, _layout);
 
 			// List of buttons
-			_buttons.CollectionChanged += (sender, e) => {
-
-				// Update buttons
-				var toRemove = new List<ActionButton>();
-				foreach(var button in layout.Children)
-				{
-					toRemove.Add(button as ActionButton);
-				}
-
-				foreach(var button in toRemove)
-					layout.Children.Remove(button);
-
-				foreach(var button in Buttons)
-				{
-					button.Opacity = 0.0;
-					AddButtonToLayout (button, layout);
-				}
-
-				AddButtonToLayout(_mainButton, layout);
-			};
+			_buttons.CollectionChanged += (sender, e) => UpdateButtons();
 
 			_mainButton.PropertyChanged += (object sender, System.ComponentModel.PropertyChangedEventArgs e) => {
 				if(e.PropertyName == ToggleActionButton.IsToggledProperty.PropertyName)
@@ -96,12 +80,44 @@ namespace NControl.Controls
 		#region Private Members
 
 		/// <summary>
+		/// Updates the buttons.
+		/// </summary>
+		private void UpdateButtons()
+		{
+			// Update buttons
+			var toRemove = new List<ActionButton>();
+			foreach(var button in _layout.Children)
+			{				
+				if (button == _mainButton)
+					continue;
+				
+				var ac = button as ActionButton;
+				ac.OnClicked -= HandleButtonClicked;
+				toRemove.Add(ac);
+			}
+
+			foreach(var button in toRemove)
+				_layout.Children.Remove(button);
+
+			foreach(var button in Buttons)
+			{
+				if (!button.IsEnabled)
+					continue;
+				
+				button.Opacity = 0.0;
+				button.OnClicked += HandleButtonClicked;
+				AddButtonToLayout (button, _layout);
+			}				
+		}
+
+		/// <summary>
 		/// Adds the main button to layout.
 		/// </summary>
 		/// <param name="layout">Layout.</param>
 		private void AddButtonToLayout (ActionButton button, RelativeLayout layout)
-		{
+		{			
 			layout.Children.Add (button, () => 
+				
 				Direction == ExpandDirection.Up ? 
 				// Up	
 				new Rectangle(0, layout.Height-layout.Width, layout.Width, layout.Width) : 
@@ -123,8 +139,6 @@ namespace NControl.Controls
 		/// </summary>
 		private void HideButtons ()
 		{
-			System.Diagnostics.Debug.WriteLine ("Hide Buttons");
-
 			Task.Run (() => 
 				Device.BeginInvokeOnMainThread(async () => {
 
@@ -148,17 +162,30 @@ namespace NControl.Controls
 		/// </summary>
 		private void ShowButtons ()
 		{
-			System.Diagnostics.Debug.WriteLine ("Show Buttons");
+			UpdateButtons ();
 
 			var c = 1;
 
-			foreach (var button in Buttons) {	
+			foreach (var button in Buttons) {
+				if (!button.IsEnabled)
+					continue;	
+				
 				button.HasShadow = true;
 				button.FadeTo(1.0, 100);
 				button.TranslateTo (0.0, -(16+40) * c++, easing: Easing.SpringIn);
 			}
 		}
 
+		/// <summary>
+		/// Handles the button clicked.
+		/// </summary>
+		/// <param name="sender">Sender.</param>
+		/// <param name="args">Arguments.</param>
+		private void HandleButtonClicked(object sender, EventArgs args)
+		{
+			_mainButton.IsToggled = false;
+			HideButtons ();
+		}
 		#endregion
 
 		#region Properties
@@ -204,20 +231,6 @@ namespace NControl.Controls
 			get {  return _buttons; }
 		}
 			
-		#endregion
-
-		#region Touches
-
-		/// <summary>
-		/// Toucheses the began.
-		/// </summary>
-		/// <param name="points">Points.</param>
-		public override void TouchesBegan (IEnumerable<NGraphics.Point> points)
-		{
-			base.TouchesBegan (points);
-
-
-		}
 		#endregion
 	}
 }

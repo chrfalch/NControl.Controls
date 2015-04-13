@@ -28,6 +28,7 @@
 using System;
 using NControl.Abstractions;
 using Xamarin.Forms;
+using System.Windows.Input;
 
 namespace NControl.Controls
 {
@@ -58,6 +59,15 @@ namespace NControl.Controls
 		/// The button icon label.
 		/// </summary>
 		protected readonly FontAwesomeLabel ButtonIconLabel;
+
+		#endregion
+
+		#region Events
+
+		/// <summary>
+		/// Occurs when on clicked.
+		/// </summary>
+		public event EventHandler OnClicked;
 
 		#endregion
 
@@ -112,7 +122,7 @@ namespace NControl.Controls
 		/// The command property.
 		/// </summary>
 		public static BindableProperty CommandProperty = 
-			BindableProperty.Create<ActionButton, Command> (p => p.Command, null,
+			BindableProperty.Create<ActionButton, ICommand> (p => p.Command, null,
 				BindingMode.Default, null, (bindable, oldValue, newValue) => {
 					var ctrl = (ActionButton)bindable;
 					ctrl.Command = newValue;
@@ -122,11 +132,19 @@ namespace NControl.Controls
 		/// Gets or sets the color of the buton.
 		/// </summary>
 		/// <value>The color of the buton.</value>
-		public Command Command
+		public ICommand Command
 		{
-			get {  return (Command)GetValue (CommandProperty);}
+			get {  return (ICommand)GetValue (CommandProperty);}
 			set {
+
+				if (Command != null)
+					Command.CanExecuteChanged -= HandleCanExecuteChanged;
+				
 				SetValue (CommandProperty, value);
+
+				if (Command != null)
+					Command.CanExecuteChanged += HandleCanExecuteChanged;
+				
 			}
 		}
 
@@ -250,11 +268,16 @@ namespace NControl.Controls
 			
 		#endregion
 
-		#region Drawing
+		#region Private Members
 
-		public override void Draw (NGraphics.ICanvas canvas, NGraphics.Rect rect)
+		/// <summary>
+		/// Handles the can execute changed.
+		/// </summary>
+		/// <param name="sender">Sender.</param>
+		/// <param name="args">Arguments.</param>
+		private void HandleCanExecuteChanged(object sender, EventArgs args)
 		{
-			base.Draw (canvas, rect);
+			IsEnabled = Command.CanExecute (CommandParameter);
 		}
 		#endregion
 
@@ -268,6 +291,9 @@ namespace NControl.Controls
 		{
 			base.TouchesBegan (points);
 
+			if (!IsEnabled)
+				return;
+
 			ButtonElement.ScaleTo (1.15, 140, Easing.CubicInOut);
 
 			ButtonIconLabel.ScaleTo (1.2, 140, Easing.CubicInOut);
@@ -275,7 +301,6 @@ namespace NControl.Controls
 			ButtonShadowElement.TranslateTo (0.0, 3, 140, Easing.CubicInOut);
 			ButtonShadowElement.ScaleTo (1.2, 140, Easing.CubicInOut);
 			ButtonShadowElement.FadeTo (0.44, 140, Easing.CubicInOut);
-
 		}
 
 		/// <summary>
@@ -285,6 +310,9 @@ namespace NControl.Controls
 		public override void TouchesCancelled (System.Collections.Generic.IEnumerable<NGraphics.Point> points)
 		{
 			base.TouchesCancelled (points);
+
+			if (!IsEnabled)
+				return;
 
 			if (Command != null && Command.CanExecute (CommandParameter))
 				Command.Execute (CommandParameter);			
@@ -296,6 +324,9 @@ namespace NControl.Controls
 			ButtonShadowElement.TranslateTo (0.0, 0.0, 140, Easing.CubicInOut);
 			ButtonShadowElement.ScaleTo (1.0, 140, Easing.CubicInOut);
 			ButtonShadowElement.FadeTo (1.0, 140, Easing.CubicInOut);
+
+			if (OnClicked != null)
+				OnClicked (this, EventArgs.Empty);
 		}
 
 		/// <summary>
@@ -305,6 +336,9 @@ namespace NControl.Controls
 		public override void TouchesEnded (System.Collections.Generic.IEnumerable<NGraphics.Point> points)
 		{
 			base.TouchesEnded (points);
+
+			if (!IsEnabled)
+				return;
 
 			if (Command != null && Command.CanExecute (CommandParameter))
 				Command.Execute (CommandParameter);
@@ -316,6 +350,9 @@ namespace NControl.Controls
 			ButtonShadowElement.TranslateTo (0.0, 0.0, 140, Easing.CubicInOut);
 			ButtonShadowElement.ScaleTo (1.0, 140, Easing.CubicInOut);
 			ButtonShadowElement.FadeTo (1.0, 140, Easing.CubicInOut);
+
+			if (OnClicked != null)
+				OnClicked (this, EventArgs.Empty);
 		}
 		#endregion
 	}

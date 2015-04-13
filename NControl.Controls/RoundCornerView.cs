@@ -47,6 +47,55 @@ namespace NControl.Controls
 
         #region Properties
 
+		/// <summary>
+		/// The border width property.
+		/// </summary>
+		public static BindableProperty BorderWidthProperty = 
+			BindableProperty.Create<RoundCornerView, double> (p => p.BorderWidth, 0, 
+				propertyChanged: (bindable, oldValue, newValue) => {
+					var ctrl = (RoundCornerView)bindable;
+					ctrl.BorderWidth = newValue;
+				});
+
+		/// <summary>
+		/// Gets or sets the border width
+		/// </summary>
+		/// <value>The corner radius.</value>
+		public double BorderWidth 
+		{
+			get { return (double)GetValue(BorderWidthProperty); }
+			set 
+			{ 
+				SetValue(BorderWidthProperty, value); 
+				Invalidate ();
+			}
+		}
+
+		/// <summary>
+		/// The border color property.
+		/// </summary>
+		public static BindableProperty BorderColorProperty = 
+			BindableProperty.Create<RoundCornerView, Xamarin.Forms.Color> (p => p.BorderColor, 
+				Xamarin.Forms.Color.Transparent, 
+				propertyChanged: (bindable, oldValue, newValue) => {
+					var ctrl = (RoundCornerView)bindable;
+					ctrl.BorderColor = newValue;
+				});
+
+		/// <summary>
+		/// Gets or sets the border width
+		/// </summary>
+		/// <value>The corner radius.</value>
+		public Xamarin.Forms.Color BorderColor 
+		{
+			get { return (Xamarin.Forms.Color)GetValue(BorderColorProperty); }
+			set 
+			{ 
+				SetValue(BorderColorProperty, value); 
+				Invalidate ();
+			}
+		}
+
         /// <summary>
         /// The corner radius property.
         /// </summary>
@@ -110,41 +159,85 @@ namespace NControl.Controls
 
             var backgroundBrush = new SolidBrush(new NGraphics.Color(BackgroundColor.R,
                 BackgroundColor.G, BackgroundColor.B, BackgroundColor.A));
+
+			var foregroundPen = new SolidBrush (new NGraphics.Color (BorderColor.R,
+				BorderColor.G, BorderColor.B, BorderColor.A));
             
             var curveSize = CornerRadius;
             var width = rect.Width;
             var height = rect.Height;
+			var zero = 0.0;
+
+			if (BorderWidth > 0.0) {
+
+				canvas.DrawPath(new PathOp []{ 
+					new MoveTo(curveSize, zero),
+					// Top Right corner
+					new LineTo(width-curveSize, zero),
+					new CurveTo(
+						new NGraphics.Point(width-curveSize, zero),
+						new NGraphics.Point(width, zero),
+						new NGraphics.Point(width, curveSize)
+					),
+					new LineTo(width, height-curveSize),
+					// Bottom right corner
+					new CurveTo(
+						new NGraphics.Point(width, height-curveSize),
+						new NGraphics.Point(width, height),
+						new NGraphics.Point(width-curveSize, height)
+					),
+					new LineTo(curveSize, height),
+					// Bottom left corner
+					new CurveTo(
+						new NGraphics.Point(curveSize, height),
+						new NGraphics.Point(zero, height),
+						new NGraphics.Point(zero, height-curveSize)
+					),
+					new LineTo(zero, curveSize),
+					new CurveTo(
+						new NGraphics.Point(zero, curveSize),
+						new NGraphics.Point(zero, zero),
+						new NGraphics.Point(curveSize, zero)
+					),
+					new ClosePath()
+				}, null, foregroundPen);
+
+				width -= BorderWidth;
+				height -= BorderWidth;
+				zero += BorderWidth;
+			}
+
             canvas.DrawPath(new PathOp []{ 
-                new MoveTo(curveSize, 0),
-                // Top Right corner
-                new LineTo(width-curveSize, 0),
-                new CurveTo(
-                    new NGraphics.Point(width-curveSize, 0),
-                    new NGraphics.Point(width, 0),
-                    new NGraphics.Point(width, curveSize)
-                ),
-                new LineTo(width, height-curveSize),
-                // Bottom right corner
-                new CurveTo(
-                    new NGraphics.Point(width, height-curveSize),
-                    new NGraphics.Point(width, height),
-                    new NGraphics.Point(width-curveSize, height)
-                ),
-                new LineTo(curveSize, height),
-                // Bottom left corner
-                new CurveTo(
-                    new NGraphics.Point(curveSize, height),
-                    new NGraphics.Point(0, height),
-                    new NGraphics.Point(0, height-curveSize)
-                ),
-                new LineTo(0, curveSize),
-                new CurveTo(
-                    new NGraphics.Point(0, curveSize),
-                    new NGraphics.Point(0, 0),
-                    new NGraphics.Point(curveSize, 0)
-                ),
-                new ClosePath()
-            }, null, backgroundBrush);
+				new MoveTo(curveSize, zero),
+				// Top Right corner
+				new LineTo(width-curveSize, zero),
+				new CurveTo(
+					new NGraphics.Point(width-curveSize, zero),
+					new NGraphics.Point(width, zero),
+					new NGraphics.Point(width, curveSize)
+				),
+				new LineTo(width, height-curveSize),
+				// Bottom right corner
+				new CurveTo(
+					new NGraphics.Point(width, height-curveSize),
+					new NGraphics.Point(width, height),
+					new NGraphics.Point(width-curveSize, height)
+				),
+				new LineTo(curveSize, height),
+				// Bottom left corner
+				new CurveTo(
+					new NGraphics.Point(curveSize, height),
+					new NGraphics.Point(zero, height),
+					new NGraphics.Point(zero, height-curveSize)
+				),
+				new LineTo(zero, curveSize),
+				new CurveTo(
+					new NGraphics.Point(zero, curveSize),
+					new NGraphics.Point(zero, zero),
+					new NGraphics.Point(curveSize, zero)
+				),
+				new ClosePath()
+			}, null, backgroundBrush);
 
         }
 
