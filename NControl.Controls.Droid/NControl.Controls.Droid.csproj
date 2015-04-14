@@ -74,6 +74,7 @@
     <Compile Include="ExtendedEntryRenderer.cs" />
     <Compile Include="FontAwareLabelRenderer.cs" />
     <Compile Include="FontAwareButtonRenderer.cs" />
+    <Compile Include="CardPageRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

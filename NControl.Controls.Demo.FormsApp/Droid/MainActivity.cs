@@ -8,6 +8,7 @@ using Android.Views;
 using Android.Widget;
 using Android.OS;
 using NControl.Controls.Droid;
+using Xamarin.Forms;
 
 namespace NControl.Controls.Demo.FormsApp.Droid
 {

@@ -17,6 +17,7 @@ namespace NControl.Controls.Demo.FormsApp
 				new FontAwesomeLabelPage(),
 				new FloatingLabelPage(),
 				new ActionButtonPage(),
+				new CardPageDemo(),
 			};
 
 			var listView = new ListView {
@@ -37,8 +38,12 @@ namespace NControl.Controls.Demo.FormsApp
 					return;
 				
 				// Show page
-				await startPage.Navigation.PushAsync(listView.SelectedItem as ContentPage);
-					
+				if(listView.SelectedItem is CardPageDemo)
+					Device.OnPlatform(
+						async () => await startPage.Navigation.PushModalAsync(listView.SelectedItem as ContentPage, false),
+						null, null, async ()=> await startPage.Navigation.PushAsync(listView.SelectedItem as ContentPage));					
+				else
+					await startPage.Navigation.PushAsync(listView.SelectedItem as ContentPage);					
 			};
 
 			listView.ItemTapped += (sender, e) => listView.SelectedItem = null;
