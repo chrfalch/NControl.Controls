@@ -39,20 +39,20 @@ namespace NControl.Controls.Droid
 			SetBackgroundDrawable (null);
 			return;
 
-			// Take screenshot
-			var activity = (Xamarin.Forms.Forms.Context as Activity);
-			var view = activity.Window.DecorView.RootView;
-			view.DrawingCacheEnabled = true;
-			var bitmap = view.GetDrawingCache (true);
-
-			using (var stream = new MemoryStream ()) {
-
-				bitmap.Compress (Bitmap.CompressFormat.Png, 0, stream);
-				var cardPage = Element as CardPage;
-				cardPage.BackgroundImageSource = ImageSource.FromStream (() => new MemoryStream (stream.GetBuffer ()));
-			}
-
-			view.DrawingCacheEnabled = false;			
+//			// Take screenshot
+//			var activity = (Xamarin.Forms.Forms.Context as Activity);
+//			var view = activity.Window.DecorView.RootView;
+//			view.DrawingCacheEnabled = true;
+//			var bitmap = view.GetDrawingCache (true);
+//
+//			using (var stream = new MemoryStream ()) {
+//
+//				bitmap.Compress (Bitmap.CompressFormat.Png, 0, stream);
+//				var cardPage = Element as CardPage;
+//				cardPage.BackgroundImageSource = ImageSource.FromStream (() => new MemoryStream (stream.GetBuffer ()));
+//			}
+//
+//			view.DrawingCacheEnabled = false;			
 		}				
 	}
 }

@@ -133,9 +133,8 @@ namespace NControl.Controls
             // Postfix
             _postFix = new Label{
 				BackgroundColor = Color.Transparent,                
-                XAlign = TextAlignment.End,
+				XAlign = TextAlignment.Center,
                 YAlign = TextAlignment.Center,                
-				HorizontalOptions = LayoutOptions.End,
 				TextColor = PostfixColor
             };
 
@@ -165,10 +164,10 @@ namespace NControl.Controls
 			// Position entry/postfix
             _layout.Children.Add(_entryAndPostfixLayout, () => 
 				new Rectangle(
-					Device.OnPlatform<int>(0, -12, -15), 
+					Device.OnPlatform<int>(0, -4, -15), 
 					Device.OnPlatform<int>(12, 12, 14), 
-					_layout.Width - Device.OnPlatform<int>(0, -12, (string.IsNullOrWhiteSpace(Postfix) ? -34 : -15)), 
-					_layout.Height - Device.OnPlatform<int>(12, 12, 2)));
+					_layout.Width - Device.OnPlatform<int>(0, -4, (string.IsNullOrWhiteSpace(Postfix) ? -34 : -15)), 
+					_layout.Height - Device.OnPlatform<int>(12, 0, 2)));
 
 			Content = _layout;
 		}	    
@@ -453,8 +452,8 @@ namespace NControl.Controls
 		{
 			base.Draw (canvas, rect);
 
-			var bottom = Device.OnPlatform<double> (_textEntry.Bounds.Height + 4, 
-				_textEntry.Bounds.Height + 50, Bounds.Height -4);
+			var bottom = Device.OnPlatform<double> (rect.Height-4, 
+				rect.Height-4, Bounds.Height -4);
 
 			canvas.DrawPath (new NGraphics.PathOp[]{ 
 				new NGraphics.MoveTo(_textEntry.Bounds.Left-1, bottom),

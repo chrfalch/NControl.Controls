@@ -14,7 +14,8 @@ namespace NControl.Controls.Droid
 		{
 			base.OnElementChanged (e);
 
-			this.Control.SetBackgroundDrawable(null);
+			Control.SetBackgroundDrawable(null);
+			Control.SetPadding (10, 0, 0, 0);	
 		}
 	}
 }

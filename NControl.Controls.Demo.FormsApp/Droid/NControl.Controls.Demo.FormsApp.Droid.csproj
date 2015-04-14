@@ -63,11 +63,11 @@
     <Reference Include="Xamarin.Android.Support.v4">
       <HintPath>..\..\packages\Xamarin.Android.Support.v4.22.0.0.0\lib\MonoAndroid10\Xamarin.Android.Support.v4.dll</HintPath>
     </Reference>
-    <Reference Include="NControl.Droid">
-      <HintPath>..\..\packages\NControl.0.3.2\lib\MonoAndroid10\NControl.Droid.dll</HintPath>
-    </Reference>
     <Reference Include="NControl">
-      <HintPath>..\..\packages\NControl.0.3.2\lib\MonoAndroid10\NControl.dll</HintPath>
+      <HintPath>..\..\packages\NControl.0.3.3\lib\MonoAndroid10\NControl.dll</HintPath>
+    </Reference>
+    <Reference Include="NControl.Droid">
+      <HintPath>..\..\packages\NControl.0.3.3\lib\MonoAndroid10\NControl.Droid.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
