@@ -33,7 +33,7 @@ namespace NControl.Controls
 		/// <summary>
 		/// The layout.
 		/// </summary>
-		private readonly RelativeLayout _layout;
+		private readonly RelativeLayout _buttonsLayout;
 
 		/// <summary>
 		/// The buttons.
@@ -52,27 +52,27 @@ namespace NControl.Controls
 			Direction = ExpandDirection.Up;
 
 			// Layout
-			_layout = new RelativeLayout ();
-			Content = _layout;
+			Content = new RelativeLayout();
 
 			// Main button
 			_mainButton = new ToggleActionButton {
 				ButtonIcon = FontAwesomeLabel.FAEllipsisV,
 			};
+				
+			// Create buttons layout
+			_buttonsLayout = new RelativeLayout ();
+			(Content as RelativeLayout).Children.Add (_buttonsLayout, () => (Content as RelativeLayout).Bounds);
 
-			AddButtonToLayout (_mainButton, _layout);
+			AddButtonToLayout (_mainButton, Content as RelativeLayout);
 
-			// List of buttons
-			_buttons.CollectionChanged += (sender, e) => UpdateButtons();
-
-			_mainButton.PropertyChanged += (object sender, System.ComponentModel.PropertyChangedEventArgs e) => {
+			_mainButton.PropertyChanged += async (object sender, System.ComponentModel.PropertyChangedEventArgs e) => {
 				if(e.PropertyName == ToggleActionButton.IsToggledProperty.PropertyName)
 				{
 					// Show/Hide buttons
 					if(_mainButton.IsToggled)
-						ShowButtons();
+						await ShowButtonsAsync();
 					else
-						HideButtons();
+						await HideButtonsAsync();
 				}
 			};
 		}
@@ -80,34 +80,42 @@ namespace NControl.Controls
 		#region Private Members
 
 		/// <summary>
-		/// Updates the buttons.
+		/// Adds buttons.
 		/// </summary>
-		private void UpdateButtons()
+		private void AddButtons()
+		{
+			// Update buttons
+			foreach(var button in Buttons)
+			{
+				if (!button.IsEnabled)
+					continue;
+
+				button.Opacity = 0.0;
+				button.OnClicked += HandleButtonClicked;
+				AddButtonToLayout (button, _buttonsLayout);
+			}				
+
+			_buttonsLayout.ForceLayout ();
+		}
+
+		/// <summary>
+		/// Removes buttons.
+		/// </summary>
+		private void RemoveButtons()
 		{
 			// Update buttons
 			var toRemove = new List<ActionButton>();
-			foreach(var button in _layout.Children)
+			foreach(var button in _buttonsLayout.Children)
 			{				
-				if (button == _mainButton)
-					continue;
-				
 				var ac = button as ActionButton;
 				ac.OnClicked -= HandleButtonClicked;
 				toRemove.Add(ac);
 			}
 
 			foreach(var button in toRemove)
-				_layout.Children.Remove(button);
+				_buttonsLayout.Children.Remove(button);
 
-			foreach(var button in Buttons)
-			{
-				if (!button.IsEnabled)
-					continue;
-				
-				button.Opacity = 0.0;
-				button.OnClicked += HandleButtonClicked;
-				AddButtonToLayout (button, _layout);
-			}				
+			_buttonsLayout.ForceLayout ();
 		}
 
 		/// <summary>
@@ -137,32 +145,34 @@ namespace NControl.Controls
 		/// <summary>
 		/// Hides the buttons.
 		/// </summary>
-		private void HideButtons ()
+		private async Task HideButtonsAsync ()
 		{
-			Task.Run (() => 
-				Device.BeginInvokeOnMainThread(async () => {
+			var tasks = new List<Task>();
+			foreach (var button in Buttons) {						
+				button.HasShadow = false;
+				tasks.Add(button.TranslateTo (0.0, 0.0, easing: Easing.CubicInOut));
+			}
 
-					var tasks = new List<Task>();
-					foreach (var button in Buttons) {						
-						button.HasShadow = false;
-						tasks.Add(button.TranslateTo (0.0, 0.0, easing: Easing.CubicInOut));
-					}
+			await Task.WhenAll(tasks);
 
-					await Task.WhenAll(tasks);
+			tasks.Clear ();
+			foreach (var button in Buttons) {						
+				tasks.Add (button.FadeTo (0.0, 350, Easing.CubicInOut));
+			}
 
-					foreach (var button in Buttons) {						
-						button.FadeTo (0.0, 150,Easing.CubicInOut);
-					}
-				})
-			);				
+			await Task.WhenAll(tasks);
+
+			RemoveButtons ();
 		}
 
 		/// <summary>
 		/// Shows the buttons.
 		/// </summary>
-		private void ShowButtons ()
+		private async Task ShowButtonsAsync ()
 		{
-			UpdateButtons ();
+			AddButtons ();
+
+			var tasks = new List<Task>();
 
 			var c = 1;
 
@@ -171,9 +181,11 @@ namespace NControl.Controls
 					continue;	
 				
 				button.HasShadow = true;
-				button.FadeTo(1.0, 100);
-				button.TranslateTo (0.0, -(16+40) * c++, easing: Easing.SpringIn);
-			}
+				tasks.Add (button.FadeTo (1.0, 50));
+				tasks.Add(button.TranslateTo (0.0, -(16+40) * c++, easing: Easing.SpringIn));
+			}			
+
+			await Task.WhenAll(tasks);
 		}
 
 		/// <summary>
@@ -184,7 +196,7 @@ namespace NControl.Controls
 		private void HandleButtonClicked(object sender, EventArgs args)
 		{
 			_mainButton.IsToggled = false;
-			HideButtons ();
+			HideButtonsAsync ();
 		}
 		#endregion
 

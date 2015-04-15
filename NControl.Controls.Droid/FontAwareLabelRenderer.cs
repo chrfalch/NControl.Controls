@@ -30,7 +30,10 @@ namespace NControl.Controls.Droid
 		{
 			base.OnElementPropertyChanged (sender, e);
 		
-			if(e.PropertyName == Label.FontFamilyProperty.PropertyName)
+			if(e.PropertyName == Label.FontFamilyProperty.PropertyName ||
+				e.PropertyName == Label.FontSizeProperty.PropertyName ||
+				e.PropertyName == Label.FontAttributesProperty.PropertyName ||
+				e.PropertyName == Label.TextProperty.PropertyName)
 				UpdateFont();
 		}
 

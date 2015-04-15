@@ -38,7 +38,7 @@ namespace NControl.Controls.Demo.FormsApp
 					new ActionButton{ ButtonColor = Color.FromHex("#CDDC39"), ButtonIcon = FontAwesomeLabel.FARoad},
 				}
 			};
-			layout.Children.Add(abex, () => new Rectangle(((layout.Width/4)*3)-(56/2), (layout.Height/2)-(56/2), 56, (layout.Height/4)-48));
+			layout.Children.Add(abex, () => new Rectangle(((layout.Width/4)*3)-(56/2), (layout.Height/2)-(200), 56, 250));
 		}
 	}
 }

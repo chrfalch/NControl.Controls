@@ -29,6 +29,7 @@ using System;
 using NControl.Abstractions;
 using Xamarin.Forms;
 using System.Windows.Input;
+using System.Collections.Generic;
 
 namespace NControl.Controls
 {
@@ -75,8 +76,8 @@ namespace NControl.Controls
 		/// Initializes a new instance of the <see cref="NControl.Controls.ActionButton"/> class.
 		/// </summary>
 		public ActionButton()
-		{	
-			var layout = new RelativeLayout ();
+		{            
+			var layout = new Grid{Padding = 0, ColumnSpacing = 0, RowSpacing = 0};
 
 			ButtonShadowElement = new NControlView{ 
 				DrawingFunction = (canvas, rect) => {
@@ -109,9 +110,9 @@ namespace NControl.Controls
 				FontSize = 14,
 			};
 
-			layout.Children.Add (ButtonShadowElement, () => layout.Bounds);
-			layout.Children.Add (ButtonElement, () => layout.Bounds);
-			layout.Children.Add (ButtonIconLabel, () => layout.Bounds);
+			layout.Children.Add (ButtonShadowElement);
+			layout.Children.Add (ButtonElement);
+			layout.Children.Add (ButtonIconLabel);
 
 			Content = layout;
 		}
@@ -287,12 +288,12 @@ namespace NControl.Controls
 		/// Toucheses the began.
 		/// </summary>
 		/// <param name="points">Points.</param>
-		public override void TouchesBegan (System.Collections.Generic.IEnumerable<NGraphics.Point> points)
+		public override bool TouchesBegan (System.Collections.Generic.IEnumerable<NGraphics.Point> points)
 		{
 			base.TouchesBegan (points);
 
 			if (!IsEnabled)
-				return;
+				return false;
 
 			ButtonElement.ScaleTo (1.15, 140, Easing.CubicInOut);
 
@@ -301,18 +302,20 @@ namespace NControl.Controls
 			ButtonShadowElement.TranslateTo (0.0, 3, 140, Easing.CubicInOut);
 			ButtonShadowElement.ScaleTo (1.2, 140, Easing.CubicInOut);
 			ButtonShadowElement.FadeTo (0.44, 140, Easing.CubicInOut);
+
+			return true;
 		}
 
 		/// <summary>
 		/// Toucheses the cancelled.
 		/// </summary>
 		/// <param name="points">Points.</param>
-		public override void TouchesCancelled (System.Collections.Generic.IEnumerable<NGraphics.Point> points)
+		public override bool TouchesCancelled (System.Collections.Generic.IEnumerable<NGraphics.Point> points)
 		{
 			base.TouchesCancelled (points);
 
 			if (!IsEnabled)
-				return;
+				return false;
 
 			if (Command != null && Command.CanExecute (CommandParameter))
 				Command.Execute (CommandParameter);			
@@ -327,18 +330,20 @@ namespace NControl.Controls
 
 			if (OnClicked != null)
 				OnClicked (this, EventArgs.Empty);
+
+			return true;
 		}
 
 		/// <summary>
 		/// Toucheses the ended.
 		/// </summary>
 		/// <param name="points">Points.</param>
-		public override void TouchesEnded (System.Collections.Generic.IEnumerable<NGraphics.Point> points)
+		public override bool TouchesEnded (System.Collections.Generic.IEnumerable<NGraphics.Point> points)
 		{
 			base.TouchesEnded (points);
 
 			if (!IsEnabled)
-				return;
+				return false;
 
 			if (Command != null && Command.CanExecute (CommandParameter))
 				Command.Execute (CommandParameter);
@@ -353,6 +358,8 @@ namespace NControl.Controls
 
 			if (OnClicked != null)
 				OnClicked (this, EventArgs.Empty);
+
+			return true;
 		}
 		#endregion
 	}

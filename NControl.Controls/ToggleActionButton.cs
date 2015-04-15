@@ -59,21 +59,22 @@ namespace NControl.Controls
 
 				SetValue (IsToggledProperty, value);
 
-				Task.Run ( () => 
+				Task.Run (() => 
 
 					Device.BeginInvokeOnMainThread(async () => {
-					if (!value) {
-						ButtonIcon = _orgIcon;
-						await ButtonIconLabel.RotateTo (0, 140, Easing.CubicInOut);
-					}
-					else 
-					{
-						_orgIcon = ButtonIcon;
-						ButtonIcon = FontAwesomeLabel.FAPlus;
-						await ButtonIconLabel.RotateTo (585, 140, Easing.CubicInOut);
-					}
 
-					_inToggle = false;
+						if (!value) {
+							ButtonIcon = FontAwesomeLabel.FAEllipsisH;
+							await ButtonIconLabel.RotateTo (0, 140, Easing.CubicInOut);
+						}
+						else 
+						{
+							//_orgIcon = ButtonIcon;
+							ButtonIcon = FontAwesomeLabel.FAPlus;
+							await ButtonIconLabel.RotateTo (585, 140, Easing.CubicInOut);
+						}
+
+						_inToggle = false;
 					})
 				);								
 			}
@@ -87,11 +88,16 @@ namespace NControl.Controls
 		/// Toucheses the began.
 		/// </summary>
 		/// <param name="points">Points.</param>
-		public override void TouchesBegan (System.Collections.Generic.IEnumerable<NGraphics.Point> points)
+		public override bool TouchesBegan (System.Collections.Generic.IEnumerable<NGraphics.Point> points)
 		{
 			base.TouchesBegan (points);
 
+			if (!IsEnabled)
+				return false;
+
 			IsToggled = !IsToggled;
+
+			return true;
 		}
 
 		#endregion
