@@ -183,13 +183,13 @@
       <HintPath>..\..\packages\WPtoolkit.4.2013.08.16\lib\wp8\Microsoft.Phone.Controls.Toolkit.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="NControl, Version=0.2.5579.23139, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="NControl, Version=0.2.5583.13122, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\NControl.0.3.3\lib\wp81\NControl.dll</HintPath>
+      <HintPath>..\..\packages\NControl.0.4.0\lib\wp81\NControl.dll</HintPath>
     </Reference>
-    <Reference Include="NControl.WP81, Version=0.2.5582.29041, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="NControl.WP81, Version=0.2.5583.13125, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\NControl.0.3.3\lib\wp81\NControl.WP81.dll</HintPath>
+      <HintPath>..\..\packages\NControl.0.4.0\lib\wp81\NControl.WP81.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="NGraphics">

@@ -64,12 +64,12 @@ namespace NControl.Controls
 					Device.BeginInvokeOnMainThread(async () => {
 
 						if (!value) {
-							ButtonIcon = FontAwesomeLabel.FAEllipsisH;
+							ButtonIcon = _orgIcon;
 							await ButtonIconLabel.RotateTo (0, 140, Easing.CubicInOut);
 						}
 						else 
 						{
-							//_orgIcon = ButtonIcon;
+							_orgIcon = ButtonIcon;
 							ButtonIcon = FontAwesomeLabel.FAPlus;
 							await ButtonIconLabel.RotateTo (585, 140, Easing.CubicInOut);
 						}

@@ -96,9 +96,7 @@ namespace NControl.Controls
 
 					// Draw button circle
 					rect.Inflate (new NGraphics.Size (-8));
-					canvas.DrawEllipse (rect, null, new NGraphics.SolidBrush( new NGraphics.Color(
-						ButtonColor.R, ButtonColor.G, ButtonColor.B, ButtonColor.A
-					)));
+					canvas.DrawEllipse (rect, null, new NGraphics.SolidBrush(ButtonColor.ToNColor()));
 				}
 			};
 

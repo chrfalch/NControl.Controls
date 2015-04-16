@@ -48,6 +48,8 @@ namespace NControl.Controls
 		/// </summary>
 		public ExpandableActionButton ()
 		{
+		    BackgroundColor = Color.Aqua;
+
 			// Set direction
 			Direction = ExpandDirection.Up;
 
