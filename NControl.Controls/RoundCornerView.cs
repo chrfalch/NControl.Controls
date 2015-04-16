@@ -157,11 +157,11 @@ namespace NControl.Controls
         {
             base.Draw(canvas, rect);
 
-            var backgroundBrush = new SolidBrush(new NGraphics.Color(BackgroundColor.R,
-                BackgroundColor.G, BackgroundColor.B, BackgroundColor.A));
-
-			var foregroundPen = new SolidBrush (new NGraphics.Color (BorderColor.R,
-				BorderColor.G, BorderColor.B, BorderColor.A));
+			var backgroundBrush = BackgroundColor == Xamarin.Forms.Color.Transparent ? 
+				null : new SolidBrush(BackgroundColor.ToNColor());
+			
+			var foregroundPen = BorderColor == Xamarin.Forms.Color.Transparent ? 
+				null : new Pen (BorderColor.ToNColor(), BorderWidth);
             
             var curveSize = CornerRadius;
             var width = rect.Width;
@@ -200,7 +200,7 @@ namespace NControl.Controls
 						new NGraphics.Point(curveSize, zero)
 					),
 					new ClosePath()
-				}, null, foregroundPen);
+				}, foregroundPen, backgroundBrush);
 
 				width -= BorderWidth;
 				height -= BorderWidth;

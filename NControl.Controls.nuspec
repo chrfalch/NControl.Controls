@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
    <metadata minClientVersion="2.8.1">
        <id>NControl.Controls</id>
-    <version>0.2.1</version>
+    <version>0.3</version>
     <authors>Christian Falch</authors>
     <owners>Christian Falch</owners>
     <licenseUrl>https://github.com/chrfalch/NControl.Controls/blob/master/LICENSE.md</licenseUrl>
@@ -30,10 +30,10 @@
      <file src="NControl.Controls.Droid/bin/Release/NControl.Controls.Droid.dll" target="lib\MonoAndroid10\NControl.Controls.Droid.dll" />
      <file src="NControl.Controls.Droid/bin/Release/NControl.Controls.dll" target="lib\MonoAndroid10\NControl.Controls.dll" />
 
-     <!--Xamarin.WP81-->
+     <!--Xamarin.WP81
     <file src="NControl.Controls.WP81/Bin/Release/NControl.Controls.WP81.dll" target="lib\wp81\NControl.Controls.WP81.dll" />
     <file src="NControl.Controls.WP81/Bin/Release/NControl.Controls.dll" target="lib\wp81\NControl.Controls.dll" />
-
+    -->
      <!--Xamarin.iOSUnified-->
      <file src="NControl.Controls.iOS/bin/Release/NControl.Controls.iOS.dll" target="lib\Xamarin.iOS10\NControl.Controls.iOS.dll" />
      <file src="NControl.Controls.iOS/bin/Release/NControl.Controls.dll" target="lib\Xamarin.iOS10\NControl.Controls.dll" />
