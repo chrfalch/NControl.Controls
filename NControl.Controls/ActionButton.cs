@@ -85,12 +85,26 @@ namespace NControl.Controls
 					// Draw shadow
 					rect.Inflate(new NGraphics.Size(-4));
 					rect.Y += 4;
-					canvas.DrawEllipse (rect, null, new NGraphics.RadialGradientBrush (
-						new NGraphics.Point(rect.Width/2, (rect.Height/2) + (rect.Y/2)),
-						new NGraphics.Size(rect.Width, rect.Height),
-						new NGraphics.Color(0, 0, 0, 200), NGraphics.Colors.Clear
-					));						
-				}
+
+					Device.OnPlatform(
+
+						//iOS
+						() => canvas.DrawEllipse (rect, null, new NGraphics.RadialGradientBrush (
+							new NGraphics.Color(0, 0, 0, 200), NGraphics.Colors.Clear)),
+						
+						// Android
+						() => canvas.DrawEllipse (rect, null, new NGraphics.RadialGradientBrush (
+							new NGraphics.Point(rect.Width/2, (rect.Height/2)+2),
+							new NGraphics.Size(rect.Width, rect.Height),
+							new NGraphics.Color(0, 0, 0, 200), NGraphics.Colors.Clear)),
+						
+						// WP
+						() => canvas.DrawEllipse (rect, null, new NGraphics.RadialGradientBrush (
+							new NGraphics.Color(0, 0, 0, 200), NGraphics.Colors.Clear)),
+						
+						null
+					);
+				},
 			};
 
 			ButtonElement = new NControlView{ 

@@ -112,6 +112,8 @@ namespace NControl.Controls
 				HorizontalOptions = LayoutOptions.FillAndExpand,
 			};
 				
+			_textEntry.SetBinding (Entry.TextProperty, "Text", BindingMode.TwoWay);
+			_textEntry.BindingContext = this;
             _textEntry.Focused += (object sender, FocusEventArgs e) =>
             {
                 UpdatePlaceholderColor();
@@ -212,6 +214,7 @@ namespace NControl.Controls
 			yAnimation.Commit (_floatingLabel, "AnimateLabel");
 
 			UpdatePlaceholderColor ();
+
 		}
 
 		#endregion
@@ -281,10 +284,8 @@ namespace NControl.Controls
 		public string Text
 		{
             get { return (string)GetValue (TextProperty); }
-            set 
-            { 
-                SetValue (TextProperty, value); 
-                _textEntry.Text = value;
+            set { 
+                SetValue (TextProperty, value);                 
             }
 		}
 
