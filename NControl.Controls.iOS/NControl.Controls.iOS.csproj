@@ -63,7 +63,6 @@
     <Compile Include="NControls.cs" />
     <Compile Include="ExtendedEntryRenderer.cs" />
     <Compile Include="BlurViewRenderer.cs" />
-    <Compile Include="NavigationForCardRenderer.cs" />
     <Compile Include="PageForCardRenderer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />

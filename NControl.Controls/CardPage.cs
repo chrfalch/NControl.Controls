@@ -20,12 +20,22 @@ namespace NControl.Controls
 		/// <summary>
 		/// The overlay.
 		/// </summary>
-		readonly private RoundCornerView _contentView;
+		private readonly RoundCornerView _contentView;
 
 		/// <summary>
 		/// The shadow view.
 		/// </summary>
-		readonly private NControlView _shadowView;
+		private readonly NControlView _shadowView;
+
+		/// <summary>
+		/// The presenting layout.
+		/// </summary>
+		private RelativeLayout _presentingLayout;
+
+		/// <summary>
+		/// The overlay.
+		/// </summary>
+		private NControlView _overlay;
 
 		#endregion
 
@@ -35,6 +45,8 @@ namespace NControl.Controls
 		public CardPage()
 		{						
 			BackgroundColor = Color.Transparent;
+			NavigationPage.SetHasNavigationBar (this, false);
+			NavigationPage.SetHasBackButton (this, false);
 
 			_layout = new RelativeLayout ();
 
@@ -52,9 +64,7 @@ namespace NControl.Controls
 				BackgroundColor = Color.White,
 				CornerRadius = 4,
 			};
-
-			_contentView.OnTouchesBegan += (sender, e) => PopCardAsync();
-
+				
 			_layout.Children.Add(_shadowView, () => new Rectangle (CardInsets.X, CardInsets.Y, 
 					(_layout.Width+2) - CardInsets.Width, (_layout.Height+1) - CardInsets.Height));
 				
@@ -63,24 +73,46 @@ namespace NControl.Controls
 
 		}
 
-//		/// <summary>
-//		/// Raises the appearing event.
-//		/// </summary>
-//		protected override void OnAppearing ()
-//		{
-//			base.OnAppearing ();
-//
-//			AnimateStartForCard (_contentView);
-//		}
-//
+		#region Public Members
+
+		/// <summary>
+		/// Pushs the card async.
+		/// </summary>
+		/// <returns>The card async.</returns>
+		public async Task ShowCardPageAsync(RelativeLayout relativeLayout)
+		{
+			if (_presentingLayout != null)
+				await HideCardPageAsync ();
+
+			// Overlay
+			_overlay = new NControlView{
+				BackgroundColor = Color.Black,
+				Opacity = 0.2,
+			};
+
+			relativeLayout.Children.Add (_overlay, ()=> relativeLayout.Bounds);
+			relativeLayout.Children.Add (_layout, ()=> relativeLayout.Bounds);
+
+			_presentingLayout = relativeLayout;
+		}
+
 		/// <summary>
 		/// Pops the card.
 		/// </summary>
-		public async Task PopCardAsync()
+		public async Task HideCardPageAsync()
 		{
-			await Navigation.PopAsync (true);
+			if (_presentingLayout == null)
+				return;
+
+			_presentingLayout.Children.Remove (_layout);
+			_presentingLayout.Children.Remove (_overlay);
+
+			_presentingLayout = null;
+			_overlay = null;
 		}
-//
+
+		#endregion
+
 		#region Properties
 
 		/// <summary>
@@ -106,33 +138,6 @@ namespace NControl.Controls
 			get { return new Rectangle (40, 100, 80, 200); }
 		}
 
-//		/// <summary>
-//		/// Sets the start translation for the card. By default
-//		/// only the opacity is set
-//		/// </summary>
-//		public virtual void SetupStartStateForCard(ContentView card)
-//		{
-//			card.Opacity = 0.0;
-//		}
-//
-//		/// <summary>
-//		/// Animates the start for card.
-//		/// </summary>
-//		/// <param name="card">Card.</param>
-//		public virtual void AnimateStartForCard(ContentView card)
-//		{
-//			card.Animate ("FadeIn", (d) => card.Opacity = d, 0.0, 1.0, 350, easing: Easing.CubicInOut);
-//		}
-//
-//		/// <summary>
-//		/// Animates the end for card.
-//		/// </summary>
-//		/// <param name="card">Card.</param>
-//		public virtual void AnimateEndForCard(ContentView card)
-//		{
-//			card.Animate ("FadeOut", (d) => card.Opacity = d, 1.0, 0.0, 350, easing: Easing.CubicInOut);
-//		}
-//
 		#endregion
 	}
 }

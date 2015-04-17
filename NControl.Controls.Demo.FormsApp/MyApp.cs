@@ -28,9 +28,12 @@ namespace NControl.Controls.Demo.FormsApp
 			listView.ItemTemplate = new DataTemplate (typeof(TextCell));
 			listView.ItemTemplate.SetBinding (TextCell.TextProperty, "Title");
 
+			var contentLayout = new RelativeLayout ();
+			contentLayout.Children.Add (listView, () => contentLayout.Bounds);
+
 			var startPage = new ContentPage {
 				Title = "NControl.Controls",
-                Content = listView                
+				Content = contentLayout              
 			};
 
 			listView.ItemSelected += async (sender, e) => {
@@ -39,7 +42,10 @@ namespace NControl.Controls.Demo.FormsApp
 					return;
 				
 				// Show page
-				await startPage.Navigation.PushAsync(listView.SelectedItem as Page);					
+				if(listView.SelectedItem is CardPage)
+					await (listView.SelectedItem as CardPage).ShowCardPageAsync(contentLayout);
+				else
+					await startPage.Navigation.PushAsync(listView.SelectedItem as Page);					
 			};
 
 			listView.ItemTapped += (sender, e) => listView.SelectedItem = null;
