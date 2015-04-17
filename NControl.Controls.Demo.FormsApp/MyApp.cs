@@ -19,6 +19,7 @@ namespace NControl.Controls.Demo.FormsApp
 				new ActionButtonPage(),
 				new CardPageDemo(),
 				new BlurViewPage(),
+				new PagingViewPage(),
 			};
 
 			var listView = new ListView {
