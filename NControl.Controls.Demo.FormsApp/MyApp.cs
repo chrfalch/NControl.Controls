@@ -39,12 +39,7 @@ namespace NControl.Controls.Demo.FormsApp
 					return;
 				
 				// Show page
-				if(listView.SelectedItem is CardPageDemo)
-					Device.OnPlatform(
-						async () => await startPage.Navigation.PushModalAsync(listView.SelectedItem as ContentPage, false),
-						null, null, async ()=> await startPage.Navigation.PushAsync(listView.SelectedItem as ContentPage));					
-				else
-					await startPage.Navigation.PushAsync(listView.SelectedItem as ContentPage);					
+				await startPage.Navigation.PushAsync(listView.SelectedItem as Page);					
 			};
 
 			listView.ItemTapped += (sender, e) => listView.SelectedItem = null;
