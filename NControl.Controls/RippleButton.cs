@@ -3,6 +3,7 @@ using Xamarin.Forms;
 using NControl.Abstractions;
 using System.Linq;
 using System.Windows.Input;
+using System.Threading.Tasks;
 
 namespace NControl.Controls
 {
@@ -66,13 +67,27 @@ namespace NControl.Controls
 			_ellipse.TranslationY = -((layout.Height/2)-firstPoint.Y);
 		
 			_ellipse.ScaleTo (8);
-		 	_ellipse.FadeTo (0.0);
+			_ellipse.FadeTo (0.0);
 
+			return base.TouchesBegan (points);
+		}
+
+		public override bool TouchesEnded (System.Collections.Generic.IEnumerable<NGraphics.Point> points)
+		{
 			// Execute command
 			if (Command != null && Command.CanExecute (CommandParameter))
 				Command.Execute (CommandParameter);
 			
-			return base.TouchesBegan (points);
+			return base.TouchesEnded (points);
+		}
+
+		public override bool TouchesCancelled (System.Collections.Generic.IEnumerable<NGraphics.Point> points)
+		{
+			// Execute command
+			if (Command != null && Command.CanExecute (CommandParameter))
+				Command.Execute (CommandParameter);
+			
+			return base.TouchesCancelled (points);
 		}
 
 		/// <summary>

@@ -59,24 +59,25 @@ namespace NControl.Controls
 
 				SetValue (IsToggledProperty, value);
 
-				Task.Run (() => 
+                //Task.Run (() => 
 
-					Device.BeginInvokeOnMainThread(async () => {
+                //    Device.BeginInvokeOnMainThread(async () => {
+                System.Diagnostics.Debug.WriteLine("Toggle " + value);
 
 						if (!value) {
 							ButtonIcon = _orgIcon;
-							await ButtonIconLabel.RotateTo (0, 140, Easing.CubicInOut);
+							ButtonIconLabel.RotateTo (0, 140, Easing.CubicInOut);
 						}
 						else 
 						{
 							_orgIcon = ButtonIcon;
 							ButtonIcon = FontAwesomeLabel.FAPlus;
-							await ButtonIconLabel.RotateTo (585, 140, Easing.CubicInOut);
+							ButtonIconLabel.RotateTo (585, 140, Easing.CubicInOut);
 						}
 
 						_inToggle = false;
-					})
-				);								
+                //    })
+                //);								
 			}
 		}
 
@@ -91,6 +92,8 @@ namespace NControl.Controls
 		public override bool TouchesBegan (System.Collections.Generic.IEnumerable<NGraphics.Point> points)
 		{
 			base.TouchesBegan (points);
+
+            System.Diagnostics.Debug.WriteLine("TouchesBegan");
 
 			if (!IsEnabled)
 				return false;

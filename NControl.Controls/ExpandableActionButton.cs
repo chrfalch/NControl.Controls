@@ -30,6 +30,11 @@ namespace NControl.Controls
 		/// </summary>
 		private bool _buttonsAdded = false;
 
+        /// <summary>
+        /// Flag showing submenu buttons
+        /// </summary>
+	    private bool _isShowingSubmenu = false;
+
 		/// <summary>
 		/// The main button.
 		/// </summary>
@@ -98,8 +103,12 @@ namespace NControl.Controls
 			foreach(var button in Buttons)
 			{
 				button.Opacity = 0.0;
-				button.OnClicked += async (sender, e) => {
-					_mainButton.IsToggled = false;
+				button.OnClicked += async (sender, e) =>
+				{
+                    if (!_isShowingSubmenu)
+				        return;
+
+                    _mainButton.IsToggled = false;
 					await HideButtonsAsync ();
 				};
 				AddButtonToLayout (button, _buttonsLayout);
@@ -137,6 +146,11 @@ namespace NControl.Controls
 		/// </summary>
 		private async Task HideButtonsAsync ()
 		{
+		    if (!_isShowingSubmenu)
+		        return;
+
+		    _isShowingSubmenu = false;
+
 			var tasks = new List<Task>();
 			foreach (var button in Buttons) {						
 				button.HasShadow = false;
@@ -160,6 +174,9 @@ namespace NControl.Controls
 		{
 			AddButtons ();
 
+		    if (_isShowingSubmenu)
+		        return;
+
 			var tasks = new List<Task>();
 
 			var c = 1;
@@ -174,10 +191,12 @@ namespace NControl.Controls
 				
 				button.HasShadow = true;
 				tasks.Add (button.FadeTo (1.0, 50));
-				tasks.Add(button.TranslateTo (0.0, -(16+40) * c++, easing: Easing.SpringIn));
+				tasks.Add(button.TranslateTo (0.0, -(ButtonPadding+_mainButton.Height) * c++, easing: Easing.SpringIn));
 			}			
 
 			await Task.WhenAll(tasks);
+
+            _isShowingSubmenu = true;
 		}
 
 		#endregion
@@ -193,6 +212,26 @@ namespace NControl.Controls
 			set;
 		}
 
+		/// <summary>
+		/// The ButtonPadding property.
+		/// </summary>
+		public static BindableProperty ButtonPaddingProperty = 
+			BindableProperty.Create<ExpandableActionButton, double> (p => p.ButtonPadding, 0,
+				propertyChanged: (bindable, oldValue, newValue) => {
+					var ctrl = (ExpandableActionButton)bindable;
+					ctrl.ButtonPadding = newValue;
+				});
+
+		/// <summary>
+		/// Gets or sets the ButtonPadding of the ExpandableActionButton instance.
+		/// </summary>
+		/// <value>The color of the buton.</value>
+		public double ButtonPadding {
+			get{ return (double)GetValue (ButtonPaddingProperty); }
+			set {
+				SetValue (ButtonPaddingProperty, value);
+			}
+		}
 		/// <summary>
 		/// The button color property.
 		/// </summary>

@@ -82,10 +82,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="CardPageHelper.cs" />
     <Compile Include="ExtendedEntryRenderer.cs" />
     <Compile Include="NControls.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="FontAwareLabelRenderer.cs" />
+    <Compile Include="RoundCornerViewRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

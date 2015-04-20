@@ -15,9 +15,7 @@ namespace NControl.Controls.iOS
 	{
 		public PageForCardRenderer ()
 		{
-		}
-			
-
+		}			
 	}
 }
 
