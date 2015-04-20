@@ -26,6 +26,11 @@ namespace NControl.Controls
 		#region Private Members
 
 		/// <summary>
+		/// The buttons added.
+		/// </summary>
+		private bool _buttonsAdded = false;
+
+		/// <summary>
 		/// The main button.
 		/// </summary>
 		private readonly ToggleActionButton _mainButton;
@@ -84,40 +89,25 @@ namespace NControl.Controls
 		/// </summary>
 		private void AddButtons()
 		{
+			if (_buttonsAdded)
+				return;
+
+			_buttonsAdded = true;
+
 			// Update buttons
 			foreach(var button in Buttons)
 			{
-				if (!button.IsEnabled)
-					continue;
-
 				button.Opacity = 0.0;
-				button.OnClicked += HandleButtonClicked;
+				button.OnClicked += async (sender, e) => {
+					_mainButton.IsToggled = false;
+					await HideButtonsAsync ();
+				};
 				AddButtonToLayout (button, _buttonsLayout);
 			}				
 
 			_buttonsLayout.ForceLayout ();
 		}
-
-		/// <summary>
-		/// Removes buttons.
-		/// </summary>
-		private void RemoveButtons()
-		{
-			// Update buttons
-			var toRemove = new List<ActionButton>();
-			foreach(var button in _buttonsLayout.Children)
-			{				
-				var ac = button as ActionButton;
-				ac.OnClicked -= HandleButtonClicked;
-				toRemove.Add(ac);
-			}
-
-			foreach(var button in toRemove)
-				_buttonsLayout.Children.Remove(button);
-
-			_buttonsLayout.ForceLayout ();
-		}
-
+			
 		/// <summary>
 		/// Adds the main button to layout.
 		/// </summary>
@@ -161,8 +151,6 @@ namespace NControl.Controls
 			}
 
 			await Task.WhenAll(tasks);
-
-			RemoveButtons ();
 		}
 
 		/// <summary>
@@ -176,9 +164,13 @@ namespace NControl.Controls
 
 			var c = 1;
 
-			foreach (var button in Buttons) {
-				if (!button.IsEnabled)
-					continue;	
+			foreach (var button in Buttons) 
+			{				
+				button.Opacity = 0.0;
+
+				if ((button.Command != null &&
+				    button.Command.CanExecute (button.CommandParameter) == false)) 
+					continue;
 				
 				button.HasShadow = true;
 				tasks.Add (button.FadeTo (1.0, 50));
@@ -188,16 +180,6 @@ namespace NControl.Controls
 			await Task.WhenAll(tasks);
 		}
 
-		/// <summary>
-		/// Handles the button clicked.
-		/// </summary>
-		/// <param name="sender">Sender.</param>
-		/// <param name="args">Arguments.</param>
-		private void HandleButtonClicked(object sender, EventArgs args)
-		{
-			_mainButton.IsToggled = false;
-			HideButtonsAsync ();
-		}
 		#endregion
 
 		#region Properties

@@ -5,7 +5,6 @@ using Xamarin.Forms;
 using NControl.Controls.Droid;
 
 [assembly: ExportRenderer(typeof(ExtendedEntry), typeof(ExtendedEntryRenderer))]
-
 namespace NControl.Controls.Droid
 {
 	public class ExtendedEntryRenderer: EntryRenderer

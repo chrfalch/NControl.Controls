@@ -76,7 +76,7 @@ namespace NControl.Controls
 		/// The Page property.
 		/// </summary>
 		public static BindableProperty PageProperty = 
-			BindableProperty.Create<PagingView, int> (p => p.Page, 0,
+			BindableProperty.Create<PagingView, int> (p => p.Page, 0, BindingMode.TwoWay,
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (PagingView)bindable;
 					ctrl.Page = newValue;

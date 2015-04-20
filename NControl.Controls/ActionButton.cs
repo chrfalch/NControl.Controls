@@ -138,7 +138,7 @@ namespace NControl.Controls
 		/// </summary>
 		public static BindableProperty CommandProperty = 
 			BindableProperty.Create<ActionButton, ICommand> (p => p.Command, null,
-				BindingMode.Default, null, (bindable, oldValue, newValue) => {
+				BindingMode.TwoWay, null, (bindable, oldValue, newValue) => {
 					var ctrl = (ActionButton)bindable;
 					ctrl.Command = newValue;
 				});
@@ -168,7 +168,7 @@ namespace NControl.Controls
 		/// </summary>
 		public static BindableProperty CommandParameterProperty = 
 			BindableProperty.Create<ActionButton, object> (p => p.CommandParameter, null,
-				BindingMode.Default, null, (bindable, oldValue, newValue) => {
+				BindingMode.TwoWay, null, (bindable, oldValue, newValue) => {
 					var ctrl = (ActionButton)bindable;
 					ctrl.CommandParameter = newValue;
 				});
@@ -190,7 +190,7 @@ namespace NControl.Controls
 		/// </summary>
 		public static BindableProperty ButtonColorProperty = 
 			BindableProperty.Create<ActionButton, Color> (p => p.ButtonColor, Color.Gray,
-				BindingMode.Default, null, (bindable, oldValue, newValue) => {
+				BindingMode.TwoWay, null, (bindable, oldValue, newValue) => {
 					var ctrl = (ActionButton)bindable;
 					ctrl.ButtonColor = newValue;
 				});
@@ -213,7 +213,7 @@ namespace NControl.Controls
 		/// </summary>
 		public static BindableProperty ButtonIconProperty = 
 			BindableProperty.Create<ActionButton, string> (p => p.ButtonIcon, FontAwesomeLabel.FAPlus,
-				BindingMode.Default, null, (bindable, oldValue, newValue) => {
+				BindingMode.TwoWay, null, (bindable, oldValue, newValue) => {
 					var ctrl = (ActionButton)bindable;
 					ctrl.ButtonIcon = newValue;
 				});
@@ -236,7 +236,7 @@ namespace NControl.Controls
 		/// </summary>
 		public static BindableProperty HasShadowProperty = 
 			BindableProperty.Create<ActionButton, bool> (p => p.HasShadow, true,
-				BindingMode.Default, null, (bindable, oldValue, newValue) => {
+				BindingMode.TwoWay, null, (bindable, oldValue, newValue) => {
 					var ctrl = (ActionButton)bindable;
 					ctrl.HasShadow = newValue;
 				});
@@ -263,7 +263,7 @@ namespace NControl.Controls
 		/// </summary>
 		public static BindableProperty ButtonIconColorProperty = 
 			BindableProperty.Create<ActionButton, Color> (p => p.ButtonColor, Color.White,
-				BindingMode.Default, null, (bindable, oldValue, newValue) => {
+				BindingMode.TwoWay, null, (bindable, oldValue, newValue) => {
 					var ctrl = (ActionButton)bindable;
 					ctrl.ButtonIconColor = newValue;
 				});

@@ -271,7 +271,7 @@ namespace NControl.Controls
 		/// </summary>
 		public static BindableProperty TextProperty = 
 			BindableProperty.Create<FloatingLabelControl, string>(p => p.Text, string.Empty,
-                propertyChanged: (bindable, oldValue, newValue) =>{
+				BindingMode.TwoWay, propertyChanged: (bindable, oldValue, newValue) =>{
                 var ctrl = (FloatingLabelControl)bindable;
                 ctrl.Text = newValue;
             });

@@ -17,10 +17,13 @@ namespace NControl.Controls.Demo.FormsApp
 				new FontAwesomeLabelPage(),
 				new FloatingLabelPage(),
 				new ActionButtonPage(),
-				new CardPageDemo(),
+				new CardPageDemo{BindingContext = new ViewModel("CardPage")},
 				new BlurViewPage(),
 				new PagingViewPage(),
+				new RippleButtonPage(),
 			};
+
+			BindingContext = new ViewModel("Should say CardPage");
 
 			var listView = new ListView {
 				ItemsSource = demoPageList,
@@ -44,7 +47,7 @@ namespace NControl.Controls.Demo.FormsApp
 				
 				// Show page
 				if(listView.SelectedItem is CardPage)
-					await (listView.SelectedItem as CardPage).ShowCardPageAsync(contentLayout);
+					await (listView.SelectedItem as CardPage).ShowCardPageAsync();
 				else
 					await startPage.Navigation.PushAsync(listView.SelectedItem as Page);					
 			};
@@ -68,6 +71,24 @@ namespace NControl.Controls.Demo.FormsApp
 		protected override void OnResume ()
 		{
 			// Handle when your app resumes
+		}
+	}
+
+	public class ViewModel
+	{
+		public ViewModel(string title)
+		{
+			Title = title;
+		}
+
+		public string Title {
+			get;
+			private set;
+		}
+
+		public override string ToString ()
+		{
+			return string.Format ("[ViewModel: Title={0}]", Title);
 		}
 	}
 }

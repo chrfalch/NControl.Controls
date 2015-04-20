@@ -75,6 +75,9 @@
     <Compile Include="FontAwareLabelRenderer.cs" />
     <Compile Include="FontAwareButtonRenderer.cs" />
     <Compile Include="BlurImageViewRenderer.cs" />
+    <Compile Include="CardPageHelper.cs" />
+    <Compile Include="CardPageRenderer.cs" />
+    <Compile Include="RoundCornerViewRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
