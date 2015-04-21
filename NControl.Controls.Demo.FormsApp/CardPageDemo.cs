@@ -12,7 +12,7 @@ namespace NControl.Controls.Demo.FormsApp
 			RequestedWidth = 250;
 
 			var button = new Button{Text = "Close"};
-			button.Clicked += async (sender, e) => await HideCardPageAsync();
+			button.Clicked += async (sender, e) => await HideCardPageAsync(Application.Current.MainPage);
 
 			var label = new Label {
 				XAlign = TextAlignment.Center,

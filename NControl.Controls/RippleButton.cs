@@ -26,28 +26,27 @@ namespace NControl.Controls
 			Content = layout;
 			IsClippedToBounds = true;
 
+			_ellipse = new NControlView {
+				BackgroundColor = Color.Transparent,
+				DrawingFunction = (canvas, rect) =>{
+					canvas.DrawEllipse(rect, null, new NGraphics.SolidBrush(RippleColor.ToNColor()));
+				},
+				Scale = 0.0,
+			};				
+
+			layout.Children.Add (_ellipse, () => new Rectangle (
+				(layout.Width / 2) - (Math.Min(Math.Min (layout.Width, layout.Height), 44) / 2),
+				(layout.Height / 2) - (Math.Min(Math.Min (layout.Width, layout.Height), 44) / 2),
+				Math.Min(Math.Min (layout.Width, layout.Height), 44), 
+				Math.Min(Math.Min (layout.Width, layout.Height), 44)));
+		
 			_label = new Label{ 
 				BackgroundColor = Color.Transparent,
 				XAlign = TextAlignment.Center,
 				YAlign = TextAlignment.Center,
 			};
 
-			_ellipse = new NControlView {
-				DrawingFunction = (canvas, rect) =>{
-					canvas.DrawEllipse(rect, null, new NGraphics.SolidBrush(RippleColor.ToNColor()));
-				},
-				Scale = 0.0,
-			};
-					
-
 			layout.Children.Add (_label, ()=> layout.Bounds);
-
-			layout.Children.Add (_ellipse, () => new Rectangle (
-				(layout.Width / 2) - (Math.Min (layout.Width, layout.Height) / 2),
-				(layout.Height / 2) - (Math.Min (layout.Bounds.Width, layout.Bounds.Height) / 2),
-				Math.Min (layout.Bounds.Width, layout.Bounds.Height),
-				Math.Min (layout.Bounds.Width, layout.Bounds.Height)));
-		
 		}		
 
 		/// <summary>
@@ -66,35 +65,23 @@ namespace NControl.Controls
 			_ellipse.TranslationX = -((layout.Width/2)-firstPoint.X);
 			_ellipse.TranslationY = -((layout.Height/2)-firstPoint.Y);
 		
-			_ellipse.ScaleTo (8);
-			_ellipse.FadeTo (0.0);
+			Device.BeginInvokeOnMainThread(async () => {				
+				await _ellipse.ScaleTo (8, easing:Easing.CubicInOut);
+				_ellipse.Opacity = 0;
+			});
 
+			// Execute command
+			if (Command != null && Command.CanExecute (CommandParameter))
+				Command.Execute (CommandParameter);
+			
 			return base.TouchesBegan (points);
-		}
-
-		public override bool TouchesEnded (System.Collections.Generic.IEnumerable<NGraphics.Point> points)
-		{
-			// Execute command
-			if (Command != null && Command.CanExecute (CommandParameter))
-				Command.Execute (CommandParameter);
-			
-			return base.TouchesEnded (points);
-		}
-
-		public override bool TouchesCancelled (System.Collections.Generic.IEnumerable<NGraphics.Point> points)
-		{
-			// Execute command
-			if (Command != null && Command.CanExecute (CommandParameter))
-				Command.Execute (CommandParameter);
-			
-			return base.TouchesCancelled (points);
 		}
 
 		/// <summary>
 		/// The RippleColor property.
 		/// </summary>
 		public static BindableProperty RippleColorProperty = 
-			BindableProperty.Create<RippleButton, Color> (p => p.RippleColor, Color.Gray,
+			BindableProperty.Create<RippleButton, Color> (p => p.RippleColor, Color.FromHex("#CCCCCC"),
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (RippleButton)bindable;
 					ctrl.RippleColor = newValue;

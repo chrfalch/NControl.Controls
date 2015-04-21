@@ -6,7 +6,6 @@ namespace NControl.Controls.Demo.FormsApp
 	public class ActionButtonPage: ContentPage
 	{
 		private Command _command;
-		private bool _isToggled;
 
 		public ActionButtonPage ()
 		{

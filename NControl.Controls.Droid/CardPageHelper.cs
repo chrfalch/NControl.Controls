@@ -22,45 +22,6 @@ namespace NControl.Controls.Droid
 		#region ICardPageHelper implementation
 
 		/// <summary>
-		/// Shows the async.
-		/// </summary>
-		/// <returns>The async.</returns>
-		/// <param name="card">Card.</param>
-		public Task ShowAsync (CardPage card)
-		{			
-			return Xamarin.Forms.Application.Current.MainPage.Navigation.PushModalAsync (card, false);
-		}
-
-		/// <summary>
-		/// Hides the async.
-		/// </summary>
-		/// <returns>The async.</returns>
-		/// <param name="card">Card.</param>
-		public Task HideAsync (CardPage card)
-		{
-			return CloseAsync (card);
-		}
-
-		/// <summary>
-		/// Disposes the card.
-		/// </summary>
-		/// <param name="card">Card.</param>
-		public async Task CloseAsync (CardPage card)
-		{
-			await Xamarin.Forms.Application.Current.MainPage.Navigation.PopModalAsync (false);
-		}
-
-		/// <summary>
-		/// Shoulds the render chrome.
-		/// </summary>
-		/// <returns>true</returns>
-		/// <c>false</c>
-		public bool ShouldRenderChrome ()
-		{
-			return true;
-		}
-
-		/// <summary>
 		/// Gets the size of the screen.
 		/// </summary>
 		/// <returns>The screen size.</returns>

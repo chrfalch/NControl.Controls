@@ -47,7 +47,7 @@ namespace NControl.Controls.Demo.FormsApp
 				
 				// Show page
 				if(listView.SelectedItem is CardPage)
-					await (listView.SelectedItem as CardPage).ShowCardPageAsync();
+					await (listView.SelectedItem as CardPage).ShowCardPageAsync(Application.Current.MainPage);
 				else
 					await startPage.Navigation.PushAsync(listView.SelectedItem as Page);					
 			};

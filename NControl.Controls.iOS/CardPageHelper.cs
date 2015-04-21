@@ -29,7 +29,7 @@ namespace NControl.Controls.iOS
 		/// </summary>
 		/// <returns>The async.</returns>
 		/// <param name="card">Card.</param>
-		public async Task ShowAsync (CardPage card)
+		public async Task ShowAsync (CardPage card, Page mainPage)
 		{			
 			var window = UIApplication.SharedApplication.KeyWindow;
 
@@ -75,7 +75,7 @@ namespace NControl.Controls.iOS
 		/// </summary>
 		/// <returns>The async.</returns>
 		/// <param name="card">Card.</param>
-		public async Task HideAsync (CardPage card)
+		public async Task HideAsync (CardPage card, Page mainPage)
 		{
 			var window = UIApplication.SharedApplication.KeyWindow;
 
@@ -96,26 +96,6 @@ namespace NControl.Controls.iOS
 
 		}
 			
-		/// <summary>
-		/// Disposes the card.
-		/// </summary>
-		/// <param name="card">Card.</param>
-		public async Task CloseAsync (CardPage card)
-		{
-			await HideAsync (card);
-			_presentedCardPageContexts.Remove (card);
-		}
-
-		/// <summary>
-		/// Shoulds the render chrome.
-		/// </summary>
-		/// <returns>true</returns>
-		/// <c>false</c>
-		public bool ShouldRenderChrome ()
-		{
-			return false;
-		}
-
 		/// <summary>
 		/// Gets the size of the screen.
 		/// </summary>

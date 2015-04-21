@@ -8,7 +8,7 @@ namespace NControl.Controls
 	/// <summary>
 	/// Card page. Based on custom transitions 
 	/// </summary>
-	public class CardPage: ContentPage, IDisposable
+	public class CardPage: ContentPage
 	{				
 		#region Private Members
 
@@ -40,7 +40,7 @@ namespace NControl.Controls
 		/// <summary>
 		/// The overlay.
 		/// </summary>
-		private readonly RoundCornerView _contentView;
+		private readonly NControlView _contentView;
 
 		#endregion
 
@@ -51,18 +51,11 @@ namespace NControl.Controls
 		{					
 			_platformHelper = DependencyService.Get<ICardPageHelper> ();
 
-			CardPadding = new Thickness (40, 100, 80, 200);
+			CardPadding = new Thickness (40, 100, 40, 200);
 			BackgroundColor = Color.Transparent;
 
-			if (_platformHelper.ShouldRenderChrome ()) {
-				NavigationPage.SetHasNavigationBar (this, true);
-				NavigationPage.SetHasBackButton (this, false);
-			} 
-			else 
-			{
-				NavigationPage.SetHasNavigationBar (this, false);
-				NavigationPage.SetHasBackButton (this, false);
-			}
+			NavigationPage.SetHasNavigationBar (this, false);
+			NavigationPage.SetHasBackButton (this, false);
 
 			_layout = new RelativeLayout ();
 
@@ -74,34 +67,30 @@ namespace NControl.Controls
 				CornerRadius = 4,
 			};
 				
-			if (_platformHelper.ShouldRenderChrome ()) 
-			{
-				_overlay = new BoxView {
-					BackgroundColor = Color.Black,
-					Opacity = 0.2F,
-				};
+			_overlay = new BoxView {
+				BackgroundColor = Color.Black,
+				Opacity = 0.0F,
+			};
 
-				_layout.Children.Add (_overlay, () => _layout.Bounds);
-				_layout.Children.Add(_contentView,()=> new Rectangle (
-					CardPadding.Left,
-					CardPadding.Top, 
-					_layout.Width - (CardPadding.Right + CardPadding.Left), 
-					_layout.Height - (CardPadding.Bottom + CardPadding.Top)));
-			} 
-			else 
-			{
-				_layout.Children.Add (_contentView, () => _layout.Bounds);
-			}
-
-		}
-
-		Rectangle GetRect ()
-		{
-			return new Rectangle (
+			_layout.Children.Add (_overlay, () => _layout.Bounds);
+			_layout.Children.Add(_contentView, ()=> new Rectangle (
 				CardPadding.Left,
 				CardPadding.Top, 
 				_layout.Width - (CardPadding.Right + CardPadding.Left), 
-				_layout.Height - (CardPadding.Bottom + CardPadding.Top));
+				_layout.Height - (CardPadding.Bottom + CardPadding.Top)));
+
+			_contentView.TranslationY = _platformHelper.GetScreenSize().Height - (CardPadding.Top);
+		}
+
+		/// <summary>
+		/// Raises the appearing event.
+		/// </summary>
+		protected override void OnAppearing ()
+		{
+			base.OnAppearing ();
+
+			_overlay.FadeTo (0.2F);
+			_contentView.TranslateTo (0.0, 0.0, 250, Easing.CubicInOut);
 		}
 
 		#region Properties
@@ -143,36 +132,6 @@ namespace NControl.Controls
 
 		#endregion
 
-		#region Public Members
-
-		/// <summary>
-		/// Pushs the card async.
-		/// </summary>
-		/// <returns>The card async.</returns>
-		public Task ShowCardPageAsync()
-		{
-			_layout.ForceLayout ();
-			return _platformHelper.ShowAsync (this);
-		}
-
-		/// <summary>
-		/// Hides the card.
-		/// </summary>
-		public Task HideCardPageAsync()
-		{
-			return _platformHelper.HideAsync (this);
-		}
-
-		/// <summary>
-		/// Hides and removes the card.
-		/// </summary>
-		public Task CloseCardPageAsync()
-		{
-			return _platformHelper.CloseAsync (this);
-		}
-
-		#endregion
-
 		#region Properties
 
 		/// <summary>
@@ -193,30 +152,12 @@ namespace NControl.Controls
 		/// Defines the insets/padding for the card
 		/// </summary>
 		/// <value>The card insets.</value>
-		public virtual Thickness CardPadding {
+		public Thickness CardPadding {
 			get;
 			set;
 		}
 
 		#endregion
-
-		#region IDisposable implementation
-
-		/// <summary>
-		/// Releases all resource used by the <see cref="NControl.Controls.CardPage"/> object.
-		/// </summary>
-		/// <remarks>Call <see cref="Dispose"/> when you are finished using the <see cref="NControl.Controls.CardPage"/>. The
-		/// <see cref="Dispose"/> method leaves the <see cref="NControl.Controls.CardPage"/> in an unusable state. After
-		/// calling <see cref="Dispose"/>, you must release all references to the <see cref="NControl.Controls.CardPage"/> so
-		/// the garbage collector can reclaim the memory that the <see cref="NControl.Controls.CardPage"/> was occupying.</remarks>
-		public void Dispose ()
-		{
-			var helper = DependencyService.Get<ICardPageHelper> ();
-			helper.CloseAsync (this);
-		}
-
-		#endregion
-
 	}
 }
 

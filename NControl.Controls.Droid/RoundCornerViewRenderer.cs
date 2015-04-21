@@ -42,7 +42,8 @@ namespace NControl.Controls.Droid
 				canvas.Save();
 				var paint = new Paint();
 				paint.AntiAlias = true;
-				paint.StrokeWidth = (((float)element.BorderWidth)*Resources.DisplayMetrics.Density);
+				var strokeWidth = (((float)element.BorderWidth)*Resources.DisplayMetrics.Density);
+				paint.StrokeWidth = strokeWidth;
 
 				if(element.BackgroundColor != Xamarin.Forms.Color.Transparent)
 				{
@@ -64,8 +65,8 @@ namespace NControl.Controls.Droid
 
 				// Create clip path
 				var path = new Path();
-				path.AddRoundRect(new RectF(0.0f, 0.0f, Width, Height), 
-					cornerRadius, cornerRadius, Path.Direction.Cw);
+				path.AddRoundRect(new RectF(0.0f + (strokeWidth/2), 0.0f + (strokeWidth/2), 
+					Width - (strokeWidth/2), Height - (strokeWidth/2)), cornerRadius, cornerRadius, Path.Direction.Cw);
 				
 				canvas.Save();
 				canvas.ClipPath(path);

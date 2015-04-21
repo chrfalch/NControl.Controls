@@ -17,6 +17,17 @@ namespace NControl.Controls.Droid
 		/// </summary>
 		public CardPageRenderer()
 		{
+			
+		}
+
+		/// <Docs>This is called when the view is attached to a window.</Docs>
+		/// <summary>
+		/// Raises the attached to window event.
+		/// </summary>
+		protected override void OnAttachedToWindow ()
+		{
+			base.OnAttachedToWindow ();
+
 			SetBackgroundDrawable (null);
 			SetBackgroundColor (Android.Graphics.Color.Transparent);
 		}
