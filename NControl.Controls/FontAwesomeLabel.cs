@@ -419,6 +419,8 @@ namespace NControl.Controls
 		public static string FATry = "\uf195";
 		public static string FAPlusSquareO = "\uf196"; 
 
+		public static string FACar = "\uf1b9";
+
 		#endregion
 
 	}

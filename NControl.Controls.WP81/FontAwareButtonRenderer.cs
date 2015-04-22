@@ -1,21 +1,15 @@
-﻿using System;
-using System.IO;
-using System.IO.IsolatedStorage;
-using System.Windows.Media;
-using Windows.ApplicationModel.Activation;
-using Windows.Storage;
-using NControl.Controls;
+﻿using System.ComponentModel;
 using NControl.Controls.WP81;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.WinPhone;
 
-[assembly: ExportRenderer(typeof(Label), typeof(FontAwareLabelRenderer))]
+[assembly: ExportRenderer(typeof(Button), typeof(FontAwareButtonRenderer))]
 namespace NControl.Controls.WP81
 {
 	/// <summary>
 	/// Custom font label renderer.
 	/// </summary>
-	public class FontAwareLabelRenderer : LabelRenderer
+	public class FontAwareButonRenderer : ButtonRenderer
 	{
 		/// <summary>
 		/// Raises the element changed event.

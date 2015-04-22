@@ -56,32 +56,64 @@ namespace NControl.Controls
 		/// <param name="points">Points.</param>
 		public override bool TouchesBegan (System.Collections.Generic.IEnumerable<NGraphics.Point> points)
 		{
-			_ellipse.Scale = 0.0;
-			_ellipse.Opacity = 1.0;
+			base.TouchesBegan (points);
 
-			var firstPoint = points.FirstOrDefault ();
+			Device.BeginInvokeOnMainThread (async () => {
 
-			var layout = Content as RelativeLayout;
-			_ellipse.TranslationX = -((layout.Width/2)-firstPoint.X);
-			_ellipse.TranslationY = -((layout.Height/2)-firstPoint.Y);
+				_ellipse.Scale = 0.0;
+				_ellipse.Opacity = 1.0;
+
+				var firstPoint = points.FirstOrDefault ();
+
+				var layout = Content as RelativeLayout;
+				_ellipse.TranslationX = -((layout.Width / 2) - firstPoint.X);
+				_ellipse.TranslationY = -((layout.Height / 2) - firstPoint.Y);
 		
-			Device.BeginInvokeOnMainThread(async () => {				
-				await _ellipse.ScaleTo (8, easing:Easing.CubicInOut);
+				await _ellipse.ScaleTo (8, easing: Easing.CubicInOut);
 				_ellipse.Opacity = 0;
+
 			});
+
+			return true;
+		}
+
+		/// <summary>
+		/// Toucheses the cancelled.
+		/// </summary>
+		/// <returns><c>true</c>, if cancelled was touchesed, <c>false</c> otherwise.</returns>
+		/// <param name="points">Points.</param>
+		public override bool TouchesCancelled (System.Collections.Generic.IEnumerable<NGraphics.Point> points)
+		{
+			base.TouchesCancelled (points);
 
 			// Execute command
 			if (Command != null && Command.CanExecute (CommandParameter))
 				Command.Execute (CommandParameter);
 			
-			return base.TouchesBegan (points);
+			return true;
+		}
+
+		/// <summary>
+		/// Toucheses the ended.
+		/// </summary>
+		/// <returns><c>true</c>, if ended was touchesed, <c>false</c> otherwise.</returns>
+		/// <param name="points">Points.</param>
+		public override bool TouchesEnded (System.Collections.Generic.IEnumerable<NGraphics.Point> points)
+		{
+			base.TouchesEnded (points);
+
+			// Execute command
+			if (Command != null && Command.CanExecute (CommandParameter))
+				Command.Execute (CommandParameter);
+
+			return true;
 		}
 
 		/// <summary>
 		/// The RippleColor property.
 		/// </summary>
 		public static BindableProperty RippleColorProperty = 
-			BindableProperty.Create<RippleButton, Color> (p => p.RippleColor, Color.FromHex("#CCCCCC"),
+			BindableProperty.Create<RippleButton, Color> (p => p.RippleColor, Color.FromHex("#DDDDDD"),
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (RippleButton)bindable;
 					ctrl.RippleColor = newValue;
