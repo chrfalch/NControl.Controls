@@ -14,6 +14,7 @@ namespace NControl.Controls
 	{		
 		private readonly NControlView _ellipse;
 		private readonly Label _label;
+		private readonly FontAwesomeLabel _iconLabel;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="NControl.Controls.RippleButton"/> class.
@@ -47,6 +48,14 @@ namespace NControl.Controls
 			};
 
 			layout.Children.Add (_label, ()=> layout.Bounds);
+
+			_iconLabel = new FontAwesomeLabel {
+				XAlign = TextAlignment.Center,
+				YAlign = TextAlignment.Center,
+				TextColor = IconColor,
+			};
+
+			layout.Children.Add (_iconLabel, () => new Rectangle (14, 0, 28, layout.Height));
 		}		
 
 		/// <summary>
@@ -107,6 +116,50 @@ namespace NControl.Controls
 				Command.Execute (CommandParameter);
 
 			return true;
+		}
+
+		/// <summary>
+		/// The Icon property.
+		/// </summary>
+		public static BindableProperty IconProperty = 
+			BindableProperty.Create<RippleButton, string> (p => p.Icon, string.Empty,
+				propertyChanged: (bindable, oldValue, newValue) => {
+					var ctrl = (RippleButton)bindable;
+					ctrl.Icon = newValue;
+				});
+
+		/// <summary>
+		/// Gets or sets the Icon of the RippleButton instance.
+		/// </summary>
+		/// <value>The color of the buton.</value>
+		public string Icon {
+			get{ return (string)GetValue (IconProperty); }
+			set {
+				SetValue (IconProperty, value);
+				_iconLabel.Text = value;
+			}
+		}
+
+		/// <summary>
+		/// The IconColor property.
+		/// </summary>
+		public static BindableProperty IconColorProperty = 
+			BindableProperty.Create<RippleButton, Color> (p => p.IconColor, Color.FromHex("#CECECE"),
+				propertyChanged: (bindable, oldValue, newValue) => {
+					var ctrl = (RippleButton)bindable;
+					ctrl.IconColor = newValue;
+				});
+
+		/// <summary>
+		/// Gets or sets the IconColor of the RippleButton instance.
+		/// </summary>
+		/// <value>The color of the buton.</value>
+		public Color IconColor {
+			get{ return (Color)GetValue (IconColorProperty); }
+			set {
+				SetValue (IconColorProperty, value);
+				_iconLabel.TextColor = value;
+			}
 		}
 
 		/// <summary>

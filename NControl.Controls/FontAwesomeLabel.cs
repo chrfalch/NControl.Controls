@@ -37,11 +37,16 @@ namespace NControl.Controls
 	public class FontAwesomeLabel: Label
 	{
 		/// <summary>
+		/// The name of the font awesome.
+		/// </summary>
+		public const string FontAwesomeName = "FontAwesome";
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="NControl.Controls.FontAwesomeLabel"/> class.
 		/// </summary>
 		public FontAwesomeLabel()
 		{
-			FontFamily = "fontawesome";
+			FontFamily = FontAwesomeName;
 			FontSize = 18;
 			XAlign = TextAlignment.Center;
 			YAlign = TextAlignment.Center;

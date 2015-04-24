@@ -100,7 +100,7 @@ namespace NControl.Controls
 				FontAttributes = FontAttributes.Bold,
 				XAlign = TextAlignment.Start,
 				YAlign = TextAlignment.Center,
-                FontSize = Device.OnPlatform<int>(10, 10, 12),
+                FontSize = LabelFontSize,
 				Opacity = 0.0,
                 TextColor = PlaceholderColor
 			};
@@ -221,6 +221,26 @@ namespace NControl.Controls
 
 		#region Properties
 
+		/// <summary>
+		/// The LabelFontSize property.
+		/// </summary>
+		public static BindableProperty LabelFontSizeProperty = 
+			BindableProperty.Create<FloatingLabelControl, int> (p => p.LabelFontSize, Device.OnPlatform<int>(10, 10, 12),
+				propertyChanged: (bindable, oldValue, newValue) => {
+					var ctrl = (FloatingLabelControl)bindable;
+					ctrl.LabelFontSize = newValue;
+				});
+
+		/// <summary>
+		/// Gets or sets the LabelFontSize of the FloatingLabelControl instance.
+		/// </summary>
+		/// <value>The color of the buton.</value>
+		public int LabelFontSize {
+			get{ return (int)GetValue (LabelFontSizeProperty); }
+			set {
+				SetValue (LabelFontSizeProperty, value);
+			}
+		}
 		/// <summary>
 		/// The keyboard property.
 		/// </summary>
@@ -471,7 +491,7 @@ namespace NControl.Controls
         private void UpdatePostFix()
         {
             _postFix.Text = string.IsNullOrWhiteSpace(PostfixIcon) ? Postfix : PostfixIcon;
-            _postFix.FontFamily = string.IsNullOrWhiteSpace(PostfixIcon) ? null : "fontawesome";
+			_postFix.FontFamily = string.IsNullOrWhiteSpace(PostfixIcon) ? null : FontAwesomeLabel.FontAwesomeName;
             //_postFix.FontSize = string.IsNullOrWhiteSpace(PostfixIcon)
             //    ? Device.OnPlatform<int>(14, 14, 14)
             //    : Device.OnPlatform<int>(18, 18, 18);
