@@ -132,6 +132,7 @@ namespace NControl.Controls
 				if(Children.Any())
 					Activate(Children.First(), false);
 			};
+
 		}
 
 		/// <param name="x">A value representing the x coordinate of the child region bounding box.</param>
@@ -233,6 +234,29 @@ namespace NControl.Controls
 				_mainLayout.ForceLayout ();
 			}
 		}
+
+		/// <summary>
+		/// The TabIndicatorColor property.
+		/// </summary>
+		public static BindableProperty TabIndicatorColorProperty = 
+			BindableProperty.Create<TabStripControl, Color> (p => p.TabIndicatorColor, Color.Accent,
+				propertyChanged: (bindable, oldValue, newValue) => {
+					var ctrl = (TabStripControl)bindable;
+					ctrl.TabIndicatorColor = newValue;
+				});
+
+		/// <summary>
+		/// Gets or sets the TabIndicatorColor of the TabStripControl instance.
+		/// </summary>
+		/// <value>The color of the buton.</value>
+		public Color TabIndicatorColor {
+			get{ return (Color)GetValue (TabIndicatorColorProperty); }
+			set {
+				SetValue (TabIndicatorColorProperty, value);
+				_indicator.Color = value;
+			}
+		}
+
 		/// <summary>
 		/// The TabHeight property.
 		/// </summary>
@@ -286,11 +310,17 @@ namespace NControl.Controls
 			base.Draw (canvas, rect);
 
 			if (Location == TabLocation.Top)
-				canvas.DrawRectangle (new NGraphics.Rect (0, rect.Height+1, rect.Width, rect.Height+1),
-					NGraphics.Pens.Gray, null);
+				canvas.DrawPath (new NGraphics.PathOp[]{
+					new NGraphics.MoveTo(0, TabHeight),
+					new NGraphics.LineTo(rect.Width, TabHeight)
+				}, NGraphics.Pens.Gray, null);
 			else
-				canvas.DrawRectangle (new NGraphics.Rect (0, 0, rect.Width, 0),
-					NGraphics.Pens.Gray, null);
+				canvas.DrawPath (new NGraphics.PathOp[]{
+					new NGraphics.MoveTo(0, 0),
+					new NGraphics.LineTo(rect.Width, 0)
+				}, NGraphics.Pens.Gray, null);
+
+
 		}
 	}
 
@@ -329,6 +359,27 @@ namespace NControl.Controls
 	public class TabBarIndicator: NControlView
 	{
 		/// <summary>
+		/// The Color property.
+		/// </summary>
+		public static BindableProperty ColorProperty = 
+			BindableProperty.Create<TabBarIndicator, Color> (p => p.Color, Color.Accent,
+				propertyChanged: (bindable, oldValue, newValue) => {
+					var ctrl = (TabBarIndicator)bindable;
+					ctrl.Color = newValue;
+				});
+
+		/// <summary>
+		/// Gets or sets the Color of the TabBarIndicator instance.
+		/// </summary>
+		/// <value>The color of the buton.</value>
+		public Color Color {
+			get{ return (Color)GetValue (ColorProperty); }
+			set {
+				SetValue (ColorProperty, value);
+			}
+		}
+
+		/// <summary>
 		/// Draw the specified canvas and rect.
 		/// </summary>
 		/// <param name="canvas">Canvas.</param>
@@ -337,23 +388,7 @@ namespace NControl.Controls
 		{
 			base.Draw(canvas, rect);
 
-			canvas.DrawRectangle (rect, null, new NGraphics.SolidBrush(Color.Accent.ToNColor ()));
-
-//			var barheight = Device.OnPlatform<int>(4, 8, 8);
-//			var arrowheight = Device.OnPlatform<int>(9, 14, 11);
-//
-//			canvas.DrawPath(new NGraphics.PathOp[]{
-//				new NGraphics.MoveTo(0, 0),
-//				new NGraphics.LineTo(rect.Width, 0),
-//				new NGraphics.LineTo(rect.Width, barheight),
-//				new NGraphics.LineTo((rect.Width/2)+(arrowheight/2), barheight),
-//				new NGraphics.LineTo((rect.Width/2), arrowheight),
-//				new NGraphics.LineTo((rect.Width/2)-(arrowheight/2), barheight),
-//				new NGraphics.LineTo(0, barheight),
-//				new NGraphics.LineTo(0, 0),
-//				new NGraphics.ClosePath(),
-//
-//			}, null, new NGraphics.SolidBrush(Color.Accent.ToNColor()));
+			canvas.DrawRectangle (rect, null, new NGraphics.SolidBrush(this.Color.ToNColor ()));
 		}            
 	}
 
@@ -429,8 +464,8 @@ namespace NControl.Controls
 		{
 			base.Draw (canvas, rect);
 
-			canvas.DrawRectangle (new NGraphics.Rect (rect.Width, 0, rect.Width, rect.Height),
-				NGraphics.Pens.Gray, null);
+//			canvas.DrawRectangle (new NGraphics.Rect (rect.Width, 0, rect.Width, rect.Height),
+//				NGraphics.Pens.Gray, null);
 		}
 
 		/// <summary>
