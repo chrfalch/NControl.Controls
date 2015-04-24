@@ -12,9 +12,9 @@ namespace NControl.Controls
 	/// </summary>
 	public class RippleButton: RoundCornerView
 	{		
-		private readonly NControlView _ellipse;
-		private readonly Label _label;
-		private readonly FontAwesomeLabel _iconLabel;
+		protected readonly NControlView _ellipse;
+		public readonly Label TextLabel;
+		protected readonly FontAwesomeLabel _iconLabel;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="NControl.Controls.RippleButton"/> class.
@@ -41,13 +41,13 @@ namespace NControl.Controls
 				Math.Min(Math.Min (layout.Width, layout.Height), 44), 
 				Math.Min(Math.Min (layout.Width, layout.Height), 44)));
 		
-			_label = new Label{ 
+			TextLabel = new Label{ 
 				BackgroundColor = Color.Transparent,
 				XAlign = TextAlignment.Center,
 				YAlign = TextAlignment.Center,
 			};
 
-			layout.Children.Add (_label, ()=> layout.Bounds);
+			layout.Children.Add (TextLabel, ()=> layout.Bounds);
 
 			_iconLabel = new FontAwesomeLabel {
 				XAlign = TextAlignment.Center,
@@ -57,6 +57,25 @@ namespace NControl.Controls
 
 			layout.Children.Add (_iconLabel, () => new Rectangle (14, 0, 28, layout.Height));
 		}		
+
+		/// <summary>
+		/// Ripple this instance.
+		/// </summary>
+		public async Task RippleAsync(double x, double y)
+		{
+			var position = new Point (x, y);
+
+			_ellipse.Scale = 0.0;
+			_ellipse.Opacity = 1.0;
+
+				var layout = Content as RelativeLayout;
+			_ellipse.TranslationX = -((layout.Width / 2) - position.X);
+			_ellipse.TranslationY = -((layout.Height / 2) - position.Y);
+
+			await _ellipse.ScaleTo (8, easing: Easing.CubicInOut);
+			_ellipse.Opacity = 0;
+
+		}
 
 		/// <summary>
 		/// Toucheses the began.
@@ -69,18 +88,8 @@ namespace NControl.Controls
 
 			Device.BeginInvokeOnMainThread (async () => {
 
-				_ellipse.Scale = 0.0;
-				_ellipse.Opacity = 1.0;
-
 				var firstPoint = points.FirstOrDefault ();
-
-				var layout = Content as RelativeLayout;
-				_ellipse.TranslationX = -((layout.Width / 2) - firstPoint.X);
-				_ellipse.TranslationY = -((layout.Height / 2) - firstPoint.Y);
-		
-				await _ellipse.ScaleTo (8, easing: Easing.CubicInOut);
-				_ellipse.Opacity = 0;
-
+				await RippleAsync(firstPoint.X, firstPoint.Y);
 			});
 
 			return true;
@@ -245,7 +254,7 @@ namespace NControl.Controls
 			set
 			{
 				SetValue(TextProperty, value);
-				_label.Text = value;
+				TextLabel.Text = value;
 			}
 		}
 
@@ -267,7 +276,7 @@ namespace NControl.Controls
 			get{ return (string)GetValue (FontFamilyProperty); }
 			set {
 				SetValue (FontFamilyProperty, value);
-				_label.FontFamily = value;
+				TextLabel.FontFamily = value;
 			}
 		}
 
@@ -289,7 +298,7 @@ namespace NControl.Controls
 			get{ return (Color)GetValue (TextColorProperty); }
 			set {
 				SetValue (TextColorProperty, value);
-				_label.TextColor = value;
+				TextLabel.TextColor = value;
 			}
 		}
 
@@ -311,7 +320,7 @@ namespace NControl.Controls
 			get{ return (double)GetValue (FontSizeProperty); }
 			set {
 				SetValue (FontSizeProperty, value);
-				_label.FontSize = value;
+				TextLabel.FontSize = value;
 			}
 		}
 	}
