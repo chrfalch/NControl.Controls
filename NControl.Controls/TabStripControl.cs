@@ -121,7 +121,8 @@ namespace NControl.Controls
 					var tabItemControl = new TabBarButton(null, tabChild.Title, () => {
 						Activate(tabChild, true);
 					}){
-						WidthRequest = _contentView.Width/Children.Count
+						WidthRequest = _contentView.Width/Children.Count,
+						Font = TabFont,
 					};
 						
 					_buttonStack.Children.Add(tabItemControl);
@@ -133,6 +134,21 @@ namespace NControl.Controls
 					Activate(Children.First(), false);
 			};
 
+			//Border
+			var border = new NControlView {
+				DrawingFunction = (canvas, rect) => {
+
+					canvas.DrawPath (new NGraphics.PathOp[]{
+						new NGraphics.MoveTo(0, 0),
+						new NGraphics.LineTo(rect.Width, 0)
+					}, NGraphics.Pens.Gray, null);
+
+				},
+			};
+
+			_mainLayout.Children.Add (border, () => new Rectangle(
+				0, Location == TabLocation.Top ? TabHeight : 0, 
+				_mainLayout.Width, Location == TabLocation.Top ? TabHeight : 0));
 		}
 
 		/// <param name="x">A value representing the x coordinate of the child region bounding box.</param>
@@ -211,6 +227,28 @@ namespace NControl.Controls
 			get{ return _children;}
 		}
 
+		/// <summary>
+		/// The TabFont property.
+		/// </summary>
+		public static BindableProperty TabFontProperty = 
+			BindableProperty.Create<TabStripControl, Font> (p => p.TabFont, Font.Default,
+				propertyChanged: (bindable, oldValue, newValue) => {
+					var ctrl = (TabStripControl)bindable;
+					ctrl.TabFont = newValue;
+				});
+
+		/// <summary>
+		/// Gets or sets the TabFont of the TabStripControl instance.
+		/// </summary>
+		/// <value>The color of the buton.</value>
+		public Font TabFont {
+			get{ return (Font)GetValue (TabFontProperty); }
+			set {
+				SetValue (TabFontProperty, value);
+				foreach (var tabBtn in _buttonStack.Children)
+					((TabBarButton)tabBtn).Font = value;
+			}
+		}
 		/// <summary>
 		/// The TabLocation property.
 		/// </summary>
@@ -298,30 +336,7 @@ namespace NControl.Controls
 				SetValue (TabBackColorProperty, value);
 				_tabControl.BackgroundColor = value;
 			}
-		}
-
-		/// <summary>
-		/// Draw the specified canvas.
-		/// </summary>
-		/// <param name="canvas">Canvas.</param>
-		/// <param name="rect">Rect.</param>
-		public override void Draw (NGraphics.ICanvas canvas, NGraphics.Rect rect)
-		{
-			base.Draw (canvas, rect);
-
-			if (Location == TabLocation.Top)
-				canvas.DrawPath (new NGraphics.PathOp[]{
-					new NGraphics.MoveTo(0, TabHeight),
-					new NGraphics.LineTo(rect.Width, TabHeight)
-				}, NGraphics.Pens.Gray, null);
-			else
-				canvas.DrawPath (new NGraphics.PathOp[]{
-					new NGraphics.MoveTo(0, 0),
-					new NGraphics.LineTo(rect.Width, 0)
-				}, NGraphics.Pens.Gray, null);
-
-
-		}
+		}			
 	}
 
 	/// <summary>
@@ -453,6 +468,34 @@ namespace NControl.Controls
 				});
 
 			(Content as StackLayout).Children.Add (_label);
+		}
+
+		/// <summary>
+		/// The Font property.
+		/// </summary>
+		public static BindableProperty FontProperty = 
+			BindableProperty.Create<TabBarButton, Font> (p => p.Font, Font.Default,
+				propertyChanged: (bindable, oldValue, newValue) => {
+					var ctrl = (TabBarButton)bindable;
+					ctrl.Font = newValue;
+				});
+
+		/// <summary>
+		/// Gets or sets the Font of the TabBarButton instance.
+		/// </summary>
+		/// <value>The color of the buton.</value>
+		public Font Font {
+			get{ return (Font)GetValue (FontProperty); }
+			set {
+				SetValue (FontProperty, value);
+
+				if (value == null)
+					return;
+				
+				_label.FontFamily = value.FontFamily;
+				_label.FontSize = value.FontSize;
+				_label.FontAttributes = value.FontAttributes;
+			}
 		}
 
 		/// <summary>
