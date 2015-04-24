@@ -123,6 +123,7 @@ namespace NControl.Controls
 					}){
 						WidthRequest = _contentView.Width/Children.Count,
 						Font = TabFont,
+						SelectedColor = TabIndicatorColor,
 					};
 						
 					_buttonStack.Children.Add(tabItemControl);
@@ -142,13 +143,27 @@ namespace NControl.Controls
 						new NGraphics.MoveTo(0, 0),
 						new NGraphics.LineTo(rect.Width, 0)
 					}, NGraphics.Pens.Gray, null);
-
 				},
 			};
 
 			_mainLayout.Children.Add (border, () => new Rectangle(
 				0, Location == TabLocation.Top ? TabHeight : 0, 
 				_mainLayout.Width, Location == TabLocation.Top ? TabHeight : 0));
+
+			// Shadow
+			var shadow = new NControlView {
+				DrawingFunction = (canvas, rect)=> {
+
+					canvas.DrawRectangle(rect, null, new NGraphics.LinearGradientBrush(
+						new NGraphics.Point(0.5, 0.0), new NGraphics.Point(0.5, 1.0),
+						Color.Black.MultiplyAlpha(0.3).ToNColor(), NGraphics.Colors.Clear, 
+						NGraphics.Colors.Clear));
+				}
+			};
+
+			_mainLayout.Children.Add (shadow, () => new Rectangle(
+				0, Location == TabLocation.Top ? TabHeight : 0, 
+				_mainLayout.Width, 6));
 		}
 
 		/// <param name="x">A value representing the x coordinate of the child region bounding box.</param>
@@ -216,6 +231,9 @@ namespace NControl.Controls
 				_contentView.Children.Clear();
 				_contentView.Children.Add(tabChild.View);
 			}
+
+			foreach (var tabBtn in _buttonStack.Children)
+				((TabBarButton)tabBtn).IsSelected = _buttonStack.Children.IndexOf(tabBtn) == idxOfNew;
 		}
 
 		/// <summary>
@@ -471,6 +489,28 @@ namespace NControl.Controls
 		}
 
 		/// <summary>
+		/// The SelectedColor property.
+		/// </summary>
+		public static BindableProperty SelectedColorProperty = 
+			BindableProperty.Create<TabBarButton, Color> (p => p.SelectedColor, Color.Accent,
+				propertyChanged: (bindable, oldValue, newValue) => {
+					var ctrl = (TabBarButton)bindable;
+					ctrl.SelectedColor = newValue;
+				});
+
+		/// <summary>
+		/// Gets or sets the SelectedColor of the TabBarButton instance.
+		/// </summary>
+		/// <value>The color of the buton.</value>
+		public Color SelectedColor {
+			get{ return (Color)GetValue (SelectedColorProperty); }
+			set {
+				SetValue (SelectedColorProperty, value);
+				AccentColor = value;
+
+			}
+		}
+		/// <summary>
 		/// The Font property.
 		/// </summary>
 		public static BindableProperty FontProperty = 
@@ -489,9 +529,6 @@ namespace NControl.Controls
 			set {
 				SetValue (FontProperty, value);
 
-				if (value == null)
-					return;
-				
 				_label.FontFamily = value.FontFamily;
 				_label.FontSize = value.FontSize;
 				_label.FontAttributes = value.FontAttributes;
@@ -528,8 +565,11 @@ namespace NControl.Controls
 				else
 					_label.TextColor = DarkTextColor;
 
-				_selectedImageLabel.IsVisible = value;
-				_imageLabel.IsVisible = !value;
+				if(_selectedImageLabel != null)
+					_selectedImageLabel.IsVisible = value;
+
+				if(_imageLabel != null)
+					_imageLabel.IsVisible = !value;
 			}
 		}
 
