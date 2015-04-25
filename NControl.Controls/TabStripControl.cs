@@ -66,11 +66,11 @@ namespace NControl.Controls
 			Content = _mainLayout;
 
 			// Create tab control
-			_buttonStack = new StackLayout {
+			_buttonStack = new StackLayoutEx {
 				Orientation = StackOrientation.Horizontal,
 				Padding = 0,
 				Spacing = 0,
-				HorizontalOptions = LayoutOptions.FillAndExpand,
+				HorizontalOptions = LayoutOptions.Start,
 				VerticalOptions= LayoutOptions.FillAndExpand,
 			};
 
@@ -78,6 +78,7 @@ namespace NControl.Controls
 				VerticalOptions = Location == TabLocation.Top ? LayoutOptions.End : LayoutOptions.Start,
 				HorizontalOptions = LayoutOptions.Start,
 				HeightRequest = 6,
+				WidthRequest = 0,
 			};
 
 			_tabControl = new NControlView{
@@ -118,18 +119,11 @@ namespace NControl.Controls
 
 				foreach(var tabChild in Children)
 				{
-					var tabItemControl = new TabBarButton(null, tabChild.Title, () => {
-						Activate(tabChild, true);
-					}){
-						WidthRequest = _contentView.Width/Children.Count,
-						Font = TabFont,
-						SelectedColor = TabIndicatorColor,
-					};
-						
+					var tabItemControl = new TabBarButton(null, tabChild.Title);
+					tabItemControl.Font = TabFont;
+					tabItemControl.SelectedColor = TabIndicatorColor;						
 					_buttonStack.Children.Add(tabItemControl);
 				}
-
-				_indicator.WidthRequest = _contentView.Width/Children.Count;
 
 				if(Children.Any())
 					Activate(Children.First(), false);
@@ -165,27 +159,7 @@ namespace NControl.Controls
 				0, Location == TabLocation.Top ? TabHeight : 0, 
 				_mainLayout.Width, 6));
 		}
-
-		/// <param name="x">A value representing the x coordinate of the child region bounding box.</param>
-		/// <param name="y">A value representing the y coordinate of the child region bounding box.</param>
-		/// <param name="width">A value representing the width of the child region bounding box.</param>
-		/// <param name="height">A value representing the height of the child region bounding box.</param>
-		/// <summary>
-		/// Positions and sizes the children of a Layout.
-		/// </summary>
-		/// <remarks>Implementors wishing to change the default behavior of a Layout should override this method. It is suggested to
-		/// still call the base method and modify its calculated results.</remarks>
-		protected override void LayoutChildren (double x, double y, double width, double height)
-		{
-			base.LayoutChildren (x, y, width, height);
-
-			foreach (var view in _buttonStack.Children)
-				view.WidthRequest = width / Children.Count;
-
-			_indicator.WidthRequest = width/Children.Count;
-
-		}
-
+			
 		/// <summary>
 		/// Initializes a new instance of the <see cref="NControl.Controls.TabStripControl"/> class.
 		/// </summary>
@@ -207,6 +181,9 @@ namespace NControl.Controls
 
 				_contentView.Children.Add(tabChild.View);			
 
+				var newElementWidth = _buttonStack.Children.ElementAt (idxOfNew).Width;
+				var newElementLeft = _buttonStack.Children.ElementAt (idxOfNew).X;
+
 				var animation = new Animation ();
 				var existingViewOutAnimation = new Animation ((d) => existingChild.View.TranslationX = d,
 					0, -translation, Easing.CubicInOut, () => _contentView.Children.Remove (existingChild.View));
@@ -215,14 +192,19 @@ namespace NControl.Controls
                      translation, 0, Easing.CubicInOut);
 
 				var existingTranslation = _indicator.TranslationX;
-				var itemWidth = (_contentView.Width / Children.Count ());
-				var indicatorTranslation = itemWidth * idxOfNew;
+				var itemWidth = newElementWidth;
+				var indicatorTranslation = newElementLeft;
 				var indicatorViewAnimation = new Animation ((d) => _indicator.TranslationX = d,
 					existingTranslation, indicatorTranslation, Easing.CubicInOut);
+
+				var startWidth = _indicator.Width;
+				var indicatorSizeAnimation = new Animation ((d) => _indicator.WidthRequest = d,
+					startWidth, newElementWidth, Easing.CubicInOut);
 
 				animation.Add (0.0, 1.0, existingViewOutAnimation);
 				animation.Add (0.0, 1.0, newViewInAnimation);
 				animation.Add (0.0, 1.0, indicatorViewAnimation);
+				animation.Add (0.0, 1.0, indicatorSizeAnimation);
 				animation.Commit (this, "TabAnimation");
 			} 
 			else 
@@ -234,6 +216,44 @@ namespace NControl.Controls
 
 			foreach (var tabBtn in _buttonStack.Children)
 				((TabBarButton)tabBtn).IsSelected = _buttonStack.Children.IndexOf(tabBtn) == idxOfNew;
+		}
+
+		/// <summary>
+		/// Toucheses the began.
+		/// </summary>
+		/// <param name="points">Points.</param>
+		public override bool TouchesBegan (IEnumerable<NGraphics.Point> points)
+		{
+			base.TouchesBegan(points);
+
+			// Find selected item based on click
+			var p = points.First();
+			foreach (var child in _buttonStack.Children) {
+				if (p.X >= child.X && p.X <= child.X + child.Width) {
+					var idx = _buttonStack.Children.IndexOf (child);
+					Activate (Children [idx], true);
+					break;
+				}
+			}
+
+			return true;
+		}
+
+		/// <summary>
+		/// Positions and sizes the children of a Layout.
+		/// </summary>
+		/// <remarks>Implementors wishing to change the default behavior of a Layout should override this method. It is suggested to
+		/// still call the base method and modify its calculated results.</remarks>
+		protected override void LayoutChildren (double x, double y, double width, double height)
+		{
+			base.LayoutChildren (x, y, width, height);
+
+			if (_indicator.WidthRequest == 0 && width > 0) {
+				var existingChild = Children.FirstOrDefault (t => t.View == _contentView.Children.FirstOrDefault ());
+				var idxOfExisting = existingChild != null ? Children.IndexOf (existingChild) : -1;
+
+				_indicator.WidthRequest = _buttonStack.Children.ElementAt (idxOfExisting).Width;
+			}
 		}
 
 		/// <summary>
@@ -309,7 +329,7 @@ namespace NControl.Controls
 			get{ return (Color)GetValue (TabIndicatorColorProperty); }
 			set {
 				SetValue (TabIndicatorColorProperty, value);
-				_indicator.Color = value;
+				_indicator.BackgroundColor = value;
 			}
 		}
 
@@ -389,40 +409,9 @@ namespace NControl.Controls
 	/// <summary>
 	/// Tab bar indicator.
 	/// </summary>
-	public class TabBarIndicator: NControlView
+	public class TabBarIndicator: View
 	{
-		/// <summary>
-		/// The Color property.
-		/// </summary>
-		public static BindableProperty ColorProperty = 
-			BindableProperty.Create<TabBarIndicator, Color> (p => p.Color, Color.Accent,
-				propertyChanged: (bindable, oldValue, newValue) => {
-					var ctrl = (TabBarIndicator)bindable;
-					ctrl.Color = newValue;
-				});
-
-		/// <summary>
-		/// Gets or sets the Color of the TabBarIndicator instance.
-		/// </summary>
-		/// <value>The color of the buton.</value>
-		public Color Color {
-			get{ return (Color)GetValue (ColorProperty); }
-			set {
-				SetValue (ColorProperty, value);
-			}
-		}
-
-		/// <summary>
-		/// Draw the specified canvas and rect.
-		/// </summary>
-		/// <param name="canvas">Canvas.</param>
-		/// <param name="rect">Rect.</param>
-		public override void Draw(NGraphics.ICanvas canvas, NGraphics.Rect rect)
-		{
-			base.Draw(canvas, rect);
-
-			canvas.DrawRectangle (rect, null, new NGraphics.SolidBrush(this.Color.ToNColor ()));
-		}            
+		       
 	}
 
 	/// <summary>
@@ -433,7 +422,6 @@ namespace NControl.Controls
 		private readonly FontAwesomeLabel _imageLabel;
 		private readonly FontAwesomeLabel _selectedImageLabel;
 		private readonly Label _label;
-		private readonly Action _clickCallback;
 
 		public Color DarkTextColor = Color.Black;
 		public Color AccentColor = Color.Accent;
@@ -441,10 +429,8 @@ namespace NControl.Controls
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Clooger.FormsApp.UserControls.TabBarButton"/> class.
 		/// </summary>
-		public TabBarButton(string imageName, string buttonText, Action callback)
+		public TabBarButton(string imageName, string buttonText)
 		{
-			_clickCallback = callback;
-
 			if (!string.IsNullOrWhiteSpace (imageName)) {
 				_imageLabel = new FontAwesomeLabel {
 					Text = imageName,
@@ -475,7 +461,7 @@ namespace NControl.Controls
 			Content = new StackLayout{
 				Orientation = StackOrientation.Vertical,
 				VerticalOptions = LayoutOptions.CenterAndExpand,
-				HorizontalOptions = LayoutOptions.FillAndExpand,
+				HorizontalOptions = LayoutOptions.Center,
 				Padding = 10,
 			};
 
@@ -571,7 +557,7 @@ namespace NControl.Controls
 				if(_imageLabel != null)
 					_imageLabel.IsVisible = !value;
 			}
-		}
+		}	
 
 		/// <summary>
 		/// Toucheses the began.
@@ -580,12 +566,41 @@ namespace NControl.Controls
 		public override bool TouchesBegan(System.Collections.Generic.IEnumerable<NGraphics.Point> points)
 		{
 			base.TouchesBegan(points);
-
 			_label.TextColor = AccentColor;
-			if (_clickCallback != null)
-				_clickCallback();
 
 			return true;
+		}
+	}
+
+	/// <summary>
+	/// Stack layout ex.
+	/// </summary>
+	internal class StackLayoutEx: StackLayout
+	{
+		/// <summary>
+		/// Make sure we lay out so that we only use as much (or little) space as necessary for 
+		/// each item
+		/// </summary>
+		/// <remarks>Implementors wishing to change the default behavior of a Layout should override this method. It is suggested to
+		/// still call the base method and modify its calculated results.</remarks>
+		protected override void LayoutChildren (double x, double y, double width, double height)
+		{
+			base.LayoutChildren (x, y, width, height);
+
+			var total = Children.Sum (t => t.Width);
+			var parentWidth = (Parent as View).Width;
+
+			if (total < parentWidth) {
+
+				// We need more space
+				var diff = (parentWidth - total)/Children.Count;
+
+				var xoffset = 0.0;
+				foreach (var child in Children) {
+					child.Layout (new Rectangle (child.X + xoffset, child.Y, child.Width + diff, child.Height));
+					xoffset += diff;
+				}
+			}
 		}
 	}
 }
