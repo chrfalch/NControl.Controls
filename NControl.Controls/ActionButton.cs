@@ -27,9 +27,12 @@
 
 using System;
 using NControl.Abstractions;
+using NGraphics;
 using Xamarin.Forms;
 using System.Windows.Input;
 using System.Collections.Generic;
+using Color = Xamarin.Forms.Color;
+using TextAlignment = Xamarin.Forms.TextAlignment;
 
 namespace NControl.Controls
 {
@@ -375,7 +378,13 @@ namespace NControl.Controls
 
 			return true;
 		}
-		#endregion
+
+	    public override void Draw(ICanvas canvas, Rect rect)
+	    {
+	        base.Draw(canvas, rect);
+	    }
+
+	    #endregion
 	}
 }
 

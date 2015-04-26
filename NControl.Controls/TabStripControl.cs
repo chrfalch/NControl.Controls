@@ -192,7 +192,7 @@ namespace NControl.Controls
                      translation, 0, Easing.CubicInOut);
 
 				var existingTranslation = _indicator.TranslationX;
-				var itemWidth = newElementWidth;
+
 				var indicatorTranslation = newElementLeft;
 				var indicatorViewAnimation = new Animation ((d) => _indicator.TranslationX = d,
 					existingTranslation, indicatorTranslation, Easing.CubicInOut);
@@ -568,7 +568,7 @@ namespace NControl.Controls
 			base.TouchesBegan(points);
 			_label.TextColor = AccentColor;
 
-			return true;
+			return false;
 		}
 	}
 

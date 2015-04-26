@@ -132,7 +132,7 @@ namespace NControl.Controls
 		/// </summary>
 		public static BindableProperty IconProperty = 
 			BindableProperty.Create<RippleButton, string> (p => p.Icon, string.Empty,
-				propertyChanged: (bindable, oldValue, newValue) => {
+				BindingMode.TwoWay, propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (RippleButton)bindable;
 					ctrl.Icon = newValue;
 				});

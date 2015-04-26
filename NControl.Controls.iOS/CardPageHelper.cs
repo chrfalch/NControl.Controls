@@ -1,14 +1,12 @@
 ﻿using System;
-using Xamarin.Forms.Platform.iOS;
 using Xamarin.Forms;
-using NControl.Controls;
 using NControl.Controls.iOS;
 using UIKit;
 using System.Threading.Tasks;
 using CoreGraphics;
 using System.Collections.Generic;
 
-[assembly: Xamarin.Forms.Dependency (typeof (CardPageHelper))]
+[assembly: Dependency (typeof (CardPageHelper))]
 namespace NControl.Controls.iOS
 {
 	/// <summary>

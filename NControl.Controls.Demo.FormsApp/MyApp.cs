@@ -46,10 +46,7 @@ namespace NControl.Controls.Demo.FormsApp
 					return;
 				
 				// Show page
-				if(listView.SelectedItem is CardPage)
-					await (listView.SelectedItem as CardPage).ShowCardPageAsync(Application.Current.MainPage);
-				else
-					await startPage.Navigation.PushAsync(listView.SelectedItem as Page);					
+				await startPage.Navigation.PushAsync(listView.SelectedItem as Page);					
 			};
 
 			listView.ItemTapped += (sender, e) => listView.SelectedItem = null;

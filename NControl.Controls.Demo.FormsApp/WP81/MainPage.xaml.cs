@@ -14,8 +14,7 @@ namespace NControl.Controls.Demo.FormsApp.WP81
             SupportedOrientations = SupportedPageOrientation.PortraitOrLandscape;
 
             Forms.Init();
-            NControl.WP81.NControlViewRenderer.Init();
-            NControls.Init();
+            NControls.Init();          
             
             LoadApplication(new FormsApp.MyApp());
         }      

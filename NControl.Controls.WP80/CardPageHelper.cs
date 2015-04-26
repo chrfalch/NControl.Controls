@@ -15,30 +15,9 @@ namespace NControl.Controls.WP80
     public class CardPageHelper : ICardPageHelper
     {
         /// <summary>
-        /// 
+        /// Returns screen size
         /// </summary>
-        /// <param name="card"></param>
         /// <returns></returns>
-        public Task ShowAsync(CardPage card)
-        {
-            return Task.FromResult(true);
-        }
-
-        public Task HideAsync(CardPage card)
-        {
-            return Task.FromResult(true);
-        }
-
-        public Task CloseAsync(CardPage card)
-        {
-            return Task.FromResult(true);
-        }
-
-        public bool ShouldRenderChrome()
-        {
-            return false;
-        }
-
         public Xamarin.Forms.Size GetScreenSize()
         {
             return new Xamarin.Forms.Size(Application.Current.Host.Content.ActualWidth,

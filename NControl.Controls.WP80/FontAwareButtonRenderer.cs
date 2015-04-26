@@ -38,6 +38,7 @@ namespace NControl.Controls.WP80
                 return;
 
             fontName = fontName.ToLowerInvariant();
+            // TODO: Fix
             //if (NControls.Typefaces.ContainsKey(fontName))
             //    Control.ApplyFont(NControls.Typefaces[fontName]);
         }

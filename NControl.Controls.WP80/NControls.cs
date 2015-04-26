@@ -22,11 +22,10 @@ namespace NControl.Controls.WP80
         {
             NControl.WP80.NControlViewRenderer.Init();
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-            NControl.Controls.FontLoader.LoadFonts(assemblies, (fontName, s) =>
+            FontLoader.LoadFonts(assemblies, (fontName, s) =>
             {
-
                 fontName = fontName.ToLowerInvariant();
-                Typefaces[fontName] = new System.Windows.Documents.FontSource(s);
+                Typefaces[fontName] = new FontSource(s);
             });
         }
     }
