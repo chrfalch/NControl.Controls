@@ -27,7 +27,7 @@ namespace NControl.Controls.iOS
 		/// </summary>
 		/// <returns>The async.</returns>
 		/// <param name="card">Card.</param>
-		public async Task ShowAsync (CardPage card, Page mainPage)
+		public async Task ShowAsync (CardPage card)
 		{			
 			var window = UIApplication.SharedApplication.KeyWindow;
 
@@ -73,7 +73,7 @@ namespace NControl.Controls.iOS
 		/// </summary>
 		/// <returns>The async.</returns>
 		/// <param name="card">Card.</param>
-		public async Task HideAsync (CardPage card, Page mainPage)
+		public async Task CloseAsync (CardPage card)
 		{
 			var window = UIApplication.SharedApplication.KeyWindow;
 
@@ -101,6 +101,16 @@ namespace NControl.Controls.iOS
 		public Size GetScreenSize ()
 		{
 			return new Size (UIScreen.MainScreen.Bounds.Width, UIScreen.MainScreen.Bounds.Height);
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="NControl.Controls.iOS.CardPageHelper"/> control animates itself.
+		/// </summary>
+		/// <value><c>true</c> if control animates itself; otherwise, <c>false</c>.</value>
+		public bool ControlAnimatesItself {
+			get {
+				return false;
+			}
 		}
 		#endregion
 		

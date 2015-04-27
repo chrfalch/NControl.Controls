@@ -36,6 +36,35 @@ namespace NControl.Controls
 		/// </summary>
 		private Thickness _padding;
 
+		/// <summary>
+		/// The delta.
+		/// </summary>
+		private double _delta;
+
+		/// <summary>
+		/// The start time.
+		/// </summary>
+		private DateTime _startTime;
+
+		#endregion
+
+		#region Events
+
+		/// <summary>
+		/// The sender.
+		/// </summary>
+		public delegate void OnPageChanged(object sender, int oldIndex, int newIndex);
+
+		/// <summary>
+		/// Occurs when on page changed.
+		/// </summary>
+		public event OnPageChanged PageChanged;
+
+		/// <summary>
+		/// Occurs when clicked.
+		/// </summary>
+		public event EventHandler Clicked;
+
 		#endregion
 
 		/// <summary>
@@ -49,45 +78,12 @@ namespace NControl.Controls
 			HorizontalOptions = LayoutOptions.FillAndExpand;
 			VerticalOptions = LayoutOptions.FillAndExpand;
 
-			_childLayout = new RelativeLayoutWithTranslation ();
+			_childLayout = new Grid ();
 			var layout = new Grid ();
 
 			// Touch handling
 			var delta = 0.0;
 			var startTime = DateTime.MinValue;
-			var touchInterceptor = new NControlView {
-				HorizontalOptions = LayoutOptions.FillAndExpand,
-				VerticalOptions = LayoutOptions.FillAndExpand,
-			};
-
-			touchInterceptor.OnTouchesBegan += (object sender, IEnumerable<NGraphics.Point> e) => {
-
-				// Touch down
-				var first = e.FirstOrDefault();
-				delta = first.X;
-				startTime = DateTime.Now;
-			};
-
-			touchInterceptor.OnTouchesMoved += (object sender, IEnumerable<NGraphics.Point> e) => {
-
-				// Touches moved
-				var first = e.FirstOrDefault();
-				var firstChild = Children.FirstOrDefault();
-				var diff = first.X - delta - (firstChild != null ? Width*GetIndexOfPage(Page):0);
-				SetTranslationAsync(diff, false);
-			};
-
-			touchInterceptor.OnTouchesCancelled +=async  (object sender, IEnumerable<NGraphics.Point> e) => {
-
-				// Touches was cancelled
-				await HandleEndAsync(e.FirstOrDefault().X, delta, startTime, DateTime.Now);
-			};
-
-			touchInterceptor.OnTouchesEnded += async (object sender, IEnumerable<NGraphics.Point> e) => {
-
-				// Touches ended
-				await HandleEndAsync(e.FirstOrDefault().X, delta, startTime, DateTime.Now);
-			};
 
 			// Handle child changes
 			_children.CollectionChanged += (sender, e) => {
@@ -95,17 +91,95 @@ namespace NControl.Controls
 				_childLayout.BatchBegin();
 				_childLayout.Children.Clear();
 
-				for(var i=_children.Count-1; i>=0; i--)
-					_childLayout.Children.Insert(0, _children[i]);
+				for(var i=0; i<_children.Count; i++)
+					_childLayout.Children.Add(_children[i]);				
 
 				_childLayout.BatchCommit();
 			};
 
 			layout.Children.Add (_childLayout);
-			layout.Children.Add (touchInterceptor);
 
 			Content = layout;
 		}
+
+		#region Touches
+
+		/// <summary>
+		/// Toucheses the began.
+		/// </summary>
+		/// <returns><c>true</c>, if began was touchesed, <c>false</c> otherwise.</returns>
+		/// <param name="points">Points.</param>
+		public override bool TouchesBegan (IEnumerable<NGraphics.Point> points)
+		{
+			base.TouchesBegan (points);
+
+			// Touch down
+			var first = points.FirstOrDefault();
+			_delta = first.X;
+			_startTime = DateTime.Now;
+
+			return true;
+		}
+
+		/// <summary>
+		/// Toucheses the moved.
+		/// </summary>
+		/// <returns><c>true</c>, if moved was touchesed, <c>false</c> otherwise.</returns>
+		/// <param name="points">Points.</param>
+		public override bool TouchesMoved (IEnumerable<NGraphics.Point> points)
+		{
+			base.TouchesMoved (points);
+
+			// Touches moved
+			var first = points.FirstOrDefault();
+			var firstChild = Children.FirstOrDefault();
+			var diff = first.X - _delta - (firstChild != null ? Width*GetIndexOfPage(Page):0);
+			SetTranslationAsync(diff, false);
+
+			return true;
+		}
+
+		/// <summary>
+		/// Toucheses the ended.
+		/// </summary>
+		/// <returns><c>true</c>, if ended was touchesed, <c>false</c> otherwise.</returns>
+		/// <param name="points">Points.</param>
+		public override bool TouchesEnded (IEnumerable<NGraphics.Point> points)
+		{
+			base.TouchesEnded (points);
+
+			if (ShouldBeClick (points.FirstOrDefault ().X, _delta)) {
+				if (Clicked != null)
+					Clicked (this, EventArgs.Empty);
+				
+				return false;
+			}
+
+			HandleEndAsync(points.FirstOrDefault().X, _delta, _startTime, DateTime.Now);
+			return true;
+		}
+
+		/// <summary>
+		/// Toucheses the cancelled.
+		/// </summary>
+		/// <returns><c>true</c>, if cancelled was touchesed, <c>false</c> otherwise.</returns>
+		/// <param name="points">Points.</param>
+		public override bool TouchesCancelled (IEnumerable<NGraphics.Point> points)
+		{
+			base.TouchesCancelled (points);
+
+			if (ShouldBeClick (points.FirstOrDefault ().X, _delta)){
+				if (Clicked != null)
+					Clicked (this, EventArgs.Empty);
+
+				return false;
+			}
+
+			HandleEndAsync(points.FirstOrDefault().X, _delta, _startTime, DateTime.Now);
+			return true;
+		}
+
+		#endregion
 
 		#region Properties
 
@@ -160,6 +234,23 @@ namespace NControl.Controls
 		}
 		#endregion
 
+		#region Public Members
+
+		/// <summary>
+		/// Activates the page.
+		/// </summary>
+		/// <param name="view">View.</param>
+		/// <param name="b">If set to <c>true</c> b.</param>
+		public void ActivatePage (View view, bool animate)
+		{
+			if (Width == -1)
+				_activePage = view;
+			else
+				ActivateAsync (view, animate);
+		}
+
+		#endregion
+
 		#region Private Members
 
 		/// <summary>
@@ -178,14 +269,19 @@ namespace NControl.Controls
 		/// </summary>
 		/// <param name="value">Value.</param>
 		/// <param name="b">If set to <c>true</c> b.</param>
-		private Task ActivateAsync (View value, bool animated, double delta, DateTime startTime, DateTime endTime)
+		private async Task ActivateAsync (View value, bool animated, double delta, DateTime startTime, DateTime endTime)
 		{
 			if (_activePage == value)
-				return Task.FromResult (true);
+				return;
 
+			var oldIndex = _childLayout.Children.IndexOf (_activePage);
+			var newIndex = _childLayout.Children.IndexOf (value);
 			_activePage = value;
-			var translation = -Width * GetIndexOfPage (value);
-			return SetTranslationAsync (translation, true, delta, startTime, endTime);
+			var translationTo = -Width * GetIndexOfPage (value);
+			await SetTranslationAsync (translationTo, animated, delta, startTime, endTime);
+
+			if (PageChanged != null)
+				PageChanged (this, oldIndex, newIndex);
 		}
 
 		/// <summary>
@@ -210,38 +306,41 @@ namespace NControl.Controls
 				return Task.FromResult (true);
 			
 			var tcs = new TaskCompletionSource<bool> ();
+			double speed = 250.0;
 
 			// velocity:
-			var deltaT = (endTime - startTime).Milliseconds;
-			double velocity_X = (double)deltaT / (double)delta;
-			double speed = Math.Abs((translation  + (_activePage != null ? -_activePage.TranslationX : 0)) * velocity_X);
-
-			if (startTime == DateTime.MinValue)
-				speed = 250;
-
-			var newx = 0.0;
-			var animation = new Animation ();
-			for (int i = 0; i < _childLayout.Children.Count; i++) {
-
-				var child = _childLayout.Children [i];
-				if (animate)
-					animation.Add(0.0, 1.0, new Animation((d) => child.TranslationX = d,
-						child.TranslationX, translation + newx));
-				else
-					child.TranslationX = translation + newx;
-				
-				newx += Width;
+			if(startTime != DateTime.MinValue)
+			{
+				var deltaT = (endTime - startTime).Milliseconds;
+				double velocity_X = (double)deltaT / (double)delta;
+				speed = Math.Abs((translation  -_childLayout.TranslationX) * velocity_X);
 			}
 
-			if (animate) {
+			var animation = new Animation ();
+
+			if (animate)
+				animation.Add(0.0, 1.0, new Animation((d) => _childLayout.TranslationX = d,
+					_childLayout.TranslationX, translation));
+			else
+				_childLayout.TranslationX = translation;			
+
+			if (animate) 
+			{
 				var endAnimation = new Animation ((d) => {
-					}, 0, 1, Easing.CubicInOut, () => tcs.SetResult (true));
+				}, 0, 1, Easing.CubicInOut, () => {
+					tcs.SetResult (true);
+					System.Diagnostics.Debug.WriteLine (_childLayout.TranslationX);
+				});
 
 				animation.Add (0.0, 1.0, endAnimation);
-				animation.Commit (this, "Translate", 16, Math.Min(350, (uint)speed), Easing.CubicOut);
-			}
-			else
+				animation.Commit (this, "Translate", 16, Math.Min (350, (uint)speed), Easing.CubicOut);
+			} 
+			else 
+			{
 				tcs.SetResult (true);
+			}
+
+			System.Diagnostics.Debug.WriteLine (_childLayout.TranslationX);
 
 			return tcs.Task;
 		}
@@ -254,6 +353,21 @@ namespace NControl.Controls
 		private int GetIndexOfPage(View page)
 		{
 			return _children.IndexOf (page);
+		}
+
+		/// <summary>
+		/// Shoulds the change page.
+		/// </summary>
+		/// <returns><c>true</c>, if change page was shoulded, <c>false</c> otherwise.</returns>
+		/// <param name="endX">End x.</param>
+		/// <param name="delta">Delta.</param>
+		private bool ShouldBeClick(double endX, double delta)
+		{
+			var diff = Math.Abs(endX - delta);
+			if (diff < 10)
+				return true;
+
+			return false;
 		}
 
 		/// <summary>
@@ -294,31 +408,12 @@ namespace NControl.Controls
 		}
 		#endregion
 
-
-	}
-
-	/// <summary>
-	/// Relative layout with translation.
-	/// </summary>
-	internal class RelativeLayoutWithTranslation: Grid
-	{
-		#region Constructors
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="NControl.Controls.RelativeLayoutWithTranslation"/> class.
-		/// </summary>
-		internal RelativeLayoutWithTranslation(): base()
-		{
-			// Parent is clipping
-			IsClippedToBounds = false;
-
-			HorizontalOptions = LayoutOptions.FillAndExpand;
-			VerticalOptions = LayoutOptions.FillAndExpand;
-		}
-		#endregion
-
 		#region Overridden Members
 
+		/// <param name="x">A value representing the x coordinate of the child region bounding box.</param>
+		/// <param name="y">A value representing the y coordinate of the child region bounding box.</param>
+		/// <param name="width">A value representing the width of the child region bounding box.</param>
+		/// <param name="height">A value representing the height of the child region bounding box.</param>
 		/// <summary>
 		/// Positions and sizes the children of a Layout.
 		/// </summary>
@@ -330,11 +425,15 @@ namespace NControl.Controls
 
 			var newx = 0.0;
 			for (int i = 0; i < Children.Count; i++) {
-				Children[i].TranslationX = newx;
+				Children [i].TranslationX = newx;
 				newx += width;
 			}
+
+			if (_activePage != null)
+				_childLayout.TranslationX = Children.IndexOf (_activePage) * -Width;
 		}
+
 		#endregion
 	}
 }
-
+		

@@ -49,6 +49,7 @@ namespace NControl.Controls
 		/// </summary>
 		public CardPage()
 		{					
+			// Get helper
 			_platformHelper = DependencyService.Get<ICardPageHelper> ();
 
 			CardPadding = new Thickness (40, 100, 40, 200);
@@ -74,12 +75,13 @@ namespace NControl.Controls
 
 			_layout.Children.Add (_overlay, () => _layout.Bounds);
 			_layout.Children.Add(_contentView, ()=> new Rectangle (
-				CardPadding.Left,
-				CardPadding.Top, 
-				_layout.Width - (CardPadding.Right + CardPadding.Left), 
-				_layout.Height - (CardPadding.Bottom + CardPadding.Top)));
+				(_platformHelper.ControlAnimatesItself ? CardPadding.Left : 0),
+				(_platformHelper.ControlAnimatesItself ? CardPadding.Top :0),  
+				_layout.Width - (_platformHelper.ControlAnimatesItself ? (CardPadding.Right + CardPadding.Left) : 0), 
+				_layout.Height - (_platformHelper.ControlAnimatesItself ? (CardPadding.Bottom + CardPadding.Top) : 0)));
 
-			_contentView.TranslationY = _platformHelper.GetScreenSize().Height - (CardPadding.Top);
+			if(_platformHelper.ControlAnimatesItself)
+				_contentView.TranslationY = _platformHelper.GetScreenSize().Height - (CardPadding.Top);
 		}
 
 		/// <summary>
@@ -89,8 +91,10 @@ namespace NControl.Controls
 		{
 			base.OnAppearing ();
 
-			_overlay.FadeTo (0.2F);
-			_contentView.TranslateTo (0.0, 0.0, 250, Easing.CubicInOut);
+			if (_platformHelper.ControlAnimatesItself) {
+				_overlay.FadeTo (0.2F);
+				_contentView.TranslateTo (0.0, 0.0, 250, Easing.CubicInOut);
+			}
 		}
 
 		#region Properties
@@ -128,11 +132,7 @@ namespace NControl.Controls
 				_requestedWidth = value;
 				InvalidateMeasure ();
 			}
-		}
-
-		#endregion
-
-		#region Properties
+		}			
 
 		/// <summary>
 		/// Gets or Sets the View element representing the content of the Page.
@@ -142,6 +142,32 @@ namespace NControl.Controls
 		{
 			get { return _contentView.Content; }
 			set { _contentView.Content = value; }
+		}
+
+		#endregion
+
+		#region Public Members
+
+		/// <summary>
+		/// Shows the card async
+		/// </summary>
+		/// <returns>The async.</returns>
+		public Task ShowAsync()
+		{
+			return _platformHelper.ShowAsync (this);
+		}
+
+		/// <summary>
+		/// Closes the async.
+		/// </summary>
+		/// <returns>The async.</returns>
+		public async Task CloseAsync()
+		{
+			if (_platformHelper.ControlAnimatesItself) {
+				await _overlay.FadeTo (0.2F);
+				await _contentView.TranslateTo (0.0, 0.0, 250, Easing.CubicInOut);
+			}
+			await _platformHelper.CloseAsync (this);
 		}
 
 		#endregion

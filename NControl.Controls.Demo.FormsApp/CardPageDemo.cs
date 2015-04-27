@@ -3,41 +3,62 @@ using Xamarin.Forms;
 
 namespace NControl.Controls.Demo.FormsApp
 {
-	public class CardPageDemo: CardPage
+	public class CardPageDemo: ContentPage
 	{
 		public CardPageDemo ()
 		{
 			Title = "CardPage";
-			RequestedHeight = 180;
-			RequestedWidth = 250;
 
-			var button = new Button{Text = "Close"};
-			button.Clicked += async (sender, e) => await Navigation.PopModalAsync();
-
-			var label = new Label {
-				XAlign = TextAlignment.Center,
-				YAlign = TextAlignment.Center 
-			};
-
-			label.SetBinding (Label.TextProperty, "Title");
-
-			Content = new StackLayout {
-				Padding = 22,
-				Orientation = StackOrientation.Vertical,
-				HorizontalOptions = LayoutOptions.FillAndExpand,
-				VerticalOptions = LayoutOptions.CenterAndExpand,
+			Content = new StackLayout{
+				Padding = 24,
 				Children = {
-					label,
-					new Label{ 
-						Text = "This is a page",
-						XAlign = TextAlignment.Center,
-						YAlign = TextAlignment.Center 
-					},
+					new Button {
+						BackgroundColor = Color.Transparent,
+						Text = "Show",
+						Command = new Command(async (obj)=> {
 
-					button,
+							var button = new Button
+							{
+								Text = "Close"
+							};
+
+							var label = new Label {
+								XAlign = TextAlignment.Center,
+								YAlign = TextAlignment.Center 
+							};
+
+							label.SetBinding (Label.TextProperty, "Title");
+
+							var page = new CardPage{
+
+								RequestedHeight = 180,
+								RequestedWidth = 250,
+
+								Content = new StackLayout {
+									Padding = 22,
+									Orientation = StackOrientation.Vertical,
+									HorizontalOptions = LayoutOptions.FillAndExpand,
+									VerticalOptions = LayoutOptions.CenterAndExpand,
+									Children = {
+										label,
+										new Label{ 
+											Text = "This is a page",
+											XAlign = TextAlignment.Center,
+											YAlign = TextAlignment.Center 
+										},
+
+										button,
+									}
+								}
+							};
+
+							page.BindingContext = this.BindingContext;
+							button.Clicked += async (sender, e) => await page.CloseAsync();
+							await page.ShowAsync();
+						})		
+					}
 				}
-			};					
-					
+			};				
 		}
 	}
 }

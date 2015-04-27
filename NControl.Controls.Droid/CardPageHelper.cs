@@ -33,6 +33,36 @@ namespace NControl.Controls.Droid
 
 			return new Size (widthInDp, heightInDp);
 		}
+
+		/// <summary>
+		/// Shows the card async.
+		/// </summary>
+		/// <returns>The async.</returns>
+		/// <param name="page">Page.</param>
+		public Task ShowAsync (CardPage page)
+		{
+			return Xamarin.Forms.Application.Current.MainPage.Navigation.PushModalAsync (page);
+		}
+
+		/// <summary>
+		/// Closes the card async
+		/// </summary>
+		/// <returns>The aync.</returns>
+		/// <param name="page">Page.</param>
+		public Task CloseAsync (CardPage page)
+		{
+			return Xamarin.Forms.Application.Current.MainPage.Navigation.PopModalAsync ();
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="NControl.Controls.iOS.CardPageHelper"/> control animates itself.
+		/// </summary>
+		/// <value><c>true</c> if control animates itself; otherwise, <c>false</c>.</value>
+		public bool ControlAnimatesItself {
+			get {
+				return true;
+			}
+		}
 		#endregion
 
 		#region Private Members

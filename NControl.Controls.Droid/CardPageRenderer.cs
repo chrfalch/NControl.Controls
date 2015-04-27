@@ -28,7 +28,7 @@ namespace NControl.Controls.Droid
 		{
 			base.OnAttachedToWindow ();
 
-			SetBackgroundDrawable (null);
+			Background = null;
 			SetBackgroundColor (Android.Graphics.Color.Transparent);
 		}
 	}
