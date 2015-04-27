@@ -12,6 +12,7 @@ using NControl.Controls.WP81;
 using NControl.WP81;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.WinPhone;
+using Color = System.Windows.Media.Color;
 using Thickness = Xamarin.Forms.Thickness;
 
 [assembly: ExportRenderer(typeof(RoundCornerView), typeof(RoundCornerViewRenderer))]
@@ -51,10 +52,12 @@ namespace NControl.Controls.WP81
         /// <param name="element">Element.</param>
         private void UpdateElement(RoundCornerView element)
         {
-            this.Border.BorderBrush = (Brush)new ColorConverter().Convert(element.BorderColor, null, null, null);
-            this.Border.BorderThickness = new System.Windows.Thickness(element.BorderWidth);
-            this.Border.CornerRadius = new CornerRadius(element.CornerRadius);
-            
+            var colorConverter = new ColorConverter();
+                        
+            Background = (Brush)colorConverter.Convert(element.BackgroundColor, null, null, null);
+            Border.BorderBrush = (Brush)colorConverter.Convert(element.BorderColor, null, null, null);
+            Border.BorderThickness = new System.Windows.Thickness(element.BorderWidth);
+            Border.CornerRadius = new CornerRadius(element.CornerRadius);            
         }
     }
 }
