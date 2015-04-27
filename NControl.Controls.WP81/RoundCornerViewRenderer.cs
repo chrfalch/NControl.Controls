@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using NControl.Abstractions;
@@ -11,8 +12,9 @@ using NControl.Controls.WP81;
 using NControl.WP81;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.WinPhone;
+using Thickness = Xamarin.Forms.Thickness;
 
-//[assembly: ExportRenderer(typeof(RoundCornerView), typeof(RoundCornerViewRenderer))]
+[assembly: ExportRenderer(typeof(RoundCornerView), typeof(RoundCornerViewRenderer))]
 namespace NControl.Controls.WP81
 {
     public class RoundCornerViewRenderer: NControlViewRenderer
@@ -43,29 +45,15 @@ namespace NControl.Controls.WP81
                 UpdateElement(Element as RoundCornerView);
         }
 
-        private Canvas c;
         /// <summary>
         /// Updates the element.
         /// </summary>
         /// <param name="element">Element.</param>
         private void UpdateElement(RoundCornerView element)
         {
-            if (c == null)
-            {
-                c = new Canvas();
-                Canvas.Children.Insert(0, c);
-            }
-
-            if (element.BackgroundColor == Xamarin.Forms.Color.Transparent)
-                c.Background = new SolidColorBrush(Colors.Transparent);
-            else
-                c.Background =
-                    (Brush)new ColorConverter().Convert(element.BackgroundColor, null, null, null);
-
-            Canvas.Clip = new EllipseGeometry {
-                RadiusX = (Element as RoundCornerView).CornerRadius,
-                RadiusY = (Element as RoundCornerView).CornerRadius,                
-            };
+            this.Border.BorderBrush = (Brush)new ColorConverter().Convert(element.BorderColor, null, null, null);
+            this.Border.BorderThickness = new System.Windows.Thickness(element.BorderWidth);
+            this.Border.CornerRadius = new CornerRadius(element.CornerRadius);
             
         }
     }

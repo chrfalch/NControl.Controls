@@ -152,7 +152,7 @@ namespace NControl.Controls
 								csTemp = System.Text.Encoding.BigEndianUnicode.GetString (stringData, 0, ttRecord.uStringLength);
 
 							// Try once more with bigendian unicode
-							if(csTemp.Length == 0)
+							if(csTemp[0] ==  '\0')
 								csTemp = System.Text.Encoding.BigEndianUnicode.GetString (stringData, 0, ttRecord.uStringLength);
 
 							// yes, still need to check if the font name is not empty

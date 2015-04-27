@@ -20,6 +20,7 @@ namespace NControl.Controls.Demo.FormsApp
 				BorderColor = Color.Gray,
 				BorderWidth = 2.0,
 				CornerRadius = 22,
+				Icon = FontAwesomeLabel.FACar,
 			};
 
 			var button2 = new RippleButton {

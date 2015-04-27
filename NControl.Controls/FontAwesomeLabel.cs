@@ -27,7 +27,6 @@
 
 using System;
 using Xamarin.Forms;
-using NControl.Controls.Resources.Fonts;
 
 namespace NControl.Controls
 {
