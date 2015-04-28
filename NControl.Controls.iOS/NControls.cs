@@ -31,10 +31,6 @@ namespace NControl.Controls.iOS
 //						s.CopyTo(fs);					
 //
 //					s.Position = 0;
-				var indexOf = Array.IndexOf(UIFont.FamilyNames, fontName);
-				if(indexOf > -1)
-					return;
-
 				var data = new byte[s.Length];
 				s.Read (data, 0, data.Length);
 
@@ -52,6 +48,9 @@ namespace NControl.Controls.iOS
 //				if(error != null)
 //					throw new InvalidOperationException (error.Description);
 
+				var indexOf = Array.IndexOf(UIFont.FamilyNames, fontName);
+				if(indexOf > -1)
+					return;
 			});
 		}
 	}
