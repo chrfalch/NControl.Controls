@@ -55,7 +55,7 @@ namespace NControl.Controls
 				TextColor = IconColor,
 			};
 
-			layout.Children.Add (_iconLabel, () => new Rectangle (14, 0, 28, layout.Height));
+			layout.Children.Add (_iconLabel, () => new Rectangle (14, 0, 32, layout.Height));
 		}		
 
 		/// <summary>

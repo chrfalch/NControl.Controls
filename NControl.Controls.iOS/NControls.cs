@@ -3,6 +3,8 @@ using Xamarin.Forms;
 using Foundation;
 using CoreGraphics;
 using CoreText;
+using System.IO;
+using UIKit;
 
 namespace NControl.Controls.iOS
 {
@@ -19,16 +21,37 @@ namespace NControl.Controls.iOS
 			NControl.iOS.NControlViewRenderer.Init ();
 			NControl.Controls.FontLoader.LoadFonts (AppDomain.CurrentDomain.GetAssemblies(), (fontName, s) => {
 
-				// Copy bytes
+//				var folder = Environment.GetFolderPath (Environment.SpecialFolder.Personal);
+//				var filename = Path.Combine (folder, fontName + ".ttf");
+//				NSError error;
+//
+//				if(!File.Exists(filename))
+//				{
+//					using(var fs = new FileStream(filename, FileMode.CreateNew))
+//						s.CopyTo(fs);					
+//
+//					s.Position = 0;
+				var indexOf = Array.IndexOf(UIFont.FamilyNames, fontName);
+				if(indexOf > -1)
+					return;
+
 				var data = new byte[s.Length];
 				s.Read (data, 0, data.Length);
 
-				NSError error;
 				var dataProvider = new CGDataProvider (data, 0, data.Length);				
 				var font = CGFont.CreateFromProvider(dataProvider);
 
+				NSError error;
 				if (!CTFontManager.RegisterGraphicsFont(font, out error)) 
-					throw new InvalidOperationException (error.Description);				
+					throw new InvalidOperationException (error.Description);
+//				}
+
+//				error = CTFontManager.RegisterFontsForUrl(NSUrl.FromFilename(filename), 
+//					CTFontManagerScope.Session);
+//				
+//				if(error != null)
+//					throw new InvalidOperationException (error.Description);
+
 			});
 		}
 	}
