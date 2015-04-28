@@ -49,11 +49,12 @@ namespace NControl.Controls.WP80
         /// <param name="element">Element.</param>
         private void UpdateElement(RoundCornerView element)
         {
-            this.Border.BorderBrush = (Brush)new ColorConverter().Convert(element.BorderColor, null, null, null);
-            this.Border.BorderThickness = new System.Windows.Thickness(element.BorderWidth);
-            this.Border.CornerRadius = new CornerRadius(element.CornerRadius);
+            var colorConverter = new ColorConverter();
 
+            Border.Background = (Brush)colorConverter.Convert(element.BackgroundColor, null, null, null);
+            Border.BorderBrush = (Brush)colorConverter.Convert(element.BorderColor, null, null, null);
+            Border.BorderThickness = new System.Windows.Thickness(element.BorderWidth);
+            Border.CornerRadius = new CornerRadius(element.CornerRadius);
         }
     }
 }
-

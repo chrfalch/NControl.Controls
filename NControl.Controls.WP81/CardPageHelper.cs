@@ -24,5 +24,19 @@ namespace NControl.Controls.WP81
             return new Xamarin.Forms.Size(Application.Current.Host.Content.ActualWidth,
                 Application.Current.Host.Content.ActualHeight);
         }
+
+        public Task ShowAsync(CardPage page)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task CloseAsync(CardPage page)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool ControlAnimatesItself {
+            get { return true;  }
+        }
     }
 }

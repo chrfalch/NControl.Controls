@@ -53,8 +53,8 @@ namespace NControl.Controls.WP81
         private void UpdateElement(RoundCornerView element)
         {
             var colorConverter = new ColorConverter();
-                        
-            Background = (Brush)colorConverter.Convert(element.BackgroundColor, null, null, null);
+
+            Border.Background = (Brush)colorConverter.Convert(element.BackgroundColor, null, null, null);
             Border.BorderBrush = (Brush)colorConverter.Convert(element.BorderColor, null, null, null);
             Border.BorderThickness = new System.Windows.Thickness(element.BorderWidth);
             Border.CornerRadius = new CornerRadius(element.CornerRadius);            
