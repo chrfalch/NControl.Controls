@@ -42,6 +42,7 @@ namespace NControl.Controls.WP81
 
             if (e.PropertyName == RoundCornerView.BackgroundColorProperty.PropertyName ||
                 e.PropertyName == RoundCornerView.BorderColorProperty.PropertyName ||
+				e.PropertyName == RoundCornerView.CornerRadiusProperty.PropertyName ||
                 e.PropertyName == RoundCornerView.BorderWidthProperty.PropertyName)
                 UpdateElement(Element as RoundCornerView);
         }

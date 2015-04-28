@@ -22,6 +22,7 @@ namespace NControl.Controls.Droid
 
 			if (e.PropertyName == RoundCornerView.BackgroundColorProperty.PropertyName ||
 				e.PropertyName == RoundCornerView.BorderColorProperty.PropertyName ||
+				e.PropertyName == RoundCornerView.CornerRadiusProperty.PropertyName ||
 				e.PropertyName == RoundCornerView.BorderWidthProperty.PropertyName)
 				Invalidate ();
 		}

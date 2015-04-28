@@ -34,7 +34,8 @@ namespace NControl.Controls.iOS
 
 			if (e.PropertyName == RoundCornerView.BackgroundColorProperty.PropertyName ||
 				e.PropertyName == RoundCornerView.BorderColorProperty.PropertyName ||
-				e.PropertyName == RoundCornerView.BorderWidthProperty.PropertyName)
+				e.PropertyName == RoundCornerView.BorderWidthProperty.PropertyName ||
+				e.PropertyName == RoundCornerView.CornerRadiusProperty.PropertyName )
 				UpdateElement ( Element as RoundCornerView);
 		}
 

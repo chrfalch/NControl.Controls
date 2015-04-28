@@ -100,7 +100,7 @@ namespace NControl.Controls
         /// The corner radius property.
         /// </summary>
         public static BindableProperty CornerRadiusProperty = 
-            BindableProperty.Create<RoundCornerView, int> (p => p.CornerRadius, 4, 
+            BindableProperty.Create<RoundCornerView, int> (p => p.CornerRadius, 4, 				
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (RoundCornerView)bindable;
 					ctrl.CornerRadius = newValue;
