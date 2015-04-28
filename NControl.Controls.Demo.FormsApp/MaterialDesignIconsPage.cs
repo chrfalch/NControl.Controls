@@ -18,7 +18,10 @@ namespace NControl.Controls.Demo.FormsApp
 				Padding = 16,
 				Children = {
 					new FontMaterialDesignLabel {
-						Text = FontMaterialDesignLabel.MDaccountchild,
+						Text = 
+							FontMaterialDesignLabel.MD3drotation + " " + 
+							FontMaterialDesignLabel.MDaccountchild + " " + 
+							FontMaterialDesignLabel.localgasstation,
 					}
 				}
 			};

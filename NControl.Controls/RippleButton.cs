@@ -8,13 +8,26 @@ using System.Threading.Tasks;
 namespace NControl.Controls
 {
 	/// <summary>
+	/// Image position.
+	/// </summary>
+	public enum ImagePosition
+	{
+		Left,
+		Right,
+		Top,
+		Bottom
+	}
+
+	/// <summary>
 	/// Ripple button.
 	/// </summary>
 	public class RippleButton: RoundCornerView
-	{		
+	{				
+		private const double ImageHeight = 34;
+
 		protected readonly NControlView _ellipse;
 		public readonly Label TextLabel;
-		protected readonly FontAwesomeLabel _iconLabel;
+		public readonly FontAwesomeLabel IconLabel;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="NControl.Controls.RippleButton"/> class.
@@ -47,16 +60,60 @@ namespace NControl.Controls
 				YAlign = TextAlignment.Center,
 			};
 
-			layout.Children.Add (TextLabel, ()=> layout.Bounds);
+			layout.Children.Add (TextLabel, ()=> GetTextRectangleForImagePosition(layout));
 
-			_iconLabel = new FontAwesomeLabel {
+			IconLabel = new FontAwesomeLabel {
 				XAlign = TextAlignment.Center,
 				YAlign = TextAlignment.Center,
 				TextColor = IconColor,
 			};
 
-			layout.Children.Add (_iconLabel, () => new Rectangle (14, 0, 32, layout.Height));
-		}		
+			layout.Children.Add (IconLabel, () => GetIconRectangleForImagePosition(layout));
+		}	
+
+		/// <summary>
+		/// Gets the text layout for image position.
+		/// </summary>
+		/// <returns>The text layout for image position.</returns>
+		/// <param name="layout">Layout.</param>
+		private Rectangle GetTextRectangleForImagePosition (RelativeLayout layout)
+		{
+			switch (ImagePosition) {
+
+			case ImagePosition.Top:
+				return new Rectangle (0, ImageHeight, layout.Width, layout.Height - ImageHeight);
+
+			case ImagePosition.Bottom:
+				return new Rectangle (0, 0, layout.Width, layout.Height - ImageHeight);
+
+			default:
+				return layout.Bounds;
+			}
+		}
+
+		/// <summary>
+		/// Gets the icon layout for image position.
+		/// </summary>
+		/// <returns>The icon layout for image position.</returns>
+		/// <param name="layout">Layout.</param>
+		private Rectangle GetIconRectangleForImagePosition(RelativeLayout layout)
+		{
+			switch (ImagePosition) {
+
+			case ImagePosition.Right:
+				return new Rectangle (layout.Width-(ImageHeight+8), 0, ImageHeight, layout.Height);
+
+			case ImagePosition.Top:
+				return new Rectangle (0, 0, layout.Width, ImageHeight);
+
+			case ImagePosition.Bottom:
+				return new Rectangle (0, layout.Height-ImageHeight, ImageHeight, ImageHeight);
+
+			case ImagePosition.Left:
+			default:				
+				return new Rectangle (8, 0, ImageHeight, layout.Height);
+			}
+		}
 
 		/// <summary>
 		/// Ripple this instance.
@@ -128,6 +185,28 @@ namespace NControl.Controls
 		}
 
 		/// <summary>
+		/// The ImagePosition property.
+		/// </summary>
+		public static BindableProperty ImagePositionProperty = 
+			BindableProperty.Create<RippleButton, ImagePosition> (p => p.ImagePosition, 
+				ImagePosition.Left, BindingMode.TwoWay, propertyChanged: 
+				(bindable, oldValue, newValue) => {
+					var ctrl = (RippleButton)bindable;
+					ctrl.ImagePosition = newValue;
+				});
+
+		/// <summary>
+		/// Gets or sets the ImagePosition of the RippleButton instance.
+		/// </summary>
+		/// <value>The color of the buton.</value>
+		public ImagePosition ImagePosition {
+			get{ return (ImagePosition)GetValue (ImagePositionProperty); }
+			set {
+				SetValue (ImagePositionProperty, value);
+				(Content as RelativeLayout).ForceLayout ();
+			}
+		}
+		/// <summary>
 		/// The Icon property.
 		/// </summary>
 		public static BindableProperty IconProperty = 
@@ -145,7 +224,7 @@ namespace NControl.Controls
 			get{ return (string)GetValue (IconProperty); }
 			set {
 				SetValue (IconProperty, value);
-				_iconLabel.Text = value;
+				IconLabel.Text = value;
 			}
 		}
 
@@ -167,7 +246,7 @@ namespace NControl.Controls
 			get{ return (Color)GetValue (IconColorProperty); }
 			set {
 				SetValue (IconColorProperty, value);
-				_iconLabel.TextColor = value;
+				IconLabel.TextColor = value;
 			}
 		}
 

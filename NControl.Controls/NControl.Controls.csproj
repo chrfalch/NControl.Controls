@@ -52,6 +52,7 @@
     <Compile Include="CalendardView.cs" />
     <Compile Include="GalleryView.cs" />
     <Compile Include="FontMaterialDesignLabel.cs" />
+    <Compile Include="MaterialDesignRippleButton.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
