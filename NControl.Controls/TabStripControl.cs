@@ -13,22 +13,13 @@ namespace NControl.Controls
 	/// </summary>
 	public class TabStripControl:NControlView
 	{
-		/// <summary>
-		/// Tab strip location.
-		/// </summary>
-		public enum TabLocation
-		{
-			Top,
-			Bottom
-		}
-
 		#region Private Members
 
 		/// <summary>
 		/// The list of views that can be displayed.
 		/// </summary>
-		private readonly ObservableCollection<TabChild> _children = 
-			new ObservableCollection<TabChild> ();
+		private readonly ObservableCollection<TabItem> _children = 
+			new ObservableCollection<TabItem> ();
 
 		/// <summary>
 		/// The tab control.
@@ -75,8 +66,9 @@ namespace NControl.Controls
 			};
 
 			_indicator = new TabBarIndicator {
-				VerticalOptions = Location == TabLocation.Top ? LayoutOptions.End : LayoutOptions.Start,
+				VerticalOptions = LayoutOptions.End,
 				HorizontalOptions = LayoutOptions.Start,
+				BackgroundColor = (Color)TabIndicatorColorProperty.DefaultValue,
 				HeightRequest = 6,
 				WidthRequest = 0,
 			};
@@ -95,8 +87,7 @@ namespace NControl.Controls
 			};
 
 			_mainLayout.Children.Add (_tabControl, () => new Rectangle (
-				0, Location == TabLocation.Top ? 0 : _mainLayout.Height-TabHeight,
-				_mainLayout.Width, TabHeight)
+				0, 0, _mainLayout.Width, TabHeight)
 			);
 
 			// Create content control
@@ -108,8 +99,7 @@ namespace NControl.Controls
 			};
 
 			_mainLayout.Children.Add (_contentView, () => new Rectangle (
-				0, Location == TabLocation.Top ? TabHeight : 0,
-				_mainLayout.Width, _mainLayout.Height-TabHeight)
+				0, TabHeight, _mainLayout.Width, _mainLayout.Height-TabHeight)
 			);
 
 			_children.CollectionChanged += (sender, e) => {
@@ -129,7 +119,7 @@ namespace NControl.Controls
 					Activate(Children.First(), false);
 			};
 
-			//Border
+			// Border
 			var border = new NControlView {
 				DrawingFunction = (canvas, rect) => {
 
@@ -141,11 +131,10 @@ namespace NControl.Controls
 			};
 
 			_mainLayout.Children.Add (border, () => new Rectangle(
-				0, Location == TabLocation.Top ? TabHeight : 0, 
-				_mainLayout.Width, Location == TabLocation.Top ? TabHeight : 0));
+				0, TabHeight, _mainLayout.Width, 1));
 
 			// Shadow
-			var shadow = new NControlView {
+			var shadow = new NControlView {				
 				DrawingFunction = (canvas, rect)=> {
 
 					canvas.DrawRectangle(rect, null, new NGraphics.LinearGradientBrush(
@@ -156,15 +145,14 @@ namespace NControl.Controls
 			};
 
 			_mainLayout.Children.Add (shadow, () => new Rectangle(
-				0, Location == TabLocation.Top ? TabHeight : 0, 
-				_mainLayout.Width, 6));
+				0, TabHeight, _mainLayout.Width, 6));
 		}
 			
 		/// <summary>
 		/// Initializes a new instance of the <see cref="NControl.Controls.TabStripControl"/> class.
 		/// </summary>
 		/// <param name="view">View.</param>
-		public void Activate (TabChild tabChild, bool animate)
+		public void Activate (TabItem tabChild, bool animate)
 		{
 			var existingChild = Children.FirstOrDefault (t => t.View == _contentView.Children.FirstOrDefault ());
 			if (existingChild == tabChild)
@@ -179,7 +167,9 @@ namespace NControl.Controls
 				var translation = idxOfExisting < idxOfNew ? 
 					_contentView.Width : - _contentView.Width;
 
-				_contentView.Children.Add(tabChild.View);			
+				tabChild.View.TranslationX = translation;
+				if(tabChild.View.Parent != _contentView)
+					_contentView.Children.Add(tabChild.View);			
 
 				var newElementWidth = _buttonStack.Children.ElementAt (idxOfNew).Width;
 				var newElementLeft = _buttonStack.Children.ElementAt (idxOfNew).X;
@@ -226,17 +216,50 @@ namespace NControl.Controls
 		{
 			base.TouchesBegan(points);
 
+			return true;
+		}
+
+		/// <summary>
+		/// Toucheses the ended.
+		/// </summary>
+		/// <returns><c>true</c>, if ended was touchesed, <c>false</c> otherwise.</returns>
+		/// <param name="points">Points.</param>
+		public override bool TouchesEnded (IEnumerable<NGraphics.Point> points)
+		{
+			base.TouchesEnded (points);
+			return HandleTouches(points);
+		}
+
+		/// <summary>
+		/// Toucheses the cancelled.
+		/// </summary>
+		/// <returns><c>true</c>, if cancelled was touchesed, <c>false</c> otherwise.</returns>
+		/// <param name="points">Points.</param>
+		public override bool TouchesCancelled (IEnumerable<NGraphics.Point> points)
+		{
+			base.TouchesCancelled (points);
+			return HandleTouches(points);
+		}
+
+		/// <summary>
+		/// Handles the touches.
+		/// </summary>
+		/// <param name="points">Points.</param>
+		private bool HandleTouches(IEnumerable<NGraphics.Point> points)
+		{
 			// Find selected item based on click
 			var p = points.First();
-			foreach (var child in _buttonStack.Children) {
-				if (p.X >= child.X && p.X <= child.X + child.Width) {
+			foreach (var child in _buttonStack.Children) 
+			{
+				if (p.X >= child.X && p.X <= child.X + child.Width && 
+					p.Y >= child.Y && p.Y <= child.Y + _tabControl.Height) {
 					var idx = _buttonStack.Children.IndexOf (child);
 					Activate (Children [idx], true);
-					break;
+					return true;
 				}
 			}
 
-			return true;
+			return false;
 		}
 
 		/// <summary>
@@ -248,7 +271,8 @@ namespace NControl.Controls
 		{
 			base.LayoutChildren (x, y, width, height);
 
-			if (_indicator.WidthRequest == 0 && width > 0) {
+			if (_indicator.WidthRequest == 0 && width > 0) 
+			{
 				var existingChild = Children.FirstOrDefault (t => t.View == _contentView.Children.FirstOrDefault ());
 				var idxOfExisting = existingChild != null ? Children.IndexOf (existingChild) : -1;
 
@@ -260,7 +284,7 @@ namespace NControl.Controls
 		/// Gets the views.
 		/// </summary>
 		/// <value>The views.</value>
-		public IList<TabChild> Children
+		public IList<TabItem> Children
 		{
 			get{ return _children;}
 		}
@@ -287,29 +311,7 @@ namespace NControl.Controls
 					((TabBarButton)tabBtn).Font = value;
 			}
 		}
-		/// <summary>
-		/// The TabLocation property.
-		/// </summary>
-		public static BindableProperty TabLocationProperty = 
-			BindableProperty.Create<TabStripControl, TabLocation> (p => p.Location, TabLocation.Top,
-				propertyChanged: (bindable, oldValue, newValue) => {
-					var ctrl = (TabStripControl)bindable;
-					ctrl.Location = newValue;
-				});
-
-		/// <summary>
-		/// Gets or sets the TabLocation of the TabStripControl instance.
-		/// </summary>
-		/// <value>The color of the buton.</value>
-		public TabLocation Location {
-			get{ return (TabLocation)GetValue (TabLocationProperty); }
-			set {
-				SetValue (TabLocationProperty, value);
-				_indicator.VerticalOptions = Location == TabLocation.Top ? 
-					LayoutOptions.End : LayoutOptions.Start;
-				_mainLayout.ForceLayout ();
-			}
-		}
+	
 
 		/// <summary>
 		/// The TabIndicatorColor property.
@@ -380,7 +382,7 @@ namespace NControl.Controls
 	/// <summary>
 	/// Tab child.
 	/// </summary>
-	public class TabChild
+	public class TabItem
 	{
 		/// <summary>
 		/// Gets the name.
@@ -399,7 +401,7 @@ namespace NControl.Controls
 		/// </summary>
 		/// <param name="name">Name.</param>
 		/// <param name="view">View.</param>
-		public TabChild(string title, View view)
+		public TabItem(string title, View view)
 		{
 			Title = title;
 			View = view;
@@ -430,7 +432,7 @@ namespace NControl.Controls
 		/// Initializes a new instance of the <see cref="Clooger.FormsApp.UserControls.TabBarButton"/> class.
 		/// </summary>
 		public TabBarButton(string imageName, string buttonText)
-		{
+		{			
 			if (!string.IsNullOrWhiteSpace (imageName)) {
 				_imageLabel = new FontAwesomeLabel {
 					Text = imageName,
@@ -493,7 +495,6 @@ namespace NControl.Controls
 			set {
 				SetValue (SelectedColorProperty, value);
 				AccentColor = value;
-
 			}
 		}
 		/// <summary>
@@ -604,4 +605,4 @@ namespace NControl.Controls
 		}
 	}
 }
-
+	

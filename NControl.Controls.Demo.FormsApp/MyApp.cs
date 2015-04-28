@@ -22,6 +22,7 @@ namespace NControl.Controls.Demo.FormsApp
 				new GalleryPage(),
 				new PagingViewPage(),
 				new RippleButtonPage(),
+				new TabStripPage(),
 				new MaterialDesignIconsPage(),
 			};
 
