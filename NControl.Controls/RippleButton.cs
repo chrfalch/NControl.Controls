@@ -22,262 +22,83 @@ namespace NControl.Controls
 	/// Ripple button.
 	/// </summary>
 	public class RippleButton: RoundCornerView
-	{				
+	{
 		#region Constants
 
 		/// <summary>
-		/// The height of the image.
+		/// The width of the image.
 		/// </summary>
-		private const double ImageHeight = 34;
+		private const double ImageWidth = 44;
 
 		#endregion
 
 		#region Private Members
 
 		/// <summary>
-		/// The color of the orginal text.
-		/// </summary>
-		private Color _orginalTextColor;
-
-		/// <summary>
-		/// The touch start.
-		/// </summary>
-		private NGraphics.Point _touchStart;
-
-		/// <summary>
-		/// The ellipse.
-		/// </summary>
-		protected readonly NControlView _ellipse;
-
-		/// <summary>
 		/// The text label.
 		/// </summary>
-		public readonly Label TextLabel;
+		private readonly Button _textButton;
 
 		/// <summary>
 		/// The icon label.
 		/// </summary>
-		public readonly FontAwesomeLabel IconLabel;
+		private readonly Button _iconButton;
 
+		/// <summary>
+		/// The rippler.
+		/// </summary>
+		private readonly RippleControl _rippler;
+
+		/// <summary>
+		/// The layout.
+		/// </summary>
+		private readonly RelativeLayout _layout;
 
 		#endregion
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="NControl.Controls.RippleButton"/> class.
 		/// </summary>
-		public RippleButton ()
-		{			
-			HeightRequest = 44;
+		public RippleButton()
+		{
+			_layout = new RelativeLayout ();
 
-			var layout = new RelativeLayout ();
-			Content = layout;
-			IsClippedToBounds = true;
+			// Add ripple thing
+			_rippler = new RippleControl();
+			_layout.Children.Add (_rippler, () => _layout.Bounds);
 
-			_ellipse = new NControlView {
+			// Add title and icon
+			_textButton = new Button{ 
 				BackgroundColor = Color.Transparent,
-				DrawingFunction = (canvas, rect) =>{
-					canvas.DrawEllipse(rect, null, new NGraphics.SolidBrush(RippleColor.ToNColor()));
-				},
-				Scale = 0.0,
-			};				
+				BorderColor = Color.Transparent,
+				TextColor = Color.Black,
+				BorderRadius = 0,
+				BorderWidth = 0,
+			};
+			_textButton.Clicked += (sender, e) => _rippler.RippleAsync(
+				_layout.Width/2, _layout.Height/2, true);
 
-			layout.Children.Add (_ellipse, () => new Rectangle (
-				(layout.Width / 2) - (Math.Max(layout.Width, layout.Height) / 2),
-				(layout.Height / 2) - (Math.Max(layout.Width, layout.Height) / 2),
-				Math.Max(layout.Width, layout.Height), 
-				Math.Max(layout.Width, layout.Height)));
+			_layout.Children.Add (_textButton, ()=> GetTextRectangleForImagePosition(_layout));
 
-		
-			TextLabel = new Label{ 
+			_iconButton = new Button{ 
 				BackgroundColor = Color.Transparent,
-				XAlign = TextAlignment.Center,
-				YAlign = TextAlignment.Center,
+				BorderColor = Color.Transparent,
+				BorderRadius = 0,
+				BorderWidth = 0,
+				FontFamily = FontAwesomeLabel.FontAwesomeName,
+				FontSize = 18,
+				TextColor = (Color)IconColorProperty.DefaultValue,
 			};
-			_orginalTextColor = TextLabel.TextColor;
+			_iconButton.Clicked += (sender, e) => _rippler.RippleAsync(
+				_layout.Width/2, _layout.Height/2, true);
 
-			layout.Children.Add (TextLabel, ()=> GetTextRectangleForImagePosition(layout));
+			_layout.Children.Add (_iconButton, () => GetIconRectangleForImagePosition(_layout));
 
-			IconLabel = new FontAwesomeLabel {
-				XAlign = TextAlignment.Center,
-				YAlign = TextAlignment.Center,
-				TextColor = IconColor,
-			};
-
-			layout.Children.Add (IconLabel, () => GetIconRectangleForImagePosition(layout));
-
-		}	
-
-		/// <summary>
-		/// Gets the text layout for image position.
-		/// </summary>
-		/// <returns>The text layout for image position.</returns>
-		/// <param name="layout">Layout.</param>
-		private Rectangle GetTextRectangleForImagePosition (RelativeLayout layout)
-		{
-			switch (ImagePosition) {
-
-			case ImagePosition.Top:
-				return new Rectangle (0, ImageHeight, layout.Width, layout.Height - ImageHeight);
-
-			case ImagePosition.Bottom:
-				return new Rectangle (0, 0, layout.Width, layout.Height - ImageHeight);
-
-			default:
-				return layout.Bounds;
-			}
+			Content = _layout;
 		}
 
-		/// <summary>
-		/// Gets the icon layout for image position.
-		/// </summary>
-		/// <returns>The icon layout for image position.</returns>
-		/// <param name="layout">Layout.</param>
-		private Rectangle GetIconRectangleForImagePosition(RelativeLayout layout)
-		{
-			switch (ImagePosition) {
+		#region Properties
 
-			case ImagePosition.Right:
-				return new Rectangle (layout.Width-(ImageHeight+8), 0, layout.Height, layout.Height);
-
-			case ImagePosition.Top:
-				return new Rectangle (0, 0, layout.Width, ImageHeight);
-
-			case ImagePosition.Bottom:
-				return new Rectangle (0, layout.Height-ImageHeight, ImageHeight, ImageHeight);
-
-			case ImagePosition.Left:
-			default:				
-				return new Rectangle (8, 0, layout.Height, layout.Height);
-			}
-		}
-
-		/// <summary>
-		/// Ripple this instance.
-		/// </summary>
-		public async Task RippleAsync(double x, double y, bool animate)
-		{
-			await InternalRippleAsync (x, y, animate);
-
-			if (animate)
-				await _ellipse.FadeTo (0.0, 50);
-			else
-				_ellipse.Opacity = 0.0;
-				
-		}
-
-		/// <summary>
-		/// Internals the ripple async.
-		/// </summary>
-		/// <returns>The ripple async.</returns>
-		/// <param name="x">The x coordinate.</param>
-		/// <param name="y">The y coordinate.</param>
-		private async Task InternalRippleAsync(double x, double y, bool animate)
-		{
-			var position = new Point (x, y);
-
-			_ellipse.Scale = 0.0;
-			_ellipse.Opacity = 1.0;
-
-			var layout = Content as RelativeLayout;
-			_ellipse.TranslationX = -((layout.Width / 2) - position.X);
-			_ellipse.TranslationY = -((layout.Height / 2) - position.Y);
-
-			if (animate)
-				await _ellipse.ScaleTo (1.2, easing: Easing.CubicInOut);
-			else
-				return;
-		}
-
-		/// <summary>
-		/// Toucheses the began.
-		/// </summary>
-		/// <returns><c>true</c>, if began was touchesed, <c>false</c> otherwise.</returns>
-		/// <param name="points">Points.</param>
-		public override bool TouchesBegan (System.Collections.Generic.IEnumerable<NGraphics.Point> points)
-		{
-			base.TouchesBegan (points);
-
-			if (!IsEnabled)
-				return false;
-
-			var firstPoint = points.FirstOrDefault ();
-			_touchStart = firstPoint;
-
-			Device.BeginInvokeOnMainThread (async () =>  await InternalRippleAsync(firstPoint.X, firstPoint.Y, true));
-
-			return true;
-		}
-
-		/// <summary>
-		/// Toucheses the cancelled.
-		/// </summary>
-		/// <returns><c>true</c>, if cancelled was touchesed, <c>false</c> otherwise.</returns>
-		/// <param name="points">Points.</param>
-		public override bool TouchesCancelled (System.Collections.Generic.IEnumerable<NGraphics.Point> points)
-		{
-			base.TouchesCancelled (points);
-			return HandleEnd (points.First (), true);
-		}
-
-		/// <summary>
-		/// Toucheses the ended.
-		/// </summary>
-		/// <returns><c>true</c>, if ended was touchesed, <c>false</c> otherwise.</returns>
-		/// <param name="points">Points.</param>
-		public override bool TouchesEnded (System.Collections.Generic.IEnumerable<NGraphics.Point> points)
-		{
-			base.TouchesEnded (points);		
-			return HandleEnd (points.First (), true);
-		}
-
-		/// <summary>
-		/// Handles the end.
-		/// </summary>
-		/// <returns><c>true</c>, if end was handled, <c>false</c> otherwise.</returns>
-		/// <param name="point">Point.</param>
-		private bool HandleEnd(NGraphics.Point point, bool allowCancel)
-		{
-			if (!IsEnabled)
-				return false;
-			
-			// Should we allow cancel?
-//			if (allowCancel) {
-//				var d = ((_touchStart.X - point.X) * (_touchStart.X - point.X) + (_touchStart.Y - point.Y) * (_touchStart.Y - point.Y));
-//				if (d > 35) {
-//					_ellipse.FadeTo (0.0, 50);
-//					return false;
-//				}
-//			}
-
-			// Execute command
-//			if (Command != null && Command.CanExecute (CommandParameter))
-//				Command.Execute (CommandParameter);
-//
-			_ellipse.FadeTo (0.0, 50);
-
-			return true;
-		}
-
-		/// <summary>
-		/// The ShouldRipple property.
-		/// </summary>
-		public static BindableProperty ShouldRippleProperty = 
-			BindableProperty.Create<RippleButton, bool> (p => p.ShouldRipple, true,
-				BindingMode.TwoWay, propertyChanged: (bindable, oldValue, newValue) => {
-					var ctrl = (RippleButton)bindable;
-					ctrl.ShouldRipple = newValue;
-				});
-
-		/// <summary>
-		/// Gets or sets the ShouldRipple of the RippleButton instance.
-		/// </summary>
-		/// <value>The color of the buton.</value>
-		public bool ShouldRipple {
-			get{ return (bool)GetValue (ShouldRippleProperty); }
-			set {
-				SetValue (ShouldRippleProperty, value);
-			}
-		}
 		/// <summary>
 		/// The ImagePosition property.
 		/// </summary>
@@ -297,9 +118,61 @@ namespace NControl.Controls
 			get{ return (ImagePosition)GetValue (ImagePositionProperty); }
 			set {
 				SetValue (ImagePositionProperty, value);
-				(Content as RelativeLayout).ForceLayout ();
+				_layout.ForceLayout ();
 			}
 		}
+
+		#endregion
+
+		#region Private Members
+
+		/// <summary>
+		/// Gets the text layout for image position.
+		/// </summary>
+		/// <returns>The text layout for image position.</returns>
+		/// <param name="layout">Layout.</param>
+		private Rectangle GetTextRectangleForImagePosition (RelativeLayout layout)
+		{
+			switch (ImagePosition) {
+
+			case ImagePosition.Top:
+				return new Rectangle (0, layout.Height/2, layout.Width, layout.Height/2);
+
+			case ImagePosition.Bottom:
+				return new Rectangle (0, 0, layout.Width, layout.Height/2);
+
+			default:
+				return layout.Bounds;
+			}
+		}
+
+		/// <summary>
+		/// Gets the icon layout for image position.
+		/// </summary>
+		/// <returns>The icon layout for image position.</returns>
+		/// <param name="layout">Layout.</param>
+		private Rectangle GetIconRectangleForImagePosition(RelativeLayout layout)
+		{
+			switch (ImagePosition) {
+
+			case ImagePosition.Right:
+				return new Rectangle (layout.Width-ImageWidth, 0, ImageWidth, layout.Height);
+
+			case ImagePosition.Top:
+				return new Rectangle (0, 0, layout.Width, layout.Height/2);
+
+			case ImagePosition.Bottom:
+				return new Rectangle (0, layout.Height/2, layout.Width, layout.Height/2);
+
+			case ImagePosition.Left:
+			default:				
+				return new Rectangle (0, 0, ImageWidth, layout.Height);
+			}
+		}
+		#endregion
+
+		#region Commands
+
 		/// <summary>
 		/// The Icon property.
 		/// </summary>
@@ -318,7 +191,7 @@ namespace NControl.Controls
 			get{ return (string)GetValue (IconProperty); }
 			set {
 				SetValue (IconProperty, value);
-				IconLabel.Text = value;
+				_iconButton.Text = value;
 			}
 		}
 
@@ -326,7 +199,7 @@ namespace NControl.Controls
 		/// The IconColor property.
 		/// </summary>
 		public static BindableProperty IconColorProperty = 
-			BindableProperty.Create<RippleButton, Color> (p => p.IconColor, Color.FromHex("#CECECE"),
+			BindableProperty.Create<RippleButton, Color> (p => p.IconColor, Color.FromHex("#BBBBBB"),
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (RippleButton)bindable;
 					ctrl.IconColor = newValue;
@@ -340,90 +213,20 @@ namespace NControl.Controls
 			get{ return (Color)GetValue (IconColorProperty); }
 			set {
 				SetValue (IconColorProperty, value);
-				IconLabel.TextColor = value;
+				_iconButton.TextColor = value;
 			}
 		}
 
-		/// <summary>
-		/// The RippleColor property.
-		/// </summary>
-		public static BindableProperty RippleColorProperty = 
-			BindableProperty.Create<RippleButton, Color> (p => p.RippleColor, Color.FromHex("#DDDDDD"),
-				propertyChanged: (bindable, oldValue, newValue) => {
-					var ctrl = (RippleButton)bindable;
-					ctrl.RippleColor = newValue;
-				});
-
-		/// <summary>
-		/// Gets or sets the RippleColor of the RippleButton instance.
-		/// </summary>
-		/// <value>The color of the buton.</value>
-		public Color RippleColor {
-			get{ return (Color)GetValue (RippleColorProperty); }
-			set {
-				SetValue (RippleColorProperty, value);
-				_ellipse.BackgroundColor = value;
-			}
-		}
-
-		/// <summary>
-		/// The Command property.
-		/// </summary>
-		public static BindableProperty CommandProperty = 
-			BindableProperty.Create<RippleButton, ICommand> (p => p.Command, null,
-				propertyChanged: (bindable, oldValue, newValue) => {
-					var ctrl = (RippleButton)bindable;
-					ctrl.Command = newValue;
-				});
-
-		/// <summary>
-		/// Gets or sets the Command of the RippleButton instance.
-		/// </summary>
-		/// <value>The color of the buton.</value>
-		public ICommand Command {
-			get{ return (ICommand)GetValue (CommandProperty); }
-			set {
-				if (Command != null)
-					Command.CanExecuteChanged -= HandleCanExecuteChanged;
-
-				SetValue (CommandProperty, value);
-				IsEnabled = Command.CanExecute (CommandParameter);
-
-				if (value != null)
-					value.CanExecuteChanged += HandleCanExecuteChanged;
-			}
-		}
-
-		/// <summary>
-		/// The CommandParameter property.
-		/// </summary>
-		public static BindableProperty CommandParameterProperty = 
-			BindableProperty.Create<RippleButton, object> (p => p.CommandParameter, null,
-				propertyChanged: (bindable, oldValue, newValue) => {
-					var ctrl = (RippleButton)bindable;
-					ctrl.CommandParameter = newValue;
-				});
-
-		/// <summary>
-		/// Gets or sets the CommandParameter of the RippleButton instance.
-		/// </summary>
-		/// <value>The color of the buton.</value>
-		public object CommandParameter {
-			get{ return (object)GetValue (CommandParameterProperty); }
-			set {
-				SetValue (CommandParameterProperty, value);
-			}
-		}
 
 		/// <summary>
 		/// The Text property.
 		/// </summary>
 		public static BindableProperty TextProperty = 
 			BindableProperty.Create<RippleButton, string> (p => p.Text, string.Empty,
-						propertyChanged: (bindable, oldValue, newValue) => {
-							var ctrl = (RippleButton)bindable;
-							ctrl.Text = newValue;
-						});
+				propertyChanged: (bindable, oldValue, newValue) => {
+					var ctrl = (RippleButton)bindable;
+					ctrl.Text = newValue;
+				});
 
 		/// <summary>
 		/// Gets or sets the Text of the RippleButton instance.
@@ -434,7 +237,7 @@ namespace NControl.Controls
 			set
 			{
 				SetValue(TextProperty, value);
-				TextLabel.Text = value;
+				_textButton.Text = value;
 			}
 		}
 
@@ -456,37 +259,55 @@ namespace NControl.Controls
 			get{ return (string)GetValue (FontFamilyProperty); }
 			set {
 				SetValue (FontFamilyProperty, value);
-				TextLabel.FontFamily = value;
+				_textButton.FontFamily = value;
 			}
 		}
 
 		/// <summary>
-		/// The IsEnabled property.
+		/// The Command property.
 		/// </summary>
-		public static new BindableProperty IsEnabledProperty = 
-			BindableProperty.Create<RippleButton, bool> (p => p.IsEnabled, true,
+		public static BindableProperty CommandProperty = 
+			BindableProperty.Create<RippleButton, ICommand> (p => p.Command, null,
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (RippleButton)bindable;
-					ctrl.IsEnabled = newValue;
+					ctrl.Command = newValue;
 				});
 
 		/// <summary>
-		/// Gets or sets the IsEnabled of the RippleButton instance.
+		/// Gets or sets the Command of the RippleButton instance.
 		/// </summary>
 		/// <value>The color of the buton.</value>
-		public new bool IsEnabled 
-		{
-			get{ return (bool)GetValue (IsEnabledProperty); }
+		public ICommand Command {
+			get{ return (ICommand)GetValue (CommandProperty); }
 			set {
+				SetValue (CommandProperty, value);
 
-				SetValue (IsEnabledProperty, value);
+				_textButton.Command = value;
+				_iconButton.Command = value;
+			}
+		}
 
-				if (value)
-					TextLabel.TextColor = _orginalTextColor;
-				else {
-					_orginalTextColor = TextLabel.TextColor;
-					TextLabel.TextColor = Color.FromHex ("#CCCCCC");
-				}
+		/// <summary>
+		/// The CommandParameter property.
+		/// </summary>
+		public static BindableProperty CommandParameterProperty = 
+			BindableProperty.Create<RippleButton, object> (p => p.CommandParameter, null,
+				propertyChanged: (bindable, oldValue, newValue) => {
+					var ctrl = (RippleButton)bindable;
+					ctrl.CommandParameter = newValue;
+				});
+
+		/// <summary>
+		/// Gets or sets the CommandParameter of the RippleButton instance.
+		/// </summary>
+		/// <value>The color of the buton.</value>
+		public object CommandParameter {
+			get{ return (object)GetValue (CommandParameterProperty); }
+			set {
+				SetValue (CommandParameterProperty, value);
+
+				_textButton.CommandParameter = value;
+				_iconButton.CommandParameter = value;
 			}
 		}
 
@@ -499,7 +320,7 @@ namespace NControl.Controls
 					var ctrl = (RippleButton)bindable;
 					ctrl.TextColor = newValue;
 				});
-
+					
 		/// <summary>
 		/// Gets or sets the TextColor of the RippleButton instance.
 		/// </summary>
@@ -508,8 +329,7 @@ namespace NControl.Controls
 			get{ return (Color)GetValue (TextColorProperty); }
 			set {
 				SetValue (TextColorProperty, value);
-				TextLabel.TextColor = value;
-				_orginalTextColor = value;
+				_textButton.TextColor = value;
 			}
 		}
 
@@ -531,22 +351,190 @@ namespace NControl.Controls
 			get{ return (double)GetValue (FontSizeProperty); }
 			set {
 				SetValue (FontSizeProperty, value);
-				TextLabel.FontSize = value;
+
+				_textButton.FontSize = value;
 			}
 		}
 
+		/// <summary>
+		/// The IconFontFamily property.
+		/// </summary>
+		public static BindableProperty IconFontFamilyProperty = 
+			BindableProperty.Create<RippleButton, string> (p => p.IconFontFamily, null,
+				propertyChanged: (bindable, oldValue, newValue) => {
+					var ctrl = (RippleButton)bindable;
+					ctrl.IconFontFamily = newValue;
+				});
+
+		/// <summary>
+		/// Gets or sets the IconFontFamily of the RippleButton instance.
+		/// </summary>
+		/// <value>The color of the buton.</value>
+		public string IconFontFamily {
+			get{ return (string)GetValue (IconFontFamilyProperty); }
+			set {
+				SetValue (IconFontFamilyProperty, value);
+
+				_iconButton.FontFamily = value;
+			}
+		}
+
+		/// <summary>
+		/// The RippleColor property.
+		/// </summary>
+		public static BindableProperty RippleColorProperty = 
+			BindableProperty.Create<RippleButton, Color> (p => p.RippleColor, Color.FromHex("#DDDDDD"),
+				propertyChanged: (bindable, oldValue, newValue) => {
+					var ctrl = (RippleButton)bindable;
+					ctrl.RippleColor = newValue;
+				});
+
+		/// <summary>
+		/// Gets or sets the RippleColor of the RippleButton instance.
+		/// </summary>
+		/// <value>The color of the buton.</value>
+		public Color RippleColor {
+			get{ return (Color)GetValue (RippleColorProperty); }
+			set {
+				SetValue (RippleColorProperty, value);
+
+				_rippler.RippleColor = value;
+			}
+		}
+		#endregion
+	}
+
+	/// <summary>
+	/// Ripple button.
+	/// </summary>
+	public class RippleControl: RoundCornerView
+	{				
 		#region Private Members
 
 		/// <summary>
-		/// Handles the can execute changed.
+		/// The ellipse.
 		/// </summary>
-		/// <param name="sender">Sender.</param>
-		/// <param name="args">Arguments.</param>
-		private void HandleCanExecuteChanged(object sender, EventArgs args)
-		{
-			IsEnabled = Command.CanExecute (CommandParameter);
-		}
+		protected readonly NControlView _ellipse;
+
 		#endregion
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="NControl.Controls.RippleButton"/> class.
+		/// </summary>
+		public RippleControl ()
+		{			
+			HeightRequest = 44;
+
+			var layout = new RelativeLayout ();
+			Content = layout;
+			IsClippedToBounds = true;
+
+			_ellipse = new NControlView {
+				BackgroundColor = Color.Transparent,
+				DrawingFunction = (canvas, rect) =>{
+					canvas.DrawEllipse(rect, null, new NGraphics.SolidBrush(RippleColor.ToNColor()));
+				},
+				Scale = 0.0,
+			};				
+
+			layout.Children.Add (_ellipse, () => new Rectangle (
+				(layout.Width / 2) - (Math.Max(layout.Width, layout.Height) / 2),
+				(layout.Height / 2) - (Math.Max(layout.Width, layout.Height) / 2),
+				Math.Max(layout.Width, layout.Height), 
+				Math.Max(layout.Width, layout.Height)));
+			
+		}	
+
+		/// <summary>
+		/// Ripple this instance.
+		/// </summary>
+		public async Task RippleAsync(double x, double y, bool animate)
+		{
+			var position = new Point (x, y);
+
+			_ellipse.Scale = 0.0;
+			_ellipse.Opacity = 1.0;
+
+			var layout = Content as RelativeLayout;
+			_ellipse.TranslationX = -((layout.Width / 2) - position.X);
+			_ellipse.TranslationY = -((layout.Height / 2) - position.Y);
+
+			if (animate) {
+				await _ellipse.ScaleTo (2.0, easing: Easing.CubicInOut);
+				await _ellipse.FadeTo (0.0, easing: Easing.CubicInOut);
+			}
+
+					
+		}
+
+		/// <summary>
+		/// Handles the end.
+		/// </summary>
+		/// <returns><c>true</c>, if end was handled, <c>false</c> otherwise.</returns>
+		/// <param name="point">Point.</param>
+		private bool HandleEnd(NGraphics.Point point, bool allowCancel)
+		{
+			_ellipse.FadeTo (0.0, 50);
+
+			// Should we allow cancel?
+//			if (allowCancel) {
+//				var d = ((_touchStart.X - point.X) * (_touchStart.X - point.X) + (_touchStart.Y - point.Y) * (_touchStart.Y - point.Y));
+//				if (d > 35) {
+//					_ellipse.FadeTo (0.0, 50);
+//					return false;
+//				}
+//			}
+
+			// Execute command
+//			if (Command != null && Command.CanExecute (CommandParameter))
+//				Command.Execute (CommandParameter);
+//
+
+			return true;
+		}
+
+		/// <summary>
+		/// The ShouldRipple property.
+		/// </summary>
+		public static BindableProperty ShouldRippleProperty = 
+			BindableProperty.Create<RippleControl, bool> (p => p.ShouldRipple, true,
+				BindingMode.TwoWay, propertyChanged: (bindable, oldValue, newValue) => {
+					var ctrl = (RippleControl)bindable;
+					ctrl.ShouldRipple = newValue;
+				});
+
+		/// <summary>
+		/// Gets or sets the ShouldRipple of the RippleButton instance.
+		/// </summary>
+		/// <value>The color of the buton.</value>
+		public bool ShouldRipple {
+			get{ return (bool)GetValue (ShouldRippleProperty); }
+			set {
+				SetValue (ShouldRippleProperty, value);
+			}
+		}
+
+		/// <summary>
+		/// The RippleColor property.
+		/// </summary>
+		public static BindableProperty RippleColorProperty = 
+			BindableProperty.Create<RippleControl, Color> (p => p.RippleColor, Color.FromHex("#DDDDDD"),
+				propertyChanged: (bindable, oldValue, newValue) => {
+					var ctrl = (RippleControl)bindable;
+					ctrl.RippleColor = newValue;
+				});
+
+		/// <summary>
+		/// Gets or sets the RippleColor of the RippleButton instance.
+		/// </summary>
+		/// <value>The color of the buton.</value>
+		public Color RippleColor {
+			get{ return (Color)GetValue (RippleColorProperty); }
+			set {
+				SetValue (RippleColorProperty, value);
+				_ellipse.BackgroundColor = value;
+			}
+		}
 	}
 }
 

@@ -9,7 +9,7 @@ namespace NControl.Controls
 	{
 		public MaterialDesignRippleButton ()
 		{
-			IconLabel.FontFamily = FontMaterialDesignLabel.FontName;
+			IconFontFamily = FontMaterialDesignLabel.FontName;
 		}
 	}
 }
