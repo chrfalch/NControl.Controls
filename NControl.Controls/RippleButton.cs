@@ -23,12 +23,44 @@ namespace NControl.Controls
 	/// </summary>
 	public class RippleButton: RoundCornerView
 	{				
+		#region Constants
+
+		/// <summary>
+		/// The height of the image.
+		/// </summary>
 		private const double ImageHeight = 34;
 
+		#endregion
+
+		#region Private Members
+
+		/// <summary>
+		/// The color of the orginal text.
+		/// </summary>
+		private Color _orginalTextColor;
+
+		/// <summary>
+		/// The touch start.
+		/// </summary>
 		private NGraphics.Point _touchStart;
+
+		/// <summary>
+		/// The ellipse.
+		/// </summary>
 		protected readonly NControlView _ellipse;
+
+		/// <summary>
+		/// The text label.
+		/// </summary>
 		public readonly Label TextLabel;
+
+		/// <summary>
+		/// The icon label.
+		/// </summary>
 		public readonly FontAwesomeLabel IconLabel;
+
+
+		#endregion
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="NControl.Controls.RippleButton"/> class.
@@ -61,6 +93,7 @@ namespace NControl.Controls
 				XAlign = TextAlignment.Center,
 				YAlign = TextAlignment.Center,
 			};
+			_orginalTextColor = TextLabel.TextColor;
 
 			layout.Children.Add (TextLabel, ()=> GetTextRectangleForImagePosition(layout));
 
@@ -71,6 +104,7 @@ namespace NControl.Controls
 			};
 
 			layout.Children.Add (IconLabel, () => GetIconRectangleForImagePosition(layout));
+
 		}	
 
 		/// <summary>
@@ -103,7 +137,7 @@ namespace NControl.Controls
 			switch (ImagePosition) {
 
 			case ImagePosition.Right:
-				return new Rectangle (layout.Width-(ImageHeight+8), 0, ImageHeight, layout.Height);
+				return new Rectangle (layout.Width-(ImageHeight+8), 0, layout.Height, layout.Height);
 
 			case ImagePosition.Top:
 				return new Rectangle (0, 0, layout.Width, ImageHeight);
@@ -113,7 +147,7 @@ namespace NControl.Controls
 
 			case ImagePosition.Left:
 			default:				
-				return new Rectangle (8, 0, ImageHeight, layout.Height);
+				return new Rectangle (8, 0, layout.Height, layout.Height);
 			}
 		}
 
@@ -122,9 +156,10 @@ namespace NControl.Controls
 		/// </summary>
 		public async Task RippleAsync(double x, double y, bool animate)
 		{
-			InternalRippleAsync (x, y, animate);
+			await InternalRippleAsync (x, y, animate);
+
 			if (animate)
-				_ellipse.FadeTo (0.0, 50);
+				await _ellipse.FadeTo (0.0, 50);
 			else
 				_ellipse.Opacity = 0.0;
 				
@@ -161,6 +196,9 @@ namespace NControl.Controls
 		public override bool TouchesBegan (System.Collections.Generic.IEnumerable<NGraphics.Point> points)
 		{
 			base.TouchesBegan (points);
+
+			if (!IsEnabled)
+				return false;
 
 			var firstPoint = points.FirstOrDefault ();
 			_touchStart = firstPoint;
@@ -199,19 +237,22 @@ namespace NControl.Controls
 		/// <param name="point">Point.</param>
 		private bool HandleEnd(NGraphics.Point point, bool allowCancel)
 		{
+			if (!IsEnabled)
+				return false;
+			
 			// Should we allow cancel?
-			if (allowCancel) {
-				var d = ((_touchStart.X - point.X) * (_touchStart.X - point.X) + (_touchStart.Y - point.Y) * (_touchStart.Y - point.Y));
-				if (d > 10) {
-					_ellipse.FadeTo (0.0, 50);
-					return false;
-				}
-			}
+//			if (allowCancel) {
+//				var d = ((_touchStart.X - point.X) * (_touchStart.X - point.X) + (_touchStart.Y - point.Y) * (_touchStart.Y - point.Y));
+//				if (d > 35) {
+//					_ellipse.FadeTo (0.0, 50);
+//					return false;
+//				}
+//			}
 
 			// Execute command
-			if (Command != null && Command.CanExecute (CommandParameter))
-				Command.Execute (CommandParameter);
-
+//			if (Command != null && Command.CanExecute (CommandParameter))
+//				Command.Execute (CommandParameter);
+//
 			_ellipse.FadeTo (0.0, 50);
 
 			return true;
@@ -342,7 +383,14 @@ namespace NControl.Controls
 		public ICommand Command {
 			get{ return (ICommand)GetValue (CommandProperty); }
 			set {
+				if (Command != null)
+					Command.CanExecuteChanged -= HandleCanExecuteChanged;
+
 				SetValue (CommandProperty, value);
+				IsEnabled = Command.CanExecute (CommandParameter);
+
+				if (value != null)
+					value.CanExecuteChanged += HandleCanExecuteChanged;
 			}
 		}
 
@@ -413,6 +461,36 @@ namespace NControl.Controls
 		}
 
 		/// <summary>
+		/// The IsEnabled property.
+		/// </summary>
+		public static new BindableProperty IsEnabledProperty = 
+			BindableProperty.Create<RippleButton, bool> (p => p.IsEnabled, true,
+				propertyChanged: (bindable, oldValue, newValue) => {
+					var ctrl = (RippleButton)bindable;
+					ctrl.IsEnabled = newValue;
+				});
+
+		/// <summary>
+		/// Gets or sets the IsEnabled of the RippleButton instance.
+		/// </summary>
+		/// <value>The color of the buton.</value>
+		public new bool IsEnabled 
+		{
+			get{ return (bool)GetValue (IsEnabledProperty); }
+			set {
+
+				SetValue (IsEnabledProperty, value);
+
+				if (value)
+					TextLabel.TextColor = _orginalTextColor;
+				else {
+					_orginalTextColor = TextLabel.TextColor;
+					TextLabel.TextColor = Color.FromHex ("#CCCCCC");
+				}
+			}
+		}
+
+		/// <summary>
 		/// The TextColor property.
 		/// </summary>
 		public static BindableProperty TextColorProperty = 
@@ -431,6 +509,7 @@ namespace NControl.Controls
 			set {
 				SetValue (TextColorProperty, value);
 				TextLabel.TextColor = value;
+				_orginalTextColor = value;
 			}
 		}
 
@@ -455,6 +534,19 @@ namespace NControl.Controls
 				TextLabel.FontSize = value;
 			}
 		}
+
+		#region Private Members
+
+		/// <summary>
+		/// Handles the can execute changed.
+		/// </summary>
+		/// <param name="sender">Sender.</param>
+		/// <param name="args">Arguments.</param>
+		private void HandleCanExecuteChanged(object sender, EventArgs args)
+		{
+			IsEnabled = Command.CanExecute (CommandParameter);
+		}
+		#endregion
 	}
 }
 
