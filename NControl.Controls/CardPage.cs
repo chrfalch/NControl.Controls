@@ -51,6 +51,9 @@ namespace NControl.Controls
 		{					
 			// Get helper
 			_platformHelper = DependencyService.Get<ICardPageHelper> ();
+            if(_platformHelper == null)
+                throw new InvalidOperationException("Error loading NControls - did you remember to call " + 
+                    "NControls.Init() in your platform startup code?");
 
 			CardPadding = new Thickness (40, 100, 40, 200);
 			BackgroundColor = Color.Transparent;

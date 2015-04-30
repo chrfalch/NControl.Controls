@@ -55,6 +55,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\Fonts\ClinkClank.ttf" />
     <EmbeddedResource Include="Resources\Images\kaffe.jpg" />
+    <EmbeddedResource Include="Resources\Fonts\NeoTechStd-Regular.otf" />
   </ItemGroup>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

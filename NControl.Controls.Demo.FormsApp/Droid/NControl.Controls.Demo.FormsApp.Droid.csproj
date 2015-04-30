@@ -98,7 +98,6 @@
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
     <None Include="Properties\AndroidManifest.xml" />
-    <None Include="Assets\AboutAssets.txt" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

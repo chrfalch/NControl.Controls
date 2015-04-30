@@ -90,8 +90,7 @@ namespace NControl.Controls.iOS
 
 			cardPageContext.Controller.View.RemoveFromSuperview ();
 			cardPageContext.Overlay.RemoveFromSuperview ();
-			cardPageContext.Controller.View.Transform = CGAffineTransform.MakeIdentity ();
-
+		    cardPageContext.Controller = null;
 		}
 			
 		/// <summary>

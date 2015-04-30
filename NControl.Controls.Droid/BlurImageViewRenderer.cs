@@ -52,11 +52,11 @@ namespace NControl.Controls.Droid
 		protected override void OnElementPropertyChanged (object sender, PropertyChangedEventArgs e)
 		{
 			base.OnElementPropertyChanged (sender, e);
-//			if (e.PropertyName == Image.SourceProperty.PropertyName) {
-//				// Update bitmap
-//				UpdateBitmap();
-//				return;
-//			}
+			if (e.PropertyName == Image.SourceProperty.PropertyName) {
+				// Update bitmap
+				HandleUpdateBitmap(this, EventArgs.Empty);
+				return;
+			}
 		}
 
 		/// <summary>
@@ -72,6 +72,9 @@ namespace NControl.Controls.Droid
 			if (d != null) {
 				if (d is BitmapDrawable) {
 					var bmp = (d as BitmapDrawable).Bitmap;
+					if (bmp == null)
+						return;
+					
 					this.Control.SetImageBitmap(CreateBlurredImage(25, bmp));
 					this.Control.Invalidate ();
 				}

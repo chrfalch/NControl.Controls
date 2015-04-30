@@ -25,6 +25,7 @@ namespace NControl.Controls
 	{				
 		private const double ImageHeight = 34;
 
+		private NGraphics.Point _touchStart;
 		protected readonly NControlView _ellipse;
 		public readonly Label TextLabel;
 		public readonly FontAwesomeLabel IconLabel;
@@ -49,10 +50,11 @@ namespace NControl.Controls
 			};				
 
 			layout.Children.Add (_ellipse, () => new Rectangle (
-				(layout.Width / 2) - (Math.Min(Math.Min (layout.Width, layout.Height), 44) / 2),
-				(layout.Height / 2) - (Math.Min(Math.Min (layout.Width, layout.Height), 44) / 2),
-				Math.Min(Math.Min (layout.Width, layout.Height), 44), 
-				Math.Min(Math.Min (layout.Width, layout.Height), 44)));
+				(layout.Width / 2) - (Math.Max(layout.Width, layout.Height) / 2),
+				(layout.Height / 2) - (Math.Max(layout.Width, layout.Height) / 2),
+				Math.Max(layout.Width, layout.Height), 
+				Math.Max(layout.Width, layout.Height)));
+
 		
 			TextLabel = new Label{ 
 				BackgroundColor = Color.Transparent,
@@ -118,20 +120,37 @@ namespace NControl.Controls
 		/// <summary>
 		/// Ripple this instance.
 		/// </summary>
-		public async Task RippleAsync(double x, double y)
+		public async Task RippleAsync(double x, double y, bool animate)
+		{
+			InternalRippleAsync (x, y, animate);
+			if (animate)
+				_ellipse.FadeTo (0.0, 50);
+			else
+				_ellipse.Opacity = 0.0;
+				
+		}
+
+		/// <summary>
+		/// Internals the ripple async.
+		/// </summary>
+		/// <returns>The ripple async.</returns>
+		/// <param name="x">The x coordinate.</param>
+		/// <param name="y">The y coordinate.</param>
+		private async Task InternalRippleAsync(double x, double y, bool animate)
 		{
 			var position = new Point (x, y);
 
 			_ellipse.Scale = 0.0;
 			_ellipse.Opacity = 1.0;
 
-				var layout = Content as RelativeLayout;
+			var layout = Content as RelativeLayout;
 			_ellipse.TranslationX = -((layout.Width / 2) - position.X);
 			_ellipse.TranslationY = -((layout.Height / 2) - position.Y);
 
-			await _ellipse.ScaleTo (8, easing: Easing.CubicInOut);
-			_ellipse.Opacity = 0;
-
+			if (animate)
+				await _ellipse.ScaleTo (1.2, easing: Easing.CubicInOut);
+			else
+				return;
 		}
 
 		/// <summary>
@@ -143,11 +162,10 @@ namespace NControl.Controls
 		{
 			base.TouchesBegan (points);
 
-			Device.BeginInvokeOnMainThread (async () => {
+			var firstPoint = points.FirstOrDefault ();
+			_touchStart = firstPoint;
 
-				var firstPoint = points.FirstOrDefault ();
-				await RippleAsync(firstPoint.X, firstPoint.Y);
-			});
+			Device.BeginInvokeOnMainThread (async () =>  await InternalRippleAsync(firstPoint.X, firstPoint.Y, true));
 
 			return true;
 		}
@@ -160,12 +178,7 @@ namespace NControl.Controls
 		public override bool TouchesCancelled (System.Collections.Generic.IEnumerable<NGraphics.Point> points)
 		{
 			base.TouchesCancelled (points);
-
-			// Execute command
-			if (Command != null && Command.CanExecute (CommandParameter))
-				Command.Execute (CommandParameter);
-			
-			return true;
+			return HandleEnd (points.First (), true);
 		}
 
 		/// <summary>
@@ -175,15 +188,55 @@ namespace NControl.Controls
 		/// <param name="points">Points.</param>
 		public override bool TouchesEnded (System.Collections.Generic.IEnumerable<NGraphics.Point> points)
 		{
-			base.TouchesEnded (points);
+			base.TouchesEnded (points);		
+			return HandleEnd (points.First (), true);
+		}
+
+		/// <summary>
+		/// Handles the end.
+		/// </summary>
+		/// <returns><c>true</c>, if end was handled, <c>false</c> otherwise.</returns>
+		/// <param name="point">Point.</param>
+		private bool HandleEnd(NGraphics.Point point, bool allowCancel)
+		{
+			// Should we allow cancel?
+			if (allowCancel) {
+				var d = ((_touchStart.X - point.X) * (_touchStart.X - point.X) + (_touchStart.Y - point.Y) * (_touchStart.Y - point.Y));
+				if (d > 10) {
+					_ellipse.FadeTo (0.0, 50);
+					return false;
+				}
+			}
 
 			// Execute command
 			if (Command != null && Command.CanExecute (CommandParameter))
 				Command.Execute (CommandParameter);
 
+			_ellipse.FadeTo (0.0, 50);
+
 			return true;
 		}
 
+		/// <summary>
+		/// The ShouldRipple property.
+		/// </summary>
+		public static BindableProperty ShouldRippleProperty = 
+			BindableProperty.Create<RippleButton, bool> (p => p.ShouldRipple, true,
+				BindingMode.TwoWay, propertyChanged: (bindable, oldValue, newValue) => {
+					var ctrl = (RippleButton)bindable;
+					ctrl.ShouldRipple = newValue;
+				});
+
+		/// <summary>
+		/// Gets or sets the ShouldRipple of the RippleButton instance.
+		/// </summary>
+		/// <value>The color of the buton.</value>
+		public bool ShouldRipple {
+			get{ return (bool)GetValue (ShouldRippleProperty); }
+			set {
+				SetValue (ShouldRippleProperty, value);
+			}
+		}
 		/// <summary>
 		/// The ImagePosition property.
 		/// </summary>
