@@ -20,6 +20,7 @@ namespace NControl.Controls.iOS
 
 			var textfield = Control as UITextField;
 			textfield.BorderStyle = UITextBorderStyle.None;
+			textfield.TextAlignment = (e.NewElement as ExtendedEntry).XAlign.ToUITextAlignment ();
 		}
 	}
 }

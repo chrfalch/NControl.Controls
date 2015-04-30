@@ -40,7 +40,29 @@ namespace NControl.Controls
 		/// </summary>
 		public ExtendedEntry ()
 		{			
-		}			
+		}	
+
+		/// <summary>
+		/// The XAlign property.
+		/// </summary>
+		public static BindableProperty XAlignProperty = 
+			BindableProperty.Create<ExtendedEntry, TextAlignment> (p => p.XAlign, 
+				TextAlignment.Start, BindingMode.TwoWay,
+				propertyChanged: (bindable, oldValue, newValue) => {
+					var ctrl = (ExtendedEntry)bindable;
+					ctrl.XAlign = newValue;
+				});
+
+		/// <summary>
+		/// Gets or sets the XAlign of the ExtendedEntry instance.
+		/// </summary>
+		/// <value>The color of the buton.</value>
+		public TextAlignment XAlign {
+			get{ return (TextAlignment)GetValue (XAlignProperty); }
+			set {
+				SetValue (XAlignProperty, value);
+			}
+		}
 	}
 }
 

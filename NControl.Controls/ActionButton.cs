@@ -212,6 +212,29 @@ namespace NControl.Controls
 		}
 
 		/// <summary>
+		/// The button font family property.
+		/// </summary>
+		public static BindableProperty ButtonFontFamilyProperty = 
+			BindableProperty.Create<ActionButton, string> (p => p.ButtonFontFamily, null,
+				BindingMode.TwoWay, null, (bindable, oldValue, newValue) => {
+					var ctrl = (ActionButton)bindable;
+					ctrl.ButtonFontFamily = newValue;
+				});
+
+		/// <summary>
+		/// Gets or sets the color of the buton.
+		/// </summary>
+		/// <value>The color of the buton.</value>
+		public string ButtonFontFamily
+		{
+			get {  return (string)GetValue (ButtonFontFamilyProperty);}
+			set {
+				SetValue (ButtonFontFamilyProperty, value);
+				ButtonIconLabel.FontFamily = value;
+			}
+		}
+
+		/// <summary>
 		/// The button icon property.
 		/// </summary>
 		public static BindableProperty ButtonIconProperty = 
