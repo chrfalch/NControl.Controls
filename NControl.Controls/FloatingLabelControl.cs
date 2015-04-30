@@ -265,15 +265,15 @@ namespace NControl.Controls
 		/// The XAlign property.
 		/// </summary>
 		public static BindableProperty XAlignProperty = 
-			BindableProperty.Create<ExtendedEntry, TextAlignment> (p => p.XAlign, 
+			BindableProperty.Create<FloatingLabelControl, TextAlignment> (p => p.XAlign, 
 				TextAlignment.Start, BindingMode.TwoWay,
 				propertyChanged: (bindable, oldValue, newValue) => {
-					var ctrl = (ExtendedEntry)bindable;
+					var ctrl = (FloatingLabelControl)bindable;
 					ctrl.XAlign = newValue;
 				});
 
 		/// <summary>
-		/// Gets or sets the XAlign of the ExtendedEntry instance.
+		/// Gets or sets the XAlign of the FloatingLabelControl instance.
 		/// </summary>
 		/// <value>The color of the buton.</value>
 		public TextAlignment XAlign {

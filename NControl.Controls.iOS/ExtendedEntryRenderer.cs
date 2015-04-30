@@ -18,9 +18,38 @@ namespace NControl.Controls.iOS
 		{
 			base.OnElementChanged (e);
 
-			var textfield = Control as UITextField;
-			textfield.BorderStyle = UITextBorderStyle.None;
-			textfield.TextAlignment = (e.NewElement as ExtendedEntry).XAlign.ToUITextAlignment ();
+			if (Control != null) 
+			{
+				var textfield = Control as UITextField;
+				textfield.BorderStyle = UITextBorderStyle.None;
+			}
+
+			if (e.NewElement != null)
+				UpdateTextAlignment ();
+		}
+
+		/// <summary>
+		/// Raises the element property changed event.
+		/// </summary>
+		/// <param name="sender">Sender.</param>
+		/// <param name="e">E.</param>
+		protected override void OnElementPropertyChanged (object sender, System.ComponentModel.PropertyChangedEventArgs e)
+		{
+			base.OnElementPropertyChanged (sender, e);
+
+			if (e.PropertyName == ExtendedEntry.XAlignProperty.PropertyName)
+				UpdateTextAlignment ();			
+		}
+
+		/// <summary>
+		/// Updates the text alignment.
+		/// </summary>
+		private void UpdateTextAlignment()
+		{
+			if (Control == null)
+				return;
+			
+			(Control as UITextField).TextAlignment = (Element as ExtendedEntry).XAlign.ToUITextAlignment ();
 		}
 	}
 }
