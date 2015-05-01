@@ -43,6 +43,8 @@ namespace NControl.Controls.WP81
             if (e.PropertyName == RoundCornerView.BackgroundColorProperty.PropertyName ||
                 e.PropertyName == RoundCornerView.BorderColorProperty.PropertyName ||
 				e.PropertyName == RoundCornerView.CornerRadiusProperty.PropertyName ||
+                e.PropertyName == VisualElement.WidthProperty.PropertyName ||
+                e.PropertyName == VisualElement.HeightProperty.PropertyName ||
                 e.PropertyName == RoundCornerView.BorderWidthProperty.PropertyName)
                 UpdateElement(Element as RoundCornerView);
         }
@@ -58,7 +60,7 @@ namespace NControl.Controls.WP81
             Border.Background = (Brush)colorConverter.Convert(element.BackgroundColor, null, null, null);
             Border.BorderBrush = (Brush)colorConverter.Convert(element.BorderColor, null, null, null);
             Border.BorderThickness = new System.Windows.Thickness(element.BorderWidth);
-            Border.CornerRadius = new CornerRadius(element.CornerRadius);            
+            Border.CornerRadius = new CornerRadius(element.CornerRadius);                        
         }
     }
 }

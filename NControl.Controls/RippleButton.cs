@@ -60,10 +60,10 @@ namespace NControl.Controls
 		/// Initializes a new instance of the <see cref="NControl.Controls.RippleButton"/> class.
 		/// </summary>
 		public RippleButton()
-		{
-			_layout = new RelativeLayout ();
+		{            
+            _layout = new RelativeLayout {IsClippedToBounds = true};
 
-			// Add ripple thing
+		    // Add ripple thing
 			_rippler = new RippleControl();
 			_layout.Children.Add (_rippler, () => _layout.Bounds);
 
