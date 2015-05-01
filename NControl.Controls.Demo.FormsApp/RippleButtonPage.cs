@@ -9,6 +9,7 @@ namespace NControl.Controls.Demo.FormsApp
 		public RippleButtonPage ()
 		{
 			Title = "RippleButton";
+		    BackgroundColor = Color.White;
 		}
 
 		protected override void OnAppearing ()

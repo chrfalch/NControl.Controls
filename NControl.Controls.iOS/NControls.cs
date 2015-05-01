@@ -31,15 +31,15 @@ namespace NControl.Controls.iOS
 //						s.CopyTo(fs);					
 //
 //					s.Position = 0;
-				var data = new byte[s.Length];
-				s.Read (data, 0, data.Length);
-
-				var dataProvider = new CGDataProvider (data, 0, data.Length);				
-				var font = CGFont.CreateFromProvider(dataProvider);
-
-				NSError error;
-				if (!CTFontManager.RegisterGraphicsFont(font, out error)) 
-					throw new InvalidOperationException (error.Description);
+//				var data = new byte[s.Length];
+//				s.Read (data, 0, data.Length);
+//
+//				var dataProvider = new CGDataProvider (data, 0, data.Length);				
+//				var font = CGFont.CreateFromProvider(dataProvider);
+//
+//				NSError error;
+//				if (!CTFontManager.RegisterGraphicsFont(font, out error)) 
+//					throw new InvalidOperationException (error.Description);
 //				}
 
 //				error = CTFontManager.RegisterFontsForUrl(NSUrl.FromFilename(filename), 
