@@ -14,7 +14,7 @@ namespace NControl.Controls.Droid
 		{
 			base.OnElementChanged (e);
 
-			Control.SetBackgroundDrawable(null);
+			Control.SetBackgroundColor (Android.Graphics.Color.Transparent);
 			Control.SetPadding (10, 0, 0, 0);
 
 			UpdateGravity ();

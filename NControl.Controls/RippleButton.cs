@@ -402,6 +402,19 @@ namespace NControl.Controls
 			}
 		}
 		#endregion
+
+		/// <param name="widthConstraint">The available width that a parent element can allocated to a child. Value will be between 0 and double.PositiveInfinity.</param>
+		/// <param name="heightConstraint">The available height that a parent element can allocated to a child. Value will be between 0 and double.PositiveInfinity.</param>
+		/// <summary>
+		/// Gets the size request.
+		/// </summary>
+		/// <returns>The size request.</returns>
+		protected override SizeRequest OnSizeRequest (double widthConstraint, double heightConstraint)
+		{							
+			var retVal = _textButton.GetSizeRequest (widthConstraint, heightConstraint);
+			return new SizeRequest (new Size (retVal.Request.Width + 8, retVal.Request.Height), 
+				retVal.Minimum);
+		}
 	}
 
 	/// <summary>
@@ -534,7 +547,7 @@ namespace NControl.Controls
 				SetValue (RippleColorProperty, value);
 				_ellipse.BackgroundColor = value;
 			}
-		}
+		}			
 	}
 }
 

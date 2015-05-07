@@ -329,7 +329,6 @@ namespace NControl.Controls
 				var endAnimation = new Animation ((d) => {
 				}, 0, 1, Easing.CubicInOut, () => {
 					tcs.SetResult (true);
-					System.Diagnostics.Debug.WriteLine (_childLayout.TranslationX);
 				});
 
 				animation.Add (0.0, 1.0, endAnimation);
@@ -339,8 +338,6 @@ namespace NControl.Controls
 			{
 				tcs.SetResult (true);
 			}
-
-			System.Diagnostics.Debug.WriteLine (_childLayout.TranslationX);
 
 			return tcs.Task;
 		}

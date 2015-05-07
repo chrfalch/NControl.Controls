@@ -24,6 +24,10 @@ namespace NControl.Controls.Droid
 
 			if (e.NewElement != null) 
 				UpdateFont();
+
+			if (Control != null) {
+				Control.SetPadding (0, 0, 0, 0);
+			}
 		}
 
 		protected override void OnElementPropertyChanged (object sender, System.ComponentModel.PropertyChangedEventArgs e)

@@ -112,7 +112,7 @@ namespace NControl.Controls
 				HorizontalOptions = LayoutOptions.FillAndExpand,
 			};
 				
-			_textEntry.SetBinding (Entry.TextProperty, "Text", BindingMode.TwoWay);
+			_textEntry.SetBinding (Entry.TextProperty, TextProperty.PropertyName, BindingMode.TwoWay);
 			_textEntry.BindingContext = this;
             _textEntry.Focused += (object sender, FocusEventArgs e) =>
             {
