@@ -109,6 +109,7 @@ namespace NControl.Controls
 			_textEntry = new ExtendedEntry { 
 				Keyboard = this.Keyboard,
 				BackgroundColor = Color.Transparent,
+				VerticalOptions = LayoutOptions.Center,
 				HorizontalOptions = LayoutOptions.FillAndExpand,
 			};
 				
