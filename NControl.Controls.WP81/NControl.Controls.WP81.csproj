@@ -84,6 +84,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="BlurViewRenderer.cs" />
     <Compile Include="CardPageHelper.cs" />
     <Compile Include="ExtendedEntryRenderer.cs" />
     <Compile Include="NControls.cs" />
