@@ -24,6 +24,16 @@ namespace NControl.Controls.Droid
 			base.OnElementPropertyChanged (sender, e);
 			if (e.PropertyName == ExtendedEntry.XAlignProperty.PropertyName)
 				UpdateGravity ();
+			else if (e.PropertyName == ExtendedEntry.FontFamilyProperty.PropertyName)
+				UpdateFont ();
+		}
+
+		/// <summary>
+		/// Updates the font.
+		/// </summary>
+		private void UpdateFont ()
+		{
+			
 		}
 
 		/// <summary>

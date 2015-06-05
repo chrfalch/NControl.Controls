@@ -25,7 +25,9 @@ namespace NControl.Controls.WP80
             FontLoader.LoadFonts(assemblies, (fontName, s) =>
             {
                 fontName = fontName.ToLowerInvariant();
-                Typefaces[fontName] = new FontSource(s);
+                var copyStream = new MemoryStream();
+                s.CopyTo(copyStream);
+                Typefaces[fontName] = new FontSource(copyStream);
             });
         }
     }

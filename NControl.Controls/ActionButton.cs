@@ -339,9 +339,11 @@ namespace NControl.Controls
 
 			ButtonIconLabel.ScaleTo (1.2, 140, Easing.CubicInOut);
 
-			ButtonShadowElement.TranslateTo (0.0, 3, 140, Easing.CubicInOut);
-			ButtonShadowElement.ScaleTo (1.2, 140, Easing.CubicInOut);
-			ButtonShadowElement.FadeTo (0.44, 140, Easing.CubicInOut);
+			if (HasShadow) {
+				ButtonShadowElement.TranslateTo (0.0, 3, 140, Easing.CubicInOut);
+				ButtonShadowElement.ScaleTo (1.2, 140, Easing.CubicInOut);
+				ButtonShadowElement.FadeTo (0.44, 140, Easing.CubicInOut);
+			}
 
 			return true;
 		}
@@ -364,9 +366,11 @@ namespace NControl.Controls
 
 			ButtonIconLabel.ScaleTo (1.0, 140, Easing.CubicInOut);
 
-			ButtonShadowElement.TranslateTo (0.0, 0.0, 140, Easing.CubicInOut);
-			ButtonShadowElement.ScaleTo (1.0, 140, Easing.CubicInOut);
-			ButtonShadowElement.FadeTo (1.0, 140, Easing.CubicInOut);
+			if (HasShadow) {
+				ButtonShadowElement.TranslateTo (0.0, 0.0, 140, Easing.CubicInOut);
+				ButtonShadowElement.ScaleTo (1.0, 140, Easing.CubicInOut);
+				ButtonShadowElement.FadeTo (1.0, 140, Easing.CubicInOut);
+			}
 
 			if (OnClicked != null)
 				OnClicked (this, EventArgs.Empty);
@@ -392,9 +396,11 @@ namespace NControl.Controls
 
 			ButtonIconLabel.ScaleTo (1.0, 140, Easing.CubicInOut);
 
-			ButtonShadowElement.TranslateTo (0.0, 0.0, 140, Easing.CubicInOut);
-			ButtonShadowElement.ScaleTo (1.0, 140, Easing.CubicInOut);
-			ButtonShadowElement.FadeTo (1.0, 140, Easing.CubicInOut);
+			if (HasShadow) {
+				ButtonShadowElement.TranslateTo (0.0, 0.0, 140, Easing.CubicInOut);
+				ButtonShadowElement.ScaleTo (1.0, 140, Easing.CubicInOut);
+				ButtonShadowElement.FadeTo (1.0, 140, Easing.CubicInOut);
+			}
 
 			if (OnClicked != null)
 				OnClicked (this, EventArgs.Empty);
@@ -402,12 +408,24 @@ namespace NControl.Controls
 			return true;
 		}
 
-	    public override void Draw(ICanvas canvas, Rect rect)
-	    {
-	        base.Draw(canvas, rect);
-	    }
-
 	    #endregion
+
+		/// <param name="widthConstraint">The available width for the element to use.</param>
+		/// <param name="heightConstraint">The available height for the element to use.</param>
+		/// <summary>
+		/// This method is called during the measure pass of a layout cycle to get the desired size of an element.
+		/// </summary>
+		protected override SizeRequest OnSizeRequest (double widthConstraint, double heightConstraint)
+		{
+			var retVal = base.OnSizeRequest (widthConstraint, heightConstraint);
+
+			if (retVal.Request.Width > retVal.Request.Height)
+				retVal.Request = new Xamarin.Forms.Size (retVal.Request.Width, retVal.Request.Width);
+			else if (retVal.Request.Height > retVal.Request.Width)
+				retVal.Request = new Xamarin.Forms.Size (retVal.Request.Height, retVal.Request.Height);
+
+			return retVal;
+		}		
 	}
 }
 

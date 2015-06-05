@@ -21,7 +21,7 @@ namespace NControl.Controls
 	/// <summary>
 	/// Expandable action button.
 	/// </summary>
-	public class ExpandableActionButton: NControlView
+	public class ExpandableActionButton: ContentView
 	{
 		#region Private Members
 

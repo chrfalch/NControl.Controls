@@ -63,6 +63,27 @@ namespace NControl.Controls
 				SetValue (XAlignProperty, value);
 			}
 		}
+
+		/// <summary>
+		/// The FontFamily property.
+		/// </summary>
+		public static BindableProperty FontFamilyProperty = 
+			BindableProperty.Create<ExtendedEntry, string> (p => p.FontFamily, null,
+				propertyChanged: (bindable, oldValue, newValue) => {
+					var ctrl = (ExtendedEntry)bindable;
+					ctrl.FontFamily = newValue;
+				});
+
+		/// <summary>
+		/// Gets or sets the FontFamily of the ExtendedEntry instance.
+		/// </summary>
+		/// <value>The color of the buton.</value>
+		public string FontFamily {
+			get{ return (string)GetValue (FontFamilyProperty); }
+			set {
+				SetValue (FontFamilyProperty, value);
+			}
+		}
 	}
 }
 

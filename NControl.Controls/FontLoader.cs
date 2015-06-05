@@ -65,18 +65,14 @@ namespace NControl.Controls
 				// Find all resources ending with ttf 
 				foreach (var name in assembly.GetManifestResourceNames()) {
 
-					if (!name.ToLowerInvariant ().EndsWith (".ttf") )
-						//&&
-						//!name.ToLowerInvariant ().EndsWith (".otf"))
-						continue;
-
-					var s = assembly.GetManifestResourceStream (name);
-					var fontName = name.ToLowerInvariant ().EndsWith (".ttf") ? 
-						TTFFont.GetName(s) :
-						OTFFont.GetName(s);
-					
-					s.Position = 0;
-					registerFont (Path.GetFileName(fontName), s);
+					if (name.ToLowerInvariant ().EndsWith (".ttf")) 
+					{
+						using (var s = assembly.GetManifestResourceStream (name)) {
+							var fontName = TTFFont.GetName (s);					
+							s.Position = 0;
+							registerFont (Path.GetFileName (fontName), s);
+						}
+					}
 				}
 			}
 		}

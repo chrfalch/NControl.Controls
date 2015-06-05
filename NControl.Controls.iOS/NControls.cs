@@ -5,6 +5,7 @@ using CoreGraphics;
 using CoreText;
 using System.IO;
 using UIKit;
+using System.Collections.Generic;
 
 namespace NControl.Controls.iOS
 {
@@ -21,36 +22,27 @@ namespace NControl.Controls.iOS
 			NControl.iOS.NControlViewRenderer.Init ();
 			NControl.Controls.FontLoader.LoadFonts (AppDomain.CurrentDomain.GetAssemblies(), (fontName, s) => {
 
-//				var folder = Environment.GetFolderPath (Environment.SpecialFolder.Personal);
-//				var filename = Path.Combine (folder, fontName + ".ttf");
-//				NSError error;
-//
-//				if(!File.Exists(filename))
-//				{
-//					using(var fs = new FileStream(filename, FileMode.CreateNew))
-//						s.CopyTo(fs);					
-//
-//					s.Position = 0;
 //				var data = new byte[s.Length];
 //				s.Read (data, 0, data.Length);
 //
-//				var dataProvider = new CGDataProvider (data, 0, data.Length);				
-//				var font = CGFont.CreateFromProvider(dataProvider);
+//				using(var dataProvider = new CGDataProvider (data, 0, data.Length))
+//				{
+//					using(var cgFont = CGFont.CreateFromProvider (dataProvider))
+//					{
 //
-//				NSError error;
-//				if (!CTFontManager.RegisterGraphicsFont(font, out error)) 
-//					throw new InvalidOperationException (error.Description);
+//						NSError error;
+//
+//						var registered = CTFontManager.RegisterGraphicsFont(cgFont, out error);
+//						if (!registered)
+//						{
+//							// If the error code is 105 then the font we are trying to register is already registered
+//							// We will not report this as an error.
+//							if (error.Code != 105)
+//								throw new ArgumentException("Error registering: " + fontName + 
+//									" (" + error.LocalizedDescription + ")");
+//						}
+//					}
 //				}
-
-//				error = CTFontManager.RegisterFontsForUrl(NSUrl.FromFilename(filename), 
-//					CTFontManagerScope.Session);
-//				
-//				if(error != null)
-//					throw new InvalidOperationException (error.Description);
-
-//				var indexOf = Array.IndexOf(UIFont.FamilyNames, fontName);
-//				if(indexOf > -1)
-//					return;
 			});
 		}
 	}

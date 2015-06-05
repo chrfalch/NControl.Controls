@@ -35,9 +35,14 @@ namespace NControl.Controls
 	/// <summary>
 	/// Float label control.
 	/// </summary>
-	public class FloatingLabelControl: NControlView
+	public class FloatingLabelControl: ContentView
 	{
 		#region Private Members
+
+		/// <summary>
+		/// The underline control.
+		/// </summary>
+		private readonly BoxView _underlineControl;
 
 		/// <summary>
 		/// The floating label.
@@ -172,6 +177,15 @@ namespace NControl.Controls
 					_layout.Width - Device.OnPlatform<int>(0, -4, (string.IsNullOrWhiteSpace(Postfix) ? -34 : -15)), 
 					_layout.Height - Device.OnPlatform<int>(12, 0, 2)));
 
+			// underline
+			_underlineControl = new BoxView {				
+				BackgroundColor = GetCurrentPlaceholderColor()
+			};
+
+			_layout.Children.Add (_underlineControl, () => new Rectangle (0, 
+				Device.OnPlatform<double> (_layout.Height - 4, _layout.Height - 4, Bounds.Height - 4), 
+				_layout.Width, 0.5));
+
 			Content = _layout;
 		}	    
 
@@ -240,8 +254,76 @@ namespace NControl.Controls
 			get{ return (int)GetValue (LabelFontSizeProperty); }
 			set {
 				SetValue (LabelFontSizeProperty, value);
+				_floatingLabel.FontSize = value;
 			}
 		}
+
+		/// <summary>
+		/// The LabelFontFamily property.
+		/// </summary>
+		public static BindableProperty LabelFontFamilyProperty = 
+			BindableProperty.Create<FloatingLabelControl, string> (p => p.LabelFontFamily, null,
+				propertyChanged: (bindable, oldValue, newValue) => {
+					var ctrl = (FloatingLabelControl)bindable;
+					ctrl.LabelFontFamily = newValue;
+				});
+
+		/// <summary>
+		/// Gets or sets the LabelFontFamily of the FloatingLabelControl instance.
+		/// </summary>
+		/// <value>The color of the buton.</value>
+		public string LabelFontFamily {
+			get{ return (string)GetValue (LabelFontFamilyProperty); }
+			set {
+				SetValue (LabelFontFamilyProperty, value);
+				_floatingLabel.FontFamily = value;
+			}
+		}
+
+		/// <summary>
+		/// The FontFamily property.
+		/// </summary>
+		public static BindableProperty FontFamilyProperty = 
+			BindableProperty.Create<FloatingLabelControl, string> (p => p.FontFamily, null,
+				propertyChanged: (bindable, oldValue, newValue) => {
+					var ctrl = (FloatingLabelControl)bindable;
+					ctrl.FontFamily = newValue;
+				});
+
+		/// <summary>
+		/// Gets or sets the FontFamily of the FloatingLabelControl instance.
+		/// </summary>
+		/// <value>The color of the buton.</value>
+		public string FontFamily {
+			get{ return (string)GetValue (FontFamilyProperty); }
+			set {
+				SetValue (FontFamilyProperty, value);
+				_textEntry.FontFamily = value;
+			}
+		}
+
+		/// <summary>
+		/// The PostfixFontFamily property.
+		/// </summary>
+		public static BindableProperty PostfixFontFamilyProperty = 
+			BindableProperty.Create<FloatingLabelControl, string> (p => p.PostfixFontFamily, null,
+				propertyChanged: (bindable, oldValue, newValue) => {
+					var ctrl = (FloatingLabelControl)bindable;
+					ctrl.PostfixFontFamily = newValue;
+				});
+
+		/// <summary>
+		/// Gets or sets the PostfixFontFamily of the FloatingLabelControl instance.
+		/// </summary>
+		/// <value>The color of the buton.</value>
+		public string PostfixFontFamily {
+			get{ return (string)GetValue (PostfixFontFamilyProperty); }
+			set {
+				SetValue (PostfixFontFamilyProperty, value);
+				_postFix.FontFamily = value;
+			}
+		}
+
 		/// <summary>
 		/// The keyboard property.
 		/// </summary>
@@ -486,27 +568,6 @@ namespace NControl.Controls
 
 		#endregion       
 
-		#region Drawing
-
-		/// <summary>
-		/// Draw the specified canvas and rect.
-		/// </summary>
-		/// <param name="canvas">Canvas.</param>
-		/// <param name="rect">Rect.</param>
-		public override void Draw (NGraphics.ICanvas canvas, NGraphics.Rect rect)
-		{
-			base.Draw (canvas, rect);
-
-			var bottom = Device.OnPlatform<double> (rect.Height-4, 
-				rect.Height-4, Bounds.Height -4);
-
-			canvas.DrawPath (new NGraphics.PathOp[]{ 
-				new NGraphics.MoveTo(_textEntry.Bounds.Left-1, bottom),
-				new NGraphics.LineTo(rect.Width, bottom)
-			}, new NGraphics.Pen(GetCurrentPlaceholderColor(), 0.5));
-		}
-		#endregion
-
         #region Private Members
 
         /// <summary>
@@ -531,11 +592,11 @@ namespace NControl.Controls
 		/// Gets the color of the current placeholder.
 		/// </summary>
 		/// <returns>The current placeholder color.</returns>
-		private NGraphics.Color GetCurrentPlaceholderColor()
+		private Color GetCurrentPlaceholderColor()
 		{
 			return _textEntry.IsFocused && !string.IsNullOrWhiteSpace(_textEntry.Text) ? 
-				new NGraphics.Color (PlaceholderFocusedColor.R, PlaceholderFocusedColor.G, PlaceholderFocusedColor.B) :
-				new NGraphics.Color (PlaceholderColor.R, PlaceholderColor.G, PlaceholderColor.B);
+				PlaceholderFocusedColor :
+				PlaceholderColor;
 		}
 
         /// <summary>
@@ -544,7 +605,7 @@ namespace NControl.Controls
 	    private void UpdatePlaceholderColor()
         {
             _floatingLabel.TextColor = _textEntry.IsFocused ? PlaceholderFocusedColor : PlaceholderColor;
-			Invalidate ();
+			_underlineControl.BackgroundColor = GetCurrentPlaceholderColor ();
         }
 
 	    #endregion

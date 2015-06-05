@@ -110,7 +110,7 @@ namespace NControl.Controls
 				foreach(var tabChild in Children)
 				{
 					var tabItemControl = new TabBarButton(null, tabChild.Title);
-					tabItemControl.Font = TabFont;
+					tabItemControl.FontFamily = FontFamily;
 					tabItemControl.SelectedColor = TabIndicatorColor;						
 					_buttonStack.Children.Add(tabItemControl);
 				}
@@ -290,28 +290,27 @@ namespace NControl.Controls
 		}
 
 		/// <summary>
-		/// The TabFont property.
+		/// The FontFamily property.
 		/// </summary>
-		public static BindableProperty TabFontProperty = 
-			BindableProperty.Create<TabStripControl, Font> (p => p.TabFont, Font.Default,
+		public static BindableProperty FontFamilyProperty = 
+			BindableProperty.Create<TabStripControl, string> (p => p.FontFamily, null,
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (TabStripControl)bindable;
-					ctrl.TabFont = newValue;
+					ctrl.FontFamily = newValue;
 				});
 
 		/// <summary>
-		/// Gets or sets the TabFont of the TabStripControl instance.
+		/// Gets or sets the FontFamily of the TabStripControl instance.
 		/// </summary>
 		/// <value>The color of the buton.</value>
-		public Font TabFont {
-			get{ return (Font)GetValue (TabFontProperty); }
+		public string FontFamily {
+			get{ return (string)GetValue (FontFamilyProperty); }
 			set {
-				SetValue (TabFontProperty, value);
+				SetValue (FontFamilyProperty, value);
 				foreach (var tabBtn in _buttonStack.Children)
-					((TabBarButton)tabBtn).Font = value;
+					((TabBarButton)tabBtn).FontFamily = value;
 			}
 		}
-	
 
 		/// <summary>
 		/// The TabIndicatorColor property.
@@ -497,42 +496,27 @@ namespace NControl.Controls
 				AccentColor = value;
 			}
 		}
+
 		/// <summary>
-		/// The Font property.
+		/// The FontFamily property.
 		/// </summary>
-		public static BindableProperty FontProperty = 
-			BindableProperty.Create<TabBarButton, Font> (p => p.Font, Font.Default,
+		public static BindableProperty FontFamilyProperty = 
+			BindableProperty.Create<TabBarButton, string> (p => p.FontFamily, null,
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (TabBarButton)bindable;
-					ctrl.Font = newValue;
+					ctrl.FontFamily = newValue;
 				});
 
 		/// <summary>
-		/// Gets or sets the Font of the TabBarButton instance.
+		/// Gets or sets the FontFamily of the TabBarButton instance.
 		/// </summary>
 		/// <value>The color of the buton.</value>
-		public Font Font {
-			get{ return (Font)GetValue (FontProperty); }
+		public string FontFamily {
+			get{ return (string)GetValue (FontFamilyProperty); }
 			set {
-				SetValue (FontProperty, value);
-
-				_label.FontFamily = value.FontFamily;
-				_label.FontSize = value.FontSize;
-				_label.FontAttributes = value.FontAttributes;
+				SetValue (FontFamilyProperty, value);
+				_label.FontFamily = value;
 			}
-		}
-
-		/// <summary>
-		/// Draw the specified canvas.
-		/// </summary>
-		/// <param name="canvas">Canvas.</param>
-		/// <param name="rect">Rect.</param>
-		public override void Draw (NGraphics.ICanvas canvas, NGraphics.Rect rect)
-		{
-			base.Draw (canvas, rect);
-
-//			canvas.DrawRectangle (new NGraphics.Rect (rect.Width, 0, rect.Width, rect.Height),
-//				NGraphics.Pens.Gray, null);
 		}
 
 		/// <summary>

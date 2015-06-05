@@ -38,7 +38,18 @@ namespace NControl.Controls.iOS
 			base.OnElementPropertyChanged (sender, e);
 
 			if (e.PropertyName == ExtendedEntry.XAlignProperty.PropertyName)
-				UpdateTextAlignment ();			
+				UpdateTextAlignment ();		
+			else if (e.PropertyName == ExtendedEntry.FontFamilyProperty.PropertyName)
+				UpdateFont ();
+		}
+
+		/// <summary>
+		/// Updates the font.
+		/// </summary>
+		private void UpdateFont ()
+		{
+			(Control as UITextField).Font = UIFont.FromName ((Element as ExtendedEntry).FontFamily, 
+				(Control as UITextField).Font.PointSize);
 		}
 
 		/// <summary>

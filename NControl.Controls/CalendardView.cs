@@ -403,6 +403,34 @@ namespace NControl.Controls
 		}
 
 		/// <summary>
+		/// The FontFamily property.
+		/// </summary>
+		public static BindableProperty FontFamilyProperty = 
+			BindableProperty.Create<CalendarView, string> (p => p.FontFamily, null,
+				propertyChanged: (bindable, oldValue, newValue) => {
+					var ctrl = (CalendarView)bindable;
+					ctrl.FontFamily = newValue;
+				});
+
+		/// <summary>
+		/// Gets or sets the FontFamily of the CalendarView instance.
+		/// </summary>
+		/// <value>The color of the buton.</value>
+		public string FontFamily {
+			get{ return (string)GetValue (FontFamilyProperty); }
+			set {
+				SetValue (FontFamilyProperty, value);
+				foreach (var lbl in _dayNameLabels)
+					lbl.FontFamily = value;
+
+				foreach (var lbl in _dayNumberLabels)
+					lbl.FontFamily = value;
+
+				_monthYearLabel.FontFamily = value;
+			}
+		}
+
+		/// <summary>
 		/// The SelectedDateColor property.
 		/// </summary>
 		public static BindableProperty SelectedDateColorProperty = 

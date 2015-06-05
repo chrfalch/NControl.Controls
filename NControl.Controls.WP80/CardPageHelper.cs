@@ -84,12 +84,12 @@ namespace NControl.Controls.WP80
         /// </summary>
         /// <param name="canvas"></param>
         /// <returns></returns>
-        private PageRenderer GetRenderer(Canvas canvas)
+        private MasterDetailRenderer GetRenderer(Canvas canvas)
         {
             if (canvas == null)
                 throw new InvalidOperationException("MainPage.Content should be a Canvas element.");
 
-            var pageRenderer = canvas.Children[0] as PageRenderer;
+            var pageRenderer = canvas.Children[0] as MasterDetailRenderer;
             if (pageRenderer == null)
                 throw new InvalidOperationException("MainPage.Content as Canvas should contain a PageRenderer element.");
 
