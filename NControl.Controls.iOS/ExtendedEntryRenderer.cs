@@ -18,10 +18,11 @@ namespace NControl.Controls.iOS
 		{
 			base.OnElementChanged (e);
 
-			if (Control != null) 
+            if (Control != null && e.NewElement != null) 
 			{
 				var textfield = Control as UITextField;
 				textfield.BorderStyle = UITextBorderStyle.None;
+                UpdateFont(e.NewElement as ExtendedEntry);
 			}
 
 			if (e.NewElement != null)
@@ -40,15 +41,18 @@ namespace NControl.Controls.iOS
 			if (e.PropertyName == ExtendedEntry.XAlignProperty.PropertyName)
 				UpdateTextAlignment ();		
 			else if (e.PropertyName == ExtendedEntry.FontFamilyProperty.PropertyName)
-				UpdateFont ();
+                UpdateFont (Element as ExtendedEntry);            
 		}
 
 		/// <summary>
 		/// Updates the font.
 		/// </summary>
-		private void UpdateFont ()
+        private void UpdateFont (ExtendedEntry element)
 		{
-			(Control as UITextField).Font = UIFont.FromName ((Element as ExtendedEntry).FontFamily, 
+            if (string.IsNullOrEmpty(element.FontFamily))
+                return;
+            
+			(Control as UITextField).Font = UIFont.FromName (element.FontFamily, 
 				(Control as UITextField).Font.PointSize);
 		}
 

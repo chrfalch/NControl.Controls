@@ -69,7 +69,7 @@ namespace NControl.Controls
 		/// </summary>
 		public static BindableProperty FontFamilyProperty = 
 			BindableProperty.Create<ExtendedEntry, string> (p => p.FontFamily, null,
-				propertyChanged: (bindable, oldValue, newValue) => {
+                BindingMode.TwoWay, propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (ExtendedEntry)bindable;
 					ctrl.FontFamily = newValue;
 				});

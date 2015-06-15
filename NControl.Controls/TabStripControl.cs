@@ -454,7 +454,7 @@ namespace NControl.Controls
 				Text = buttonText,
 				XAlign = TextAlignment.Center,
 				YAlign = TextAlignment.Center,                
-				FontSize = 12,
+				FontSize = 14,
 				LineBreakMode = LineBreakMode.TailTruncation,					
 				TextColor = DarkTextColor,
 			};
