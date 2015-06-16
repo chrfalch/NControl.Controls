@@ -96,10 +96,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="NControl">
-      <HintPath>..\..\packages\NControl.0.5.65\lib\Xamarin.iOS10\NControl.dll</HintPath>
+      <HintPath>..\..\packages\NControl.0.5.8\lib\Xamarin.iOS10\NControl.dll</HintPath>
     </Reference>
     <Reference Include="NControl.iOS">
-      <HintPath>..\..\packages\NControl.0.5.65\lib\Xamarin.iOS10\NControl.iOS.dll</HintPath>
+      <HintPath>..\..\packages\NControl.0.5.8\lib\Xamarin.iOS10\NControl.iOS.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
