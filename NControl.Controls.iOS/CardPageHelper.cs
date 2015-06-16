@@ -33,6 +33,9 @@ namespace NControl.Controls.iOS
 
 			if (!_presentedCardPageContexts.ContainsKey (card)) {
 
+				// To avoid Xamarin changing the current application object we need
+				// to set the parent.
+				card.Parent = Xamarin.Forms.Application.Current;
 				_presentedCardPageContexts.Add (card, new CardPageContext{
 					Controller = card.CreateViewController (),
 					Overlay = new UIView {

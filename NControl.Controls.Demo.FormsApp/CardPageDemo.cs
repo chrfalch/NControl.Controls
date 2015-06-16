@@ -53,7 +53,13 @@ namespace NControl.Controls.Demo.FormsApp
 							};
 
 							page.BindingContext = this.BindingContext;
-							button.Clicked += async (sender, e) => await page.CloseAsync();
+							var currentApp = Xamarin.Forms.Application.Current;
+							button.Clicked += async (sender, e) => {
+								await page.CloseAsync();
+								if(currentApp != Xamarin.Forms.Application.Current)
+									throw new InvalidOperationException("Application.Current changed");
+							};
+								
 							await page.ShowAsync();
 						})		
 					}
