@@ -5,6 +5,9 @@ using UIKit;
 using System.Threading.Tasks;
 using CoreGraphics;
 using System.Collections.Generic;
+using System.Reflection;
+using Xamarin.Forms.Platform.iOS;
+using Foundation;
 
 [assembly: Dependency (typeof (CardPageHelper))]
 namespace NControl.Controls.iOS
@@ -17,8 +20,8 @@ namespace NControl.Controls.iOS
 		/// <summary>
 		/// The presented controllers.
 		/// </summary>
-		private readonly Dictionary<CardPage, CardPageContext> _presentedCardPageContexts = 
-			new Dictionary<CardPage, CardPageContext> ();
+//		private readonly Dictionary<CardPage, CardPageContext> _presentedCardPageContexts = 
+//			new Dictionary<CardPage, CardPageContext> ();
 
 		#region ICardPageHelper implementation
 
@@ -28,47 +31,45 @@ namespace NControl.Controls.iOS
 		/// <returns>The async.</returns>
 		/// <param name="card">Card.</param>
 		public async Task ShowAsync (CardPage card)
-		{			
-			var window = UIApplication.SharedApplication.KeyWindow;
+		{	
+			// If not showing any modals at the moment:
+//			if (Application.Current.MainPage.Navigation.ModalStack.Count == 0) {
+//
+//				// Find platform renderer uiviewcontroller
+//				var currentController = UIApplication.SharedApplication.KeyWindow.RootViewController;
+//				currentController.TransitioningDelegate = this;
+//				currentController.ModalPresentationStyle = UIModalPresentationStyle.Custom;
+//			}
 
-			if (!_presentedCardPageContexts.ContainsKey (card)) {
+			await Application.Current.MainPage.Navigation.PushModalAsync (card, false);
 
-				// To avoid Xamarin changing the current application object we need
-				// to set the parent.
-				card.Parent = Xamarin.Forms.Application.Current;
-				_presentedCardPageContexts.Add (card, new CardPageContext{
-					Controller = card.CreateViewController (),
-					Overlay = new UIView {
-						Alpha = 0.0f,
-						BackgroundColor = UIColor.Black,
-						Frame = window.Bounds,
-					}
-				});
-			}
-			
-			var cardPageContext = _presentedCardPageContexts [card];
-
-			// Presentation rect
-			var rect = new CGRect (
-				(nfloat)card.CardPadding.Left, 
-				(nfloat)card.CardPadding.Top, 
-				(nfloat)(window.Bounds.Width - (card.CardPadding.Right + (nfloat)card.CardPadding.Left)), 
-				(nfloat)(window.Bounds.Height - (card.CardPadding.Bottom + (nfloat)card.CardPadding.Top)));
-			
-			cardPageContext.Controller.View.Frame = rect;
-			cardPageContext.Controller.View.Layer.CornerRadius = 4;
-			cardPageContext.Controller.View.Layer.MasksToBounds = true;
-			cardPageContext.Controller.View.Transform = 
-				CGAffineTransform.MakeTranslation (0, window.Bounds.Height);
-
-			window.AddSubview (cardPageContext.Overlay);
-			window.AddSubview (cardPageContext.Controller.View);
-
-			// Animate
-			await UIView.AnimateAsync (0.15f, () => cardPageContext.Overlay.Alpha = 0.2f);
-			await UIView.AnimateAsync (0.2f, () => {
-				cardPageContext.Controller.View.Transform = CGAffineTransform.MakeIdentity();
-			});
+//			var window = UIApplication.SharedApplication.KeyWindow;
+//
+//			// Create card context
+//			var context = new CardPageContext {
+////				Controller = card.CreateViewController(), 
+////				Controller = new CardPageRenderer (),
+//				Controller = (UIViewController)RendererFactory.GetRenderer(card),
+////				Overlay = new UIView {
+////					Alpha = 0.0f,
+////					BackgroundColor = UIColor.Black,
+////					Frame = window.Bounds,
+////				}
+//			};
+//
+//			_presentedCardPageContexts.Add (card, context);	
+//
+//			// Set element
+//			var renderer = (context.Controller as CardPageRenderer);
+//			if(renderer != null)
+//				renderer.SetElement(card);
+//
+//			// controller containment
+//			window.RootViewController.AddChildViewController (context.Controller);
+//			window.RootViewController.View.AddSubview (context.Controller.View);
+//			context.Controller.DidMoveToParentViewController (window.RootViewController);
+//
+//			return Task.FromResult (true);
 		}
 
 		/// <summary>
@@ -78,22 +79,23 @@ namespace NControl.Controls.iOS
 		/// <param name="card">Card.</param>
 		public async Task CloseAsync (CardPage card)
 		{
-			var window = UIApplication.SharedApplication.KeyWindow;
+			await Application.Current.MainPage.Navigation.PopModalAsync ();
 
-			var cardPageContext = _presentedCardPageContexts [card];
-			cardPageContext.Controller.View.Transform = CGAffineTransform.MakeIdentity ();
-				
-			// Animate
-			await UIView.AnimateAsync (0.2f, () => {
-				cardPageContext.Controller.View.Transform = 
-					CGAffineTransform.MakeTranslation (0, window.Bounds.Height);
-			});		
-
-			await UIView.AnimateAsync (0.15f, () => cardPageContext.Overlay.Alpha = 0.0f);
-
-			cardPageContext.Controller.View.RemoveFromSuperview ();
-			cardPageContext.Overlay.RemoveFromSuperview ();
-		    cardPageContext.Controller = null;
+//			var window = UIApplication.SharedApplication.KeyWindow;
+//
+//			var cardPageContext = _presentedCardPageContexts [card];
+//			cardPageContext.Controller.View.Transform = CGAffineTransform.MakeIdentity ();
+//				
+//			// Controller containment
+//			cardPageContext.Controller.WillMoveToParentViewController (null);
+//			cardPageContext.Controller.View.RemoveFromSuperview ();
+//			cardPageContext.Controller.RemoveFromParentViewController ();
+//
+//			// Clean up
+//			cardPageContext.Controller.Dispose ();
+//		    cardPageContext.Controller = null;
+//
+//			return Task.FromResult (true);
 		}
 			
 		/// <summary>
@@ -111,11 +113,11 @@ namespace NControl.Controls.iOS
 		/// <value><c>true</c> if control animates itself; otherwise, <c>false</c>.</value>
 		public bool ControlAnimatesItself {
 			get {
-				return false;
+				return true;
 			}
 		}
 		#endregion
-		
+	
 	}
 
 	/// <summary>
@@ -128,12 +130,6 @@ namespace NControl.Controls.iOS
 		/// </summary>
 		/// <value>The controller.</value>
 		public UIViewController Controller { get; set; }
-
-		/// <summary>
-		/// Gets or sets the overlay.
-		/// </summary>
-		/// <value>The overlay.</value>
-		public UIView Overlay { get; set; }
 	}
 }
 

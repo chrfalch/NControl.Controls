@@ -66,11 +66,11 @@ namespace NControl.Controls
 			base.Content = _layout;
 
 			// Card 
-			_contentView = new RoundCornerView {
+			_contentView = new RoundCornerView {				
 				BackgroundColor = Color.White,
 				CornerRadius = 4,
 			};
-				
+
 			_overlay = new BoxView {
 				BackgroundColor = Color.Black,
 				Opacity = 0.0F,
@@ -85,6 +85,11 @@ namespace NControl.Controls
 
 			if(_platformHelper.ControlAnimatesItself)
 				_contentView.TranslationY = _platformHelper.GetScreenSize().Height - (CardPadding.Top);
+
+			// Add tap
+			_overlay.GestureRecognizers.Add (new TapGestureRecognizer {
+				Command = new Command(async () => await CloseAsync())
+			});
 		}
 
 		/// <summary>
@@ -97,7 +102,21 @@ namespace NControl.Controls
 			if (_platformHelper.ControlAnimatesItself) {
 				_overlay.FadeTo (0.2F);
 				_contentView.TranslateTo (0.0, 0.0, 250, Easing.CubicInOut);
-			}
+			} 
+		}
+
+		/// <param name="x">Left-hand side of layout area.</param>
+		/// <param name="y">Top of layout area.</param>
+		/// <param name="width">Width of layout area.</param>
+		/// <param name="height">Height of layout area.</param>
+		/// <summary>
+		/// Layouts the children.
+		/// </summary>
+		protected override void LayoutChildren (double x, double y, double width, double height)
+		{
+			base.LayoutChildren (x, y, width, height);
+			((Layout)_contentView.Content).ForceLayout ();
+			var l = _contentView.Content.Bounds;
 		}
 
 		#region Properties
@@ -167,8 +186,11 @@ namespace NControl.Controls
 		public async Task CloseAsync()
 		{
 			if (_platformHelper.ControlAnimatesItself) {
-				await _overlay.FadeTo (0.2F);
-				await _contentView.TranslateTo (0.0, 0.0, 250, Easing.CubicInOut);
+				await _contentView.TranslateTo (0.0, 
+					_platformHelper.GetScreenSize().Height - (CardPadding.Top), 250, Easing.CubicInOut);
+				
+				await _overlay.FadeTo (0.0F);
+
 			}
 			await _platformHelper.CloseAsync (this);
 		}

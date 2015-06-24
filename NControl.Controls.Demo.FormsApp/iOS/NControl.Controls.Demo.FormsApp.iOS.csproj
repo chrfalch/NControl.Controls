@@ -95,12 +95,6 @@
     <CodesignKey>iPhone Distribution</CodesignKey>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NControl">
-      <HintPath>..\..\packages\NControl.0.5.8\lib\Xamarin.iOS10\NControl.dll</HintPath>
-    </Reference>
-    <Reference Include="NControl.iOS">
-      <HintPath>..\..\packages\NControl.0.5.8\lib\Xamarin.iOS10\NControl.iOS.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
@@ -122,6 +116,12 @@
     </Reference>
     <Reference Include="Xamarin.Forms.Platform">
       <HintPath>..\..\packages\Xamarin.Forms.1.4.2.6359\lib\Xamarin.iOS10\Xamarin.Forms.Platform.dll</HintPath>
+    </Reference>
+    <Reference Include="NControl.iOS">
+      <HintPath>..\..\packages\NControl.0.5.94\lib\Xamarin.iOS10\NControl.iOS.dll</HintPath>
+    </Reference>
+    <Reference Include="NControl">
+      <HintPath>..\..\packages\NControl.0.5.94\lib\Xamarin.iOS10\NControl.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

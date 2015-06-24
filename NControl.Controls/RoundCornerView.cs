@@ -41,9 +41,13 @@ namespace NControl.Controls
         /// Initializes a new instance of the <see cref="RoundCornerView"/> class.
         /// </summary>
         public RoundCornerView()
-        {
-            base.BackgroundColor = Xamarin.Forms.Color.Transparent;
+        {         
         }
+
+		protected override void LayoutChildren (double x, double y, double width, double height)
+		{
+			base.LayoutChildren (x, y, width, height);
+		}
 
         #region Properties
 
@@ -116,30 +120,6 @@ namespace NControl.Controls
             set 
 			{ 
 				SetValue(CornerRadiusProperty, value); 
-				Invalidate ();
-			}
-        }
-
-        /// <summary>
-        /// The border and fill color property.
-        /// </summary>
-        public static new BindableProperty BackgroundColorProperty = 
-            BindableProperty.Create<RoundCornerView, Xamarin.Forms.Color> (
-				p => p.BackgroundColor, Xamarin.Forms.Color.Transparent, propertyChanged: (bindable, oldValue, newValue) => {
-					var ctrl = (RoundCornerView)bindable;
-					ctrl.BackgroundColor = newValue;
-				});
-
-        /// <summary>
-        /// Gets or sets the color which will fill the background of a VisualElement. This is a bindable property.
-        /// </summary>
-        /// <value>The color of the background.</value>
-        public new Xamarin.Forms.Color BackgroundColor
-        {
-            get { return (Xamarin.Forms.Color)GetValue(BackgroundColorProperty); }
-            set 
-			{ 
-				SetValue(BackgroundColorProperty, value); 
 				Invalidate ();
 			}
         }

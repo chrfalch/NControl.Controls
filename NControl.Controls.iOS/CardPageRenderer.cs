@@ -14,10 +14,37 @@ namespace NControl.Controls.iOS
 	/// </summary>
 	public class CardPageRenderer: PageRenderer
 	{
-		public override void ViewDidLoad ()
+		/// <summary>
+		/// The parent.
+		/// </summary>
+		private UIViewController _parentModalViewController;
+
+		/// <summary>
+		/// Dids the move to parent view controller.
+		/// </summary>
+		/// <param name="parent">Parent.</param>
+		public override void DidMoveToParentViewController (UIViewController parent)
 		{
-			base.ViewDidLoad ();
-		}			
+			base.DidMoveToParentViewController (parent);
+
+			// Save modal wrapper from Xamarin.Forms
+			_parentModalViewController = parent;
+
+			// Set custom to be able to set clear background!
+			parent.ModalPresentationStyle = UIModalPresentationStyle.Custom;
+		}
+
+		/// <summary>
+		/// Views the did appear.
+		/// </summary>
+		/// <param name="animated">If set to <c>true</c> animated.</param>
+		public override void ViewDidAppear (bool animated)
+		{
+			base.ViewDidAppear (animated);
+
+			// Clear background on parent modal wrapper!!
+			_parentModalViewController.View.BackgroundColor = UIColor.Clear;
+		}
 	}
 }
 
