@@ -189,7 +189,7 @@ namespace NControl.Controls
 				await _contentView.TranslateTo (0.0, 
 					_platformHelper.GetScreenSize().Height - (CardPadding.Top), 250, Easing.CubicInOut);
 				
-				await _overlay.FadeTo (0.0F);
+                await _overlay.FadeTo (0.0F, 150, Easing.CubicInOut);
 
 			}
 			await _platformHelper.CloseAsync (this);

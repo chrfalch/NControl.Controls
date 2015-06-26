@@ -21,28 +21,32 @@ namespace NControl.Controls.Demo.FormsApp
 						Text = "Show from Modal Page",
 						Command = new Command(async () => {
 							
-							await Application.Current.MainPage.Navigation.PushModalAsync(new ContentPage{
-								Content = new StackLayout{
-									Children = {
-										new Button{
-											VerticalOptions = LayoutOptions.Center,
-											HorizontalOptions = LayoutOptions.Center,
-											HeightRequest = 44,
-											Text = "Show Card",
-											Command = ShowCardPageCommand
-										},
-										new Button{
-											VerticalOptions = LayoutOptions.Center,
-											HorizontalOptions = LayoutOptions.Center,
-											HeightRequest = 44,
-											Text = "Close",
-											Command = new Command(async () => {
-												await Application.Current.MainPage.Navigation.PopModalAsync();
-											})
+							await Application.Current.MainPage.Navigation.PushModalAsync(
+								new NavigationPage(
+									new ContentPage{
+										Title = "Navigation",
+										Content = new StackLayout{
+											Children = {
+												new Button{
+													VerticalOptions = LayoutOptions.Center,
+													HorizontalOptions = LayoutOptions.Center,
+													HeightRequest = 44,
+													Text = "Show Card",
+													Command = ShowCardPageCommand
+												},
+												new Button{
+													VerticalOptions = LayoutOptions.Center,
+													HorizontalOptions = LayoutOptions.Center,
+													HeightRequest = 44,
+													Text = "Close",
+													Command = new Command(async () => {
+														await Application.Current.MainPage.Navigation.PopModalAsync();
+													})
+												}
+											}
 										}
-									}
-								}
-							});
+									})
+							);
 
 						})
 					}

@@ -18,7 +18,8 @@ namespace NControl.Controls.Demo.FormsApp
 
 			var label = new Label{ 
 				XAlign = TextAlignment.Center,
-				YAlign = TextAlignment.Center,			
+				YAlign = TextAlignment.Center,
+				InputTransparent = true,
 			};
 
 			var i = 0;
@@ -66,11 +67,28 @@ namespace NControl.Controls.Demo.FormsApp
 			};
 
 			var layout = new RelativeLayout ();
-			layout.Children.Add (button, () => new Rectangle (50, 100, layout.Width - 100, 44));
-			layout.Children.Add (button2, () => new Rectangle (50, 160, layout.Width - 100, 44));
-			layout.Children.Add (button3, () => new Rectangle (20, 220, layout.Width - 200, 150));
-			layout.Children.Add (button4, () => new Rectangle (210, 220, 120, 75));
-			layout.Children.Add (label, () => new Rectangle (10, 400, layout.Width - 20, 40));
+			layout.Children.Add (button, () => new Rectangle (50, 20, layout.Width - 100, 44));
+			layout.Children.Add (button2, () => new Rectangle (50, 80, layout.Width - 100, 44));
+			layout.Children.Add (button3, () => new Rectangle (20, 160, layout.Width - 200, 150));
+			layout.Children.Add (button4, () => new Rectangle (210, 190, 120, 75));
+			layout.Children.Add (label, () => new Rectangle (10, 300, layout.Width - 20, 40));
+
+			// In stack layout
+			var stack = new StackLayout {
+				Children = {
+					new RippleButton {
+						Text = "Mega?",
+						Icon = FontAwesomeLabel.FAHome,
+						ImagePosition = ImagePosition.Right,
+						BorderColor = Color.Gray,
+						BorderWidth = 2.0,
+						CornerRadius = 22,
+						Command = incCommand
+					}
+				}
+			};
+
+			layout.Children.Add (stack, () => new Rectangle (0, 360, layout.Width, 40));
 
 			Content = layout;
 		}

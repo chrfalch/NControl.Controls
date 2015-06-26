@@ -19,7 +19,7 @@ namespace NControl.Controls.iOS
 		/// </summary>
 		private UIViewController _parentModalViewController;
 
-		/// <summary>
+        /// <summary>
 		/// Dids the move to parent view controller.
 		/// </summary>
 		/// <param name="parent">Parent.</param>
@@ -34,16 +34,30 @@ namespace NControl.Controls.iOS
 			parent.ModalPresentationStyle = UIModalPresentationStyle.Custom;
 		}
 
+        /// <summary>
+        /// Views the will appear.
+        /// </summary>
+        /// <param name="animated">If set to <c>true</c> animated.</param>
+        public override void ViewWillAppear(bool animated)
+        {
+            base.ViewWillAppear(false);
+
+            // Clear background on parent modal wrapper!!
+            _parentModalViewController.View.BackgroundColor = UIColor.Clear;
+            View.BackgroundColor = UIColor.Clear;
+        }
+
 		/// <summary>
 		/// Views the did appear.
 		/// </summary>
 		/// <param name="animated">If set to <c>true</c> animated.</param>
 		public override void ViewDidAppear (bool animated)
 		{
-			base.ViewDidAppear (animated);
+			base.ViewDidAppear (false);
 
 			// Clear background on parent modal wrapper!!
-			_parentModalViewController.View.BackgroundColor = UIColor.Clear;
+            _parentModalViewController.View.BackgroundColor = UIColor.Clear;
+            View.BackgroundColor = UIColor.Clear;
 		}
 	}
 }

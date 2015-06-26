@@ -103,14 +103,15 @@ namespace NControl.Controls
 			foreach(var button in Buttons)
 			{
 				button.Opacity = 0.0;
-				button.OnClicked += async (sender, e) =>
-				{
+                button.Command = new Command(async () => {
+
                     if (!_isShowingSubmenu)
 				        return;
 
                     _mainButton.IsToggled = false;
 					await HideButtonsAsync ();
-				};
+                });
+                
 				AddButtonToLayout (button, _buttonsLayout);
 			}				
 

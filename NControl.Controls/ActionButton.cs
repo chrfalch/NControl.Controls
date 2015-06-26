@@ -66,15 +66,6 @@ namespace NControl.Controls
 
 		#endregion
 
-		#region Events
-
-		/// <summary>
-		/// Occurs when on clicked.
-		/// </summary>
-		public event EventHandler OnClicked;
-
-		#endregion
-
 		/// <summary>
 		/// Initializes a new instance of the <see cref="NControl.Controls.ActionButton"/> class.
 		/// </summary>
@@ -359,21 +350,14 @@ namespace NControl.Controls
 			if (!IsEnabled)
 				return false;
 
-			if (Command != null && Command.CanExecute (CommandParameter))
-				Command.Execute (CommandParameter);			
-
 			ButtonElement.ScaleTo (1.0, 140, Easing.CubicInOut);
-
 			ButtonIconLabel.ScaleTo (1.0, 140, Easing.CubicInOut);
 
 			if (HasShadow) {
 				ButtonShadowElement.TranslateTo (0.0, 0.0, 140, Easing.CubicInOut);
 				ButtonShadowElement.ScaleTo (1.0, 140, Easing.CubicInOut);
 				ButtonShadowElement.FadeTo (1.0, 140, Easing.CubicInOut);
-			}
-
-			if (OnClicked != null)
-				OnClicked (this, EventArgs.Empty);
+			}                		
 
 			return true;
 		}
@@ -402,9 +386,6 @@ namespace NControl.Controls
 				ButtonShadowElement.FadeTo (1.0, 140, Easing.CubicInOut);
 			}
 
-			if (OnClicked != null)
-				OnClicked (this, EventArgs.Empty);
-
 			return true;
 		}
 
@@ -424,6 +405,7 @@ namespace NControl.Controls
 			else if (retVal.Request.Height > retVal.Request.Width)
 				retVal.Request = new Xamarin.Forms.Size (retVal.Request.Height, retVal.Request.Height);
 
+            retVal.Minimum = retVal.Request;
 			return retVal;
 		}		
 	}

@@ -4,6 +4,7 @@ using NControl.Abstractions;
 using System.Linq;
 using System.Windows.Input;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace NControl.Controls
 {
@@ -37,12 +38,12 @@ namespace NControl.Controls
 		/// <summary>
 		/// The text label.
 		/// </summary>
-		private readonly Button _textButton;
+        private readonly Label _labelText;
 
 		/// <summary>
 		/// The icon label.
 		/// </summary>
-		private readonly Button _iconButton;
+        private readonly FontAwesomeLabel _iconLabel;
 
 		/// <summary>
 		/// The rippler.
@@ -54,6 +55,11 @@ namespace NControl.Controls
 		/// </summary>
 		private readonly RelativeLayout _layout;
 
+		/// <summary>
+		/// The click target.
+		/// </summary>
+		private readonly Button _clickTarget;
+
 		#endregion
 
 		/// <summary>
@@ -63,36 +69,41 @@ namespace NControl.Controls
 		{            
             _layout = new RelativeLayout {IsClippedToBounds = true};
 
+			// Add the bottom button
+			_clickTarget = new Button {
+				Text = "",
+				BorderColor = Color.Transparent,
+				BorderWidth = 0,
+				BackgroundColor = Color.Transparent,
+			};
+
+			_layout.Children.Add (_clickTarget, () => _layout.Bounds);
+
 		    // Add ripple thing
-			_rippler = new RippleControl();
+			_rippler = new RippleControl{
+				InputTransparent = true,
+			};
 			_layout.Children.Add (_rippler, () => _layout.Bounds);
 
 			// Add title and icon
-			_textButton = new Button{ 
+            _labelText = new Label{ 
 				BackgroundColor = Color.Transparent,
-				BorderColor = Color.Transparent,
-				TextColor = Color.Black,
-				BorderRadius = 0,
-				BorderWidth = 0,
+				XAlign = TextAlignment.Center,
+				YAlign = TextAlignment.Center,
+				TextColor = Color.Black,				
+				InputTransparent = true,
 			};
-			_textButton.Clicked += (sender, e) => _rippler.RippleAsync(
-				_layout.Width/2, _layout.Height/2, true);
+			
+			_layout.Children.Add (_labelText, ()=> GetTextRectangleForImagePosition(_layout));
 
-			_layout.Children.Add (_textButton, ()=> GetTextRectangleForImagePosition(_layout));
-
-			_iconButton = new Button{ 
+            _iconLabel = new FontAwesomeLabel{ 
 				BackgroundColor = Color.Transparent,
-				BorderColor = Color.Transparent,
-				BorderRadius = 0,
-				BorderWidth = 0,
-				FontFamily = FontAwesomeLabel.FontAwesomeName,
 				FontSize = 18,
 				TextColor = (Color)IconColorProperty.DefaultValue,
+				InputTransparent = true,
 			};
-			_iconButton.Clicked += (sender, e) => _rippler.RippleAsync(
-				_layout.Width/2, _layout.Height/2, true);
-
-			_layout.Children.Add (_iconButton, () => GetIconRectangleForImagePosition(_layout));
+			
+			_layout.Children.Add (_iconLabel, () => GetIconRectangleForImagePosition(_layout));
 
 			Content = _layout;
 		}
@@ -133,6 +144,9 @@ namespace NControl.Controls
 		/// <param name="layout">Layout.</param>
 		private Rectangle GetTextRectangleForImagePosition (RelativeLayout layout)
 		{
+			if (string.IsNullOrEmpty (_iconLabel.Text))
+				return layout.Bounds;
+			
 			switch (ImagePosition) {
 
 			case ImagePosition.Top:
@@ -191,7 +205,7 @@ namespace NControl.Controls
 			get{ return (string)GetValue (IconProperty); }
 			set {
 				SetValue (IconProperty, value);
-				_iconButton.Text = value;
+				_iconLabel.Text = value;
 			}
 		}
 
@@ -213,7 +227,7 @@ namespace NControl.Controls
 			get{ return (Color)GetValue (IconColorProperty); }
 			set {
 				SetValue (IconColorProperty, value);
-				_iconButton.TextColor = value;
+				_iconLabel.TextColor = value;
 			}
 		}
 
@@ -237,7 +251,7 @@ namespace NControl.Controls
 			set
 			{
 				SetValue(TextProperty, value);
-				_textButton.Text = value;
+				_labelText.Text = value;
 			}
 		}
 
@@ -259,7 +273,7 @@ namespace NControl.Controls
 			get{ return (string)GetValue (FontFamilyProperty); }
 			set {
 				SetValue (FontFamilyProperty, value);
-				_textButton.FontFamily = value;
+				_labelText.FontFamily = value;
 			}
 		}
 
@@ -280,10 +294,11 @@ namespace NControl.Controls
 		public ICommand Command {
 			get{ return (ICommand)GetValue (CommandProperty); }
 			set {
-				SetValue (CommandProperty, value);
 
-				_textButton.Command = value;
-				_iconButton.Command = value;
+			
+
+				SetValue (CommandProperty, value);
+				_clickTarget.Command = Command;
 			}
 		}
 
@@ -305,9 +320,7 @@ namespace NControl.Controls
 			get{ return (object)GetValue (CommandParameterProperty); }
 			set {
 				SetValue (CommandParameterProperty, value);
-
-				_textButton.CommandParameter = value;
-				_iconButton.CommandParameter = value;
+				_clickTarget.CommandParameter = value;
 			}
 		}
 
@@ -329,7 +342,7 @@ namespace NControl.Controls
 			get{ return (Color)GetValue (TextColorProperty); }
 			set {
 				SetValue (TextColorProperty, value);
-				_textButton.TextColor = value;
+				_labelText.TextColor = value;
 			}
 		}
 
@@ -352,7 +365,7 @@ namespace NControl.Controls
 			set {
 				SetValue (FontSizeProperty, value);
 
-				_textButton.FontSize = value;
+				_labelText.FontSize = value;
 			}
 		}
 
@@ -375,7 +388,7 @@ namespace NControl.Controls
 			set {
 				SetValue (IconFontFamilyProperty, value);
 
-				_iconButton.FontFamily = value;
+				_iconLabel.FontFamily = value;
 			}
 		}
 
@@ -403,6 +416,8 @@ namespace NControl.Controls
 		}
 		#endregion
 
+		#region Sizing
+
 		/// <param name="widthConstraint">The available width that a parent element can allocated to a child. Value will be between 0 and double.PositiveInfinity.</param>
 		/// <param name="heightConstraint">The available height that a parent element can allocated to a child. Value will be between 0 and double.PositiveInfinity.</param>
 		/// <summary>
@@ -411,10 +426,59 @@ namespace NControl.Controls
 		/// <returns>The size request.</returns>
 		protected override SizeRequest OnSizeRequest (double widthConstraint, double heightConstraint)
 		{							
-			var retVal = _textButton.GetSizeRequest (widthConstraint, heightConstraint);
+			var retVal = _clickTarget.GetSizeRequest (widthConstraint, heightConstraint);
 			return new SizeRequest (new Size (retVal.Request.Width + 8, retVal.Request.Height), 
 				retVal.Minimum);
 		}
+
+		#endregion
+
+		#region Touches
+
+		/// <summary>
+		/// Toucheses the began.
+		/// </summary>
+		/// <returns><c>true</c>, if began was touchesed, <c>false</c> otherwise.</returns>
+		/// <param name="points">Points.</param>
+        public override bool TouchesBegan(System.Collections.Generic.IEnumerable<NGraphics.Point> points)
+        {
+			base.TouchesBegan(points);
+
+			var point = points.FirstOrDefault();
+            _rippler.RippleAsync(point.X, point.Y, true);
+            _labelText.TextColor = Color.Accent;
+            
+			return true;
+        }
+
+		/// <summary>
+		/// Toucheses the ended.
+		/// </summary>
+		/// <returns><c>true</c>, if ended was touchesed, <c>false</c> otherwise.</returns>
+		/// <param name="points">Points.</param>
+        public override bool TouchesEnded(System.Collections.Generic.IEnumerable<NGraphics.Point> points)
+        {
+            base.TouchesEnded(points);
+            _labelText.TextColor = TextColor;
+            if (Command != null && Command.CanExecute(CommandParameter))
+                Command.Execute(CommandParameter);
+            
+            return true;
+        }
+
+        /// <summary>
+        /// Toucheses the cancelled.
+        /// </summary>
+        /// <returns><c>true</c>, if cancelled was touchesed, <c>false</c> otherwise.</returns>
+        /// <param name="points">Points.</param>
+        public override bool TouchesCancelled(IEnumerable<NGraphics.Point> points)
+        {
+            base.TouchesCancelled(points);
+            _labelText.TextColor = TextColor;
+            return true;
+        }
+
+		#endregion
 	}
 
 	/// <summary>
@@ -428,6 +492,11 @@ namespace NControl.Controls
 		/// The ellipse.
 		/// </summary>
 		protected readonly NControlView _ellipse;
+
+		/// <summary>
+		/// The animation lock.
+		/// </summary>
+		private bool _animationLock = false;
 
 		#endregion
 
@@ -463,6 +532,10 @@ namespace NControl.Controls
 		/// </summary>
 		public async Task RippleAsync(double x, double y, bool animate)
 		{
+			if (_animationLock)
+				return;
+
+			_animationLock = true;
 			var position = new Point (x, y);
 
 			_ellipse.Scale = 0.0;
@@ -473,11 +546,12 @@ namespace NControl.Controls
 			_ellipse.TranslationY = -((layout.Height / 2) - position.Y);
 
 			if (animate) {
-				await _ellipse.ScaleTo (2.0, easing: Easing.CubicInOut);
-				await _ellipse.FadeTo (0.0, easing: Easing.CubicInOut);
-			}
+				_ellipse.ScaleTo (2.0, easing: Easing.CubicInOut);
+				await _ellipse.FadeTo (0.5, 150, easing: Easing.CubicInOut);
+				await _ellipse.FadeTo (0.0, 250, easing: Easing.CubicInOut);
+			}		
 
-					
+			_animationLock = false;
 		}
 
 		/// <summary>
@@ -488,20 +562,6 @@ namespace NControl.Controls
 		private bool HandleEnd(NGraphics.Point point, bool allowCancel)
 		{
 			_ellipse.FadeTo (0.0, 50);
-
-			// Should we allow cancel?
-//			if (allowCancel) {
-//				var d = ((_touchStart.X - point.X) * (_touchStart.X - point.X) + (_touchStart.Y - point.Y) * (_touchStart.Y - point.Y));
-//				if (d > 35) {
-//					_ellipse.FadeTo (0.0, 50);
-//					return false;
-//				}
-//			}
-
-			// Execute command
-//			if (Command != null && Command.CanExecute (CommandParameter))
-//				Command.Execute (CommandParameter);
-//
 
 			return true;
 		}

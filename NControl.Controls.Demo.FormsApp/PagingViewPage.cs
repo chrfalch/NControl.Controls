@@ -18,7 +18,7 @@ namespace NControl.Controls.Demo.FormsApp
 				PageCount = 10,			
 			};
 			pager.BindingContext = this;
-			pager.SetBinding (PagingView.PageProperty, "Page");
+			pager.SetBinding (PagingView.PageProperty, PageProperty.PropertyName);
 
 			var btn = new Button{ 
 				Text = "Count",

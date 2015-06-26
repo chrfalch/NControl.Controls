@@ -35,7 +35,7 @@ namespace NControl.Controls
 	/// <summary>
 	/// Float label control.
 	/// </summary>
-	public class FloatingLabelControl: ContentView
+	public class FloatingLabelControl: NControlView
 	{
 		#region Private Members
 
@@ -96,7 +96,8 @@ namespace NControl.Controls
 		/// </summary>
 		public FloatingLabelControl ()
 		{
-            HeightRequest = Device.OnPlatform<int>(50, 50, 75); ;
+            HeightRequest = Device.OnPlatform<int>(50, 50, 75);
+            InputTransparent = false;
 
 			// Create placeholder label
 			_floatingLabel = new Label {
@@ -107,13 +108,14 @@ namespace NControl.Controls
 				YAlign = TextAlignment.Center,
                 FontSize = LabelFontSize,
 				Opacity = 0.0,
-                TextColor = PlaceholderColor
+                TextColor = PlaceholderColor,
+                InputTransparent = true
 			};
 
 			// Create textfield
 			_textEntry = new ExtendedEntry { 
 				Keyboard = this.Keyboard,
-				BackgroundColor = Color.Transparent,
+                BackgroundColor = Color.Transparent,
 				VerticalOptions = LayoutOptions.Center,
 				HorizontalOptions = LayoutOptions.FillAndExpand,
 			};
@@ -143,7 +145,8 @@ namespace NControl.Controls
 				BackgroundColor = Color.Transparent,                
 				XAlign = TextAlignment.Center,
                 YAlign = TextAlignment.Center,                
-				TextColor = PostfixColor
+				TextColor = PostfixColor,
+                InputTransparent = true
             };
 
 		    UpdatePostFix();
@@ -179,7 +182,8 @@ namespace NControl.Controls
 
 			// underline
 			_underlineControl = new BoxView {				
-				BackgroundColor = GetCurrentPlaceholderColor()
+				BackgroundColor = GetCurrentPlaceholderColor(),
+                InputTransparent = true
 			};
 
 			_layout.Children.Add (_underlineControl, () => new Rectangle (0, 
@@ -609,6 +613,7 @@ namespace NControl.Controls
         }
 
 	    #endregion
+
     }
 }
 

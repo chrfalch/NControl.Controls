@@ -55,10 +55,10 @@
       <HintPath>..\packages\Xamarin.Forms.1.4.2.6359\lib\Xamarin.iOS10\Xamarin.Forms.Platform.dll</HintPath>
     </Reference>
     <Reference Include="NControl.iOS">
-      <HintPath>..\packages\NControl.0.5.94\lib\Xamarin.iOS10\NControl.iOS.dll</HintPath>
+      <HintPath>..\packages\NControl.0.5.981\lib\Xamarin.iOS10\NControl.iOS.dll</HintPath>
     </Reference>
     <Reference Include="NControl">
-      <HintPath>..\packages\NControl.0.5.94\lib\Xamarin.iOS10\NControl.dll</HintPath>
+      <HintPath>..\packages\NControl.0.5.981\lib\Xamarin.iOS10\NControl.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

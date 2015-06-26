@@ -216,7 +216,7 @@ namespace NControl.Controls
 		{
 			base.TouchesBegan(points);
 
-			return true;
+            return HandleTouches(points, false);
 		}
 
 		/// <summary>
@@ -245,7 +245,7 @@ namespace NControl.Controls
 		/// Handles the touches.
 		/// </summary>
 		/// <param name="points">Points.</param>
-		private bool HandleTouches(IEnumerable<NGraphics.Point> points)
+        private bool HandleTouches(IEnumerable<NGraphics.Point> points, bool activate = true)
 		{
 			// Find selected item based on click
 			var p = points.First();
@@ -253,8 +253,13 @@ namespace NControl.Controls
 			{
 				if (p.X >= child.X && p.X <= child.X + child.Width && 
 					p.Y >= child.Y && p.Y <= child.Y + _tabControl.Height) {
-					var idx = _buttonStack.Children.IndexOf (child);
-					Activate (Children [idx], true);
+					
+                    if (activate)
+                    {
+                        var idx = _buttonStack.Children.IndexOf(child);
+                        Activate(Children[idx], true);
+                    }
+
 					return true;
 				}
 			}

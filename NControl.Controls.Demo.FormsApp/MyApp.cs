@@ -19,9 +19,9 @@ namespace NControl.Controls.Demo.FormsApp
 				new ActionButtonPage(),
 				new CardPageDemo{BindingContext = new ViewModel("CardPage")},
 				new BlurViewPage(),
+				new RippleButtonPage(),
 				new GalleryPage(),
 				new PagingViewPage(),
-				new RippleButtonPage(),
 				new TabStripPage(),
 				new MaterialDesignIconsPage(),
 			};
