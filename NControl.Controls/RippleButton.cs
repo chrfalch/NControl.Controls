@@ -427,7 +427,9 @@ namespace NControl.Controls
 		protected override SizeRequest OnSizeRequest (double widthConstraint, double heightConstraint)
 		{							
 			var retVal = _clickTarget.GetSizeRequest (widthConstraint, heightConstraint);
-			return new SizeRequest (new Size (retVal.Request.Width + 8, retVal.Request.Height), 
+            var labelSize = _labelText.GetSizeRequest(widthConstraint, heightConstraint);
+
+            return new SizeRequest (new Size (labelSize.Request.Width + 8, retVal.Request.Height), 
 				retVal.Minimum);
 		}
 
