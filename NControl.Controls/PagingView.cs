@@ -14,10 +14,7 @@ namespace NControl.Controls
 		/// </summary>
 		public PagingView()
 		{			
-			HeightRequest = 22;
-			OnInvalidate += (sender, e) => {
-				System.Diagnostics.Debug.WriteLine("Updating");
-			};
+			HeightRequest = 22;			
 		}
 
 		/// <summary>
