@@ -251,11 +251,11 @@ namespace NControl.Controls
 			// Update selected date
 			var col = (int)Math.Round(_ellipse.TranslationX / (_calendar.Width / 7));
 			var row = (int)Math.Round(_ellipse.TranslationY / (_calendar.Height / 6));
-			var choosenDate = StartDate.AddDays(col + (row * 7));
-			System.Diagnostics.Debug.WriteLine (choosenDate);
+			var choosenDate = StartDate.AddDays(col + (row * 7));			
 			var callEvent = (choosenDate.Month == SelectedDate.Month);
 
-			SelectedDate = choosenDate;
+            SelectedDate = new DateTime(choosenDate.Year, choosenDate.Month, choosenDate.Day,
+                SelectedDate.Hour, SelectedDate.Minute, SelectedDate.Second);
 
 			// Call event
 			if (callEvent && OnDateSelected != null)
