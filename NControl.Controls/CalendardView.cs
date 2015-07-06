@@ -329,21 +329,6 @@ namespace NControl.Controls
 				}
 
 
-				if (IsSameDay (DateTime.Now, currentDate)) {
-
-					// Today
-					_dayNumberLabels[d].TextColor = Color.White;
-
-					// Background
-					var wh = Math.Min(colWidth, rowHeight);
-					var rc = new NGraphics.Rect ((col * colWidth), (row * rowHeight), wh, wh);
-					rc.Inflate (-2, -2);
-					rc.X++;
-					rc.Y++;
-
-					canvas.DrawEllipse (rc, null, new NGraphics.SolidBrush(Color.FromHex("#fc3d39").ToNColor()));
-				}
-
 				if (IsSameDay (SelectedDate, currentDate)) {
 					
 					// Selected colors
@@ -353,6 +338,20 @@ namespace NControl.Controls
 					canvas.DrawRectangle (new NGraphics.Rect (col * colWidth, row * rowHeight,
 						colWidth, rowHeight), null, selectedBrush);
 				}
+
+                if (IsSameDay (DateTime.Now, currentDate)) {
+
+                    // Today
+                    _dayNumberLabels[d].TextColor = Color.White;
+
+                    // Background
+                    var wh = Math.Min(colWidth, rowHeight);
+                    var rc = new NGraphics.Rect ((col * colWidth), (row * rowHeight), wh, wh);
+                    rc.Inflate (-1, -1);
+                    rc.X+=3;                    
+
+                    canvas.DrawEllipse (rc, null, new NGraphics.SolidBrush(Color.FromHex("#fc3d39").ToNColor()));
+                }
 					
 				// Col/row-counter
 				col++;
