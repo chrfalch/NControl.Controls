@@ -255,7 +255,7 @@ namespace NControl.Controls
 			var callEvent = (choosenDate.Month == SelectedDate.Month);
 
             SelectedDate = new DateTime(choosenDate.Year, choosenDate.Month, choosenDate.Day,
-                SelectedDate.Hour, SelectedDate.Minute, SelectedDate.Second);
+                SelectedDate.Hour, SelectedDate.Minute, SelectedDate.Second, DateTimeKind.Utc);
 
 			// Call event
 			if (callEvent && OnDateSelected != null)
@@ -535,7 +535,8 @@ namespace NControl.Controls
 		/// <param name="date">Date.</param>
 		public DateTime GetLastDayInMonth(DateTime date)
 		{
-			return new DateTime(date.Year, date.Month, DateTime.DaysInMonth(date.Year, date.Month));
+            return new DateTime(date.Year, date.Month, DateTime.DaysInMonth(date.Year, date.Month), 
+                12, 0, 0, DateTimeKind.Utc);
 		}
 
 		/// <summary>
