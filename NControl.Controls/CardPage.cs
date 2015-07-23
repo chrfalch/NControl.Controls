@@ -28,6 +28,11 @@ namespace NControl.Controls
 		private ICardPageHelper _platformHelper;
 
 		/// <summary>
+		/// The shadow.
+		/// </summary>
+		private readonly Frame _shadowLayer;
+
+		/// <summary>
 		/// The layout.
 		/// </summary>
 		private readonly RelativeLayout _layout;
@@ -65,6 +70,12 @@ namespace NControl.Controls
 
 			base.Content = _layout;
 
+			// Shadow 
+			_shadowLayer = new Frame{
+				BackgroundColor = Color.White,
+				HasShadow = true,
+			};
+
 			// Card 
 			_contentView = new RoundCornerView {				
 				BackgroundColor = Color.White,
@@ -77,14 +88,23 @@ namespace NControl.Controls
 			};
 
 			_layout.Children.Add (_overlay, () => _layout.Bounds);
+
+			_layout.Children.Add (_shadowLayer, ()=> new Rectangle (
+				(_platformHelper.ControlAnimatesItself ? CardPadding.Left : 0),
+				(_platformHelper.ControlAnimatesItself ? CardPadding.Top :0),  
+				_layout.Width - (_platformHelper.ControlAnimatesItself ? (CardPadding.Right + CardPadding.Left) : 0), 
+				_layout.Height - (_platformHelper.ControlAnimatesItself ? (CardPadding.Bottom + CardPadding.Top) : 0)));
+			
 			_layout.Children.Add(_contentView, ()=> new Rectangle (
 				(_platformHelper.ControlAnimatesItself ? CardPadding.Left : 0),
 				(_platformHelper.ControlAnimatesItself ? CardPadding.Top :0),  
 				_layout.Width - (_platformHelper.ControlAnimatesItself ? (CardPadding.Right + CardPadding.Left) : 0), 
 				_layout.Height - (_platformHelper.ControlAnimatesItself ? (CardPadding.Bottom + CardPadding.Top) : 0)));
 
-			if(_platformHelper.ControlAnimatesItself)
-				_contentView.TranslationY = _platformHelper.GetScreenSize().Height - (CardPadding.Top);
+			if (_platformHelper.ControlAnimatesItself) {
+				_shadowLayer.TranslationY = _platformHelper.GetScreenSize ().Height - (CardPadding.Top);
+				_contentView.TranslationY = _platformHelper.GetScreenSize ().Height - (CardPadding.Top);
+			}
 
 			// Add tap
 			_overlay.GestureRecognizers.Add (new TapGestureRecognizer {
@@ -101,6 +121,7 @@ namespace NControl.Controls
 
 			if (_platformHelper.ControlAnimatesItself) {
 				_overlay.FadeTo (0.2F);
+				_shadowLayer.TranslateTo (0.0, 0.0, 250, Easing.CubicInOut);
 				_contentView.TranslateTo (0.0, 0.0, 250, Easing.CubicInOut);
 			} 
 		}
@@ -186,6 +207,10 @@ namespace NControl.Controls
 		public async Task CloseAsync()
 		{
 			if (_platformHelper.ControlAnimatesItself) {
+
+				_shadowLayer.TranslateTo (0.0, 
+					_platformHelper.GetScreenSize().Height - (CardPadding.Top), 250, Easing.CubicInOut);
+				
 				await _contentView.TranslateTo (0.0, 
 					_platformHelper.GetScreenSize().Height - (CardPadding.Top), 250, Easing.CubicInOut);
 				
