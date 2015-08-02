@@ -82,7 +82,6 @@ namespace NControl.Controls
 			var layout = new Grid ();
 
 			// Touch handling
-			var delta = 0.0;
 			var startTime = DateTime.MinValue;
 
 			// Handle child changes
@@ -155,8 +154,10 @@ namespace NControl.Controls
 				return false;
 			}
 
-			HandleEndAsync(points.FirstOrDefault().X, _delta, _startTime, DateTime.Now);
-			return true;
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            HandleEndAsync(points.FirstOrDefault().X, _delta, _startTime, DateTime.Now);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            return true;
 		}
 
 		/// <summary>
@@ -175,8 +176,10 @@ namespace NControl.Controls
 				return false;
 			}
 
-			HandleEndAsync(points.FirstOrDefault().X, _delta, _startTime, DateTime.Now);
-			return true;
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            HandleEndAsync(points.FirstOrDefault().X, _delta, _startTime, DateTime.Now);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            return true;
 		}
 
 		#endregion

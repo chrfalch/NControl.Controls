@@ -447,7 +447,9 @@ namespace NControl.Controls
 			base.TouchesBegan(points);
 
 			var point = points.FirstOrDefault();
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             _rippler.RippleAsync(point.X, point.Y, true);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             _labelText.TextColor = Color.Accent;
             
 			return true;
@@ -548,8 +550,10 @@ namespace NControl.Controls
 			_ellipse.TranslationY = -((layout.Height / 2) - position.Y);
 
 			if (animate) {
-				_ellipse.ScaleTo (2.0, easing: Easing.CubicInOut);
-				await _ellipse.FadeTo (0.5, 150, easing: Easing.CubicInOut);
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                _ellipse.ScaleTo (2.0, easing: Easing.CubicInOut);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                await _ellipse.FadeTo (0.5, 150, easing: Easing.CubicInOut);
 				await _ellipse.FadeTo (0.0, 250, easing: Easing.CubicInOut);
 			}		
 
