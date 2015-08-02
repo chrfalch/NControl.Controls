@@ -251,11 +251,11 @@ namespace NControl.Controls
 			// Update selected date
 			var col = (int)Math.Round(_ellipse.TranslationX / (_calendar.Width / 7));
 			var row = (int)Math.Round(_ellipse.TranslationY / (_calendar.Height / 6));
-			var choosenDate = StartDate.AddDays(col + (row * 7));
-			System.Diagnostics.Debug.WriteLine (choosenDate);
+			var choosenDate = StartDate.AddDays(col + (row * 7));			
 			var callEvent = (choosenDate.Month == SelectedDate.Month);
 
-			SelectedDate = choosenDate;
+            SelectedDate = new DateTime(choosenDate.Year, choosenDate.Month, choosenDate.Day,
+                SelectedDate.Hour, SelectedDate.Minute, SelectedDate.Second, DateTimeKind.Utc);
 
 			// Call event
 			if (callEvent && OnDateSelected != null)
@@ -329,21 +329,6 @@ namespace NControl.Controls
 				}
 
 
-				if (IsSameDay (DateTime.Now, currentDate)) {
-
-					// Today
-					_dayNumberLabels[d].TextColor = Color.White;
-
-					// Background
-					var wh = Math.Min(colWidth, rowHeight);
-					var rc = new NGraphics.Rect ((col * colWidth), (row * rowHeight), wh, wh);
-					rc.Inflate (-2, -2);
-					rc.X++;
-					rc.Y++;
-
-					canvas.DrawEllipse (rc, null, new NGraphics.SolidBrush(Color.FromHex("#fc3d39").ToNColor()));
-				}
-
 				if (IsSameDay (SelectedDate, currentDate)) {
 					
 					// Selected colors
@@ -353,6 +338,20 @@ namespace NControl.Controls
 					canvas.DrawRectangle (new NGraphics.Rect (col * colWidth, row * rowHeight,
 						colWidth, rowHeight), null, selectedBrush);
 				}
+
+                if (IsSameDay (DateTime.Now, currentDate)) {
+
+                    // Today
+                    _dayNumberLabels[d].TextColor = Color.White;
+
+                    // Background
+                    var wh = Math.Min(colWidth, rowHeight);
+                    var rc = new NGraphics.Rect ((col * colWidth), (row * rowHeight), wh, wh);
+                    rc.Inflate (-1, -1);
+                    rc.X+=3;                    
+
+                    canvas.DrawEllipse (rc, null, new NGraphics.SolidBrush(Color.FromHex("#fc3d39").ToNColor()));
+                }
 					
 				// Col/row-counter
 				col++;
@@ -536,7 +535,8 @@ namespace NControl.Controls
 		/// <param name="date">Date.</param>
 		public DateTime GetLastDayInMonth(DateTime date)
 		{
-			return new DateTime(date.Year, date.Month, DateTime.DaysInMonth(date.Year, date.Month));
+            return new DateTime(date.Year, date.Month, DateTime.DaysInMonth(date.Year, date.Month), 
+                12, 0, 0, DateTimeKind.Utc);
 		}
 
 		/// <summary>
