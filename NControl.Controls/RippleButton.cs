@@ -55,11 +55,6 @@ namespace NControl.Controls
 		/// </summary>
 		private readonly RelativeLayout _layout;
 
-		/// <summary>
-		/// The click target.
-		/// </summary>
-		private readonly Button _clickTarget;
-
 		#endregion
 
 		/// <summary>
@@ -69,17 +64,7 @@ namespace NControl.Controls
 		{            
             _layout = new RelativeLayout {IsClippedToBounds = true};
 
-			// Add the bottom button
-			_clickTarget = new Button {
-				Text = "",
-				BorderColor = Color.Transparent,
-				BorderWidth = 0,
-				BackgroundColor = Color.Transparent,
-			};
-
-			_layout.Children.Add (_clickTarget, () => _layout.Bounds);
-
-		    // Add ripple thing
+			// Add ripple thing
 			_rippler = new RippleControl{
 				InputTransparent = true,
 			};
@@ -293,13 +278,7 @@ namespace NControl.Controls
 		/// <value>The color of the buton.</value>
 		public ICommand Command {
 			get{ return (ICommand)GetValue (CommandProperty); }
-			set {
-
-			
-
-				SetValue (CommandProperty, value);
-				_clickTarget.Command = Command;
-			}
+			set { SetValue (CommandProperty, value); }
 		}
 
 		/// <summary>
@@ -318,10 +297,7 @@ namespace NControl.Controls
 		/// <value>The color of the buton.</value>
 		public object CommandParameter {
 			get{ return (object)GetValue (CommandParameterProperty); }
-			set {
-				SetValue (CommandParameterProperty, value);
-				_clickTarget.CommandParameter = value;
-			}
+			set { SetValue (CommandParameterProperty, value); }
 		}
 
 		/// <summary>
@@ -426,7 +402,7 @@ namespace NControl.Controls
 		/// <returns>The size request.</returns>
 		protected override SizeRequest OnSizeRequest (double widthConstraint, double heightConstraint)
 		{							
-			var retVal = _clickTarget.GetSizeRequest (widthConstraint, heightConstraint);
+			var retVal = new Button().GetSizeRequest (widthConstraint, heightConstraint);
             var labelSize = _labelText.GetSizeRequest(widthConstraint, heightConstraint);
 
             return new SizeRequest (new Size (labelSize.Request.Width + 8, retVal.Request.Height), 
