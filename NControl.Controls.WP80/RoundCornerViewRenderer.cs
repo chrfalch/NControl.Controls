@@ -23,7 +23,7 @@ namespace NControl.Controls.WP80
 
             if (e.NewElement != null)
             {
-                var element = (e.NewElement as RoundCornerView);
+                var element = (e.NewElement as RoundCornerView);                
                 UpdateElement(element);
             }
         }
@@ -39,9 +39,40 @@ namespace NControl.Controls.WP80
 
             if (e.PropertyName == RoundCornerView.BackgroundColorProperty.PropertyName ||
                 e.PropertyName == RoundCornerView.BorderColorProperty.PropertyName ||
-				e.PropertyName == RoundCornerView.CornerRadiusProperty.PropertyName ||
+                e.PropertyName == RoundCornerView.CornerRadiusProperty.PropertyName ||
                 e.PropertyName == RoundCornerView.BorderWidthProperty.PropertyName)
-                UpdateElement(Element as RoundCornerView);
+                UpdateElement(Element as RoundCornerView);            
+        }
+
+        /// <summary>
+        /// Updates the clip rectangle
+        /// </summary>
+        protected override void UpdateClip()
+        {
+            base.UpdateClip();
+
+            if (Control.Child == null)
+                return;
+
+            if (Control.ActualWidth == 0 || Control.ActualHeight == 0)
+                return;
+
+            if (Element.IsClippedToBounds)
+            {
+                var el = Element as RoundCornerView;
+                var width = Control.ActualWidth - ((Element as RoundCornerView).BorderWidth * 4);
+                var height = Control.ActualHeight - ((Element as RoundCornerView).BorderWidth * 4);
+                if(width > 0 && height > 0)
+                    Control.Child.Clip = new RectangleGeometry
+                    {
+                        Rect = new Rect((Element as RoundCornerView).BorderWidth, 
+                            (Element as RoundCornerView).BorderWidth, width, height),
+                        RadiusX = (Element as RoundCornerView).CornerRadius,
+                        RadiusY = (Element as RoundCornerView).CornerRadius,
+                    };
+            }                
+            else
+                Control.Child.Clip = null;
         }
 
         /// <summary>
@@ -52,10 +83,12 @@ namespace NControl.Controls.WP80
         {
             var colorConverter = new ColorConverter();
 
-            Border.Background = (Brush)colorConverter.Convert(element.BackgroundColor, null, null, null);
-            Border.BorderBrush = (Brush)colorConverter.Convert(element.BorderColor, null, null, null);
-            Border.BorderThickness = new System.Windows.Thickness(element.BorderWidth);
-            Border.CornerRadius = new CornerRadius(element.CornerRadius);
+            Control.Background = (Brush)colorConverter.Convert(element.BackgroundColor, null, null, null);
+            Control.BorderBrush = (Brush)colorConverter.Convert(element.BorderColor, null, null, null);
+            Control.BorderThickness = new System.Windows.Thickness(element.BorderWidth);
+            Control.CornerRadius = new CornerRadius(element.CornerRadius);
+
+            UpdateClip();
         }
     }
 }

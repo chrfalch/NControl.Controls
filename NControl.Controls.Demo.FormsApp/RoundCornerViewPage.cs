@@ -18,8 +18,10 @@ namespace NControl.Controls.Demo.FormsApp
 
 			var border1 = new RoundCornerView {
 				BackgroundColor = Color.Red,
-				CornerRadius = 4,
-			};
+				CornerRadius = 34,
+                BorderColor = Color.Yellow,
+                BorderWidth = 18,
+            };
 
 			var border2 = new RoundCornerView {
 				BackgroundColor = Color.Blue,
@@ -29,6 +31,8 @@ namespace NControl.Controls.Demo.FormsApp
 			var border3 = new RoundCornerView {
 				BackgroundColor = Color.Green,
 				CornerRadius = 12,
+                BorderColor = Color.Red,
+                BorderWidth = 4,
 			};
 
 			var border4 = new RoundCornerView {

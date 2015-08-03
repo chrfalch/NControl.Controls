@@ -39,6 +39,14 @@
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="NControl, Version=0.2.5693.20380, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NControl.0.6.18\lib\MonoAndroid10\NControl.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NControl.Droid, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NControl.0.6.18\lib\MonoAndroid10\NControl.Droid.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
@@ -66,12 +74,6 @@
     </Reference>
     <Reference Include="Xamarin.Android.Support.v4">
       <HintPath>..\packages\Xamarin.Android.Support.v4.22.2.1.0\lib\MonoAndroid403\Xamarin.Android.Support.v4.dll</HintPath>
-    </Reference>
-    <Reference Include="NControl.Droid">
-      <HintPath>..\packages\NControl.0.6.1\lib\MonoAndroid10\NControl.Droid.dll</HintPath>
-    </Reference>
-    <Reference Include="NControl">
-      <HintPath>..\packages\NControl.0.6.1\lib\MonoAndroid10\NControl.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

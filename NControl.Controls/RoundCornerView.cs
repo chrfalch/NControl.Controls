@@ -41,7 +41,8 @@ namespace NControl.Controls
         /// Initializes a new instance of the <see cref="RoundCornerView"/> class.
         /// </summary>
         public RoundCornerView()
-        {         
+        {
+            IsClippedToBounds = true;  
         }
 
 		protected override void LayoutChildren (double x, double y, double width, double height)
