@@ -50,6 +50,8 @@ namespace NControl.Controls.WP81
         {
             IImageSourceHandler handler;
             var source = (this.Element as BlurImageView).Source;
+            if (source == null)
+                return;
 
             if (source is FileImageSource)
             {
