@@ -7,10 +7,17 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
+using System.Windows.Shapes;
 using Microsoft.Phone.Controls;
 using NControl.Controls.WP80;
+using NGraphics;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.WinPhone;
+using Application = System.Windows.Application;
+using Colors = System.Windows.Media.Colors;
+using Grid = System.Windows.Controls.Grid;
+using Rectangle = System.Windows.Shapes.Rectangle;
+using Coding4Fun.Toolkit.Controls;
 
 [assembly: Xamarin.Forms.Dependency(typeof(CardPageHelper))]
 namespace NControl.Controls.WP80
@@ -18,16 +25,12 @@ namespace NControl.Controls.WP80
     /// <summary>
     /// CardPage helper implementation
     /// </summary>
-    /// <summary>
-    /// CardPage helper implementation
-    /// </summary>
     public class CardPageHelper : ICardPageHelper
     {
         /// <summary>
-        /// The presented controllers.
+        /// List of presented wrappers
         /// </summary>
-        private readonly Dictionary<CardPage, CardPageContext> _presentedCardPageContexts =
-            new Dictionary<CardPage, CardPageContext>();
+        private Stack<CardPageWrapperPopup> _presentationContext = new Stack<CardPageWrapperPopup>();
 
         /// <summary>
         /// Returns the screen size
@@ -35,94 +38,84 @@ namespace NControl.Controls.WP80
         /// <returns></returns>
         public Xamarin.Forms.Size GetScreenSize()
         {
-            return new Xamarin.Forms.Size(System.Windows.Application.Current.Host.Content.ActualWidth,
-                System.Windows.Application.Current.Host.Content.ActualHeight);
+            return new Xamarin.Forms.Size(Application.Current.Host.Content.ActualWidth,
+                Application.Current.Host.Content.ActualHeight);
         }
 
-        public Task ShowAsync(CardPage page)
+        public Task ShowAsync(CardPage card)
         {
-            // Get ahold of the main window
-            var frame = System.Windows.Application.Current.RootVisual as PhoneApplicationFrame;
-            var startPage = frame.Content as PhoneApplicationPage;
-            var canvas = startPage.Content as Canvas;
-            var pageRenderer = GetRenderer(canvas);
-
-
-            // Create popup
-            var popup = new Popup();
-            pageRenderer.Children.Add(popup);
-
-            // Add inner grid
-            var popupGrid = new System.Windows.Controls.Grid
+            var cardPageWrapper = new CardPageWrapperPopup(card)
             {
-                Opacity = 0.5,
-                Background = new SolidColorBrush(Colors.Gray),
-                VerticalAlignment = VerticalAlignment.Stretch,
-                HorizontalAlignment = HorizontalAlignment.Stretch,
+                Title = card.Title,
             };
 
-            // Set inner grid as parent to popup
-            popup.Child = popupGrid;
-            popupGrid.Width = pageRenderer.ActualWidth;
-            popupGrid.Height = pageRenderer.ActualHeight;
-
-            // Get XF representation of card page
-            var cardElement = page.ConvertPageToUIElement(startPage);
-            popupGrid.Children.Add(cardElement);
-
-            // Add to context list
-            _presentedCardPageContexts.Add(page, new CardPageContext { Popup = popup });
-
-            // Show
-            popup.IsOpen = true;
+            _presentationContext.Push(cardPageWrapper);
+            cardPageWrapper.Show();
 
             return Task.FromResult(true);
         }
 
         /// <summary>
-        /// Returns the page renderer in the given canvas
+        /// Hides the async.
         /// </summary>
-        /// <param name="canvas"></param>
-        /// <returns></returns>
-        private MasterDetailRenderer GetRenderer(Canvas canvas)
+        /// <returns>The async.</returns>
+        /// <param name="card">Card.</param>
+        public Task CloseAsync(CardPage card)
         {
-            if (canvas == null)
-                throw new InvalidOperationException("MainPage.Content should be a Canvas element.");
-
-            var pageRenderer = canvas.Children[0] as MasterDetailRenderer;
-            if (pageRenderer == null)
-                throw new InvalidOperationException("MainPage.Content as Canvas should contain a PageRenderer element.");
-
-            return pageRenderer;
-        }
-
-        public Task CloseAsync(CardPage page)
-        {
-            if (_presentedCardPageContexts.ContainsKey(page))
-            {
-                var context = _presentedCardPageContexts[page];
-                _presentedCardPageContexts.Remove(page);
-                context.Popup.IsOpen = false;
-            }
-
+            var currentCardPageWrapper = _presentationContext.Pop();
+            currentCardPageWrapper.Hide();
             return Task.FromResult(true);
         }
 
         public bool ControlAnimatesItself
         {
-            get { return true; }
+            get { return false; }
         }
     }
 
     /// <summary>
-    /// Card page context.
+    /// Class for wrapping xamarin forms page in a popup on Windows Phone
     /// </summary>
-    public class CardPageContext
+    public class CardPageWrapperPopup : MessagePrompt
     {
-        /// <summary>
-        /// Gets or sets the popup
-        /// </summary>
-        /// <value>The popup.</value>
-        public Popup Popup { get; set; }
+        private CardPage _card;
+
+        public CardPageWrapperPopup(CardPage card)
+        {
+            _card = card;
+
+            // Remove the standard circular button            
+            ActionPopUpButtons.RemoveAll(new Predicate<System.Windows.Controls.Button>(
+                delegate (System.Windows.Controls.Button arg) { return true; }));
+
+            // Do any further initialization. e.g. loading some elements into the popup
+            // This is our great hack. Without having the Platform property set, sizing isnt working
+            // See the VisualElement.OnSizeRequest method.
+            var pi = _card.GetType().GetProperty("Platform", System.Reflection.BindingFlags.Public |
+                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+
+            var val = pi.GetValue(Xamarin.Forms.Application.Current.MainPage);
+            pi.SetValue(_card, val);
+
+            // Set renderer
+            if (Xamarin.Forms.Platform.WinPhone.ViewExtensions.GetRenderer(_card) == null)
+                Xamarin.Forms.Platform.WinPhone.ViewExtensions.SetRenderer(_card,
+                    RendererFactory.GetRenderer(_card));
+
+            // Layout
+            _card.Layout(new Xamarin.Forms.Rectangle(0.0, 0.0, Application.Current.Host.Content.ActualWidth - 45,
+                _card.RequestedHeight));
+
+            var el = (UIElement)Xamarin.Forms.Platform.WinPhone.ViewExtensions.GetRenderer(_card);
+
+            this.Body = new Border
+            {                
+                Width = Application.Current.Host.Content.ActualWidth - 45,
+                Height = _card.RequestedHeight,
+                Background = new SolidColorBrush(Colors.Blue),
+                Child = el
+            };
+        }
     }
+
 }
