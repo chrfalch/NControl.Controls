@@ -16,8 +16,8 @@ namespace NControl.Controls.iOS
 		{
 			base.OnElementChanged (e);
 
-			if (e.OldElement == null)
-				((UIScrollView)NativeView).DelaysContentTouches = false;
+//			if (e.OldElement == null)
+//				((UIScrollView)NativeView).DelaysContentTouches = false;
 		}
 	}
 }
