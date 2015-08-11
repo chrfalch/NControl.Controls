@@ -45,7 +45,7 @@ namespace NControl.Controls
 		/// <summary>
 		/// The overlay.
 		/// </summary>
-		private readonly NControlView _contentView;
+		private readonly ContentView _contentView;
 
 		#endregion
 
@@ -67,7 +67,6 @@ namespace NControl.Controls
 			NavigationPage.SetHasBackButton (this, false);
 
 			_layout = new RelativeLayout ();
-
 			base.Content = _layout;
 
 			// Shadow 
@@ -76,41 +75,56 @@ namespace NControl.Controls
 				HasShadow = true,
 			};
 
-			// Card 
-			_contentView = new RoundCornerView {				
-				BackgroundColor = Color.White,
-				CornerRadius = 4,
-			};
-
 			_overlay = new BoxView {
 				BackgroundColor = Color.Black,
 				Opacity = 0.0F,
 			};
 
-			_layout.Children.Add (_overlay, () => _layout.Bounds);
+            if (_platformHelper.ControlAnimatesItself)
+            {
+                // Card 
+                _contentView = new RoundCornerView {
+                    BackgroundColor = Color.White,
+                    CornerRadius = 4,
+                };
 
-			_layout.Children.Add (_shadowLayer, ()=> new Rectangle (
-				(_platformHelper.ControlAnimatesItself ? CardPadding.Left : 0),
-				(_platformHelper.ControlAnimatesItself ? CardPadding.Top :0),  
-				_layout.Width - (_platformHelper.ControlAnimatesItself ? (CardPadding.Right + CardPadding.Left) : 0), 
-				_layout.Height - (_platformHelper.ControlAnimatesItself ? (CardPadding.Bottom + CardPadding.Top) : 0)));
-			
-			_layout.Children.Add(_contentView, ()=> new Rectangle (
-				(_platformHelper.ControlAnimatesItself ? CardPadding.Left : 0),
-				(_platformHelper.ControlAnimatesItself ? CardPadding.Top :0),  
-				_layout.Width - (_platformHelper.ControlAnimatesItself ? (CardPadding.Right + CardPadding.Left) : 0), 
-				_layout.Height - (_platformHelper.ControlAnimatesItself ? (CardPadding.Bottom + CardPadding.Top) : 0)));
+                _layout.Children.Add(_overlay, () => _layout.Bounds);
 
-			if (_platformHelper.ControlAnimatesItself) {
-				_shadowLayer.TranslationY = _platformHelper.GetScreenSize ().Height - (CardPadding.Top);
-				_contentView.TranslationY = _platformHelper.GetScreenSize ().Height - (CardPadding.Top);
-			}
+                _layout.Children.Add(_shadowLayer, () => new Rectangle(
+                   (_platformHelper.ControlAnimatesItself ? CardPadding.Left : 0),
+                   (_platformHelper.ControlAnimatesItself ? CardPadding.Top : 0),
+                   _layout.Width - (_platformHelper.ControlAnimatesItself ? (CardPadding.Right + CardPadding.Left) : 0),
+                   _layout.Height - (_platformHelper.ControlAnimatesItself ? (CardPadding.Bottom + CardPadding.Top) : 0)));
 
-			// Add tap
-			_overlay.GestureRecognizers.Add (new TapGestureRecognizer {
-				Command = new Command(async () => await CloseAsync())
-			});
-		}
+                _layout.Children.Add(_contentView, () => new Rectangle(
+                    (_platformHelper.ControlAnimatesItself ? CardPadding.Left : 0),
+                    (_platformHelper.ControlAnimatesItself ? CardPadding.Top : 0),
+                    _layout.Width - (_platformHelper.ControlAnimatesItself ? (CardPadding.Right + CardPadding.Left) : 0),
+                    _layout.Height - (_platformHelper.ControlAnimatesItself ? (CardPadding.Bottom + CardPadding.Top) : 0)));
+
+                if (_platformHelper.ControlAnimatesItself)
+                {
+                    _shadowLayer.TranslationY = _platformHelper.GetScreenSize().Height - (CardPadding.Top);
+                    _contentView.TranslationY = _platformHelper.GetScreenSize().Height - (CardPadding.Top);
+                }
+
+                // Add tap
+                _overlay.GestureRecognizers.Add(new TapGestureRecognizer
+                {
+                    Command = new Command(async () => await CloseAsync())
+                });
+            }
+            else
+            {
+                // Card 
+                _contentView = new ContentView {
+                    BackgroundColor = Color.White,                    
+                };
+
+                _layout.Children.Add(_contentView, () => 
+                    _layout.Bounds);
+            }
+        }
 
 		/// <summary>
 		/// Raises the appearing event.
@@ -208,16 +222,16 @@ namespace NControl.Controls
 		{
 			if (_platformHelper.ControlAnimatesItself) {
 
-				_shadowLayer.TranslateTo (0.0, 
-					_platformHelper.GetScreenSize().Height - (CardPadding.Top), 250, Easing.CubicInOut);
-				
-				await _contentView.TranslateTo (0.0, 
-					_platformHelper.GetScreenSize().Height - (CardPadding.Top), 250, Easing.CubicInOut);
-				
-                await _overlay.FadeTo (0.0F, 150, Easing.CubicInOut);
+                _shadowLayer.TranslateTo(0.0,
+                    _platformHelper.GetScreenSize().Height - (CardPadding.Top), 250, Easing.CubicInOut);
 
-			}
-			await _platformHelper.CloseAsync (this);
+                await _contentView.TranslateTo(0.0,
+                    _platformHelper.GetScreenSize().Height - (CardPadding.Top), 250, Easing.CubicInOut);
+
+                await _overlay.FadeTo(0.0F, 150, Easing.CubicInOut);
+
+            }
+            await _platformHelper.CloseAsync (this);
 		}
 
 		#endregion

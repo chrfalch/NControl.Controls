@@ -75,7 +75,7 @@ namespace NControl.Controls.WP80
             {
                 imagesource = await handler.LoadImageAsync(source, new CancellationToken());
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException)
             {
                 imagesource = (System.Windows.Media.ImageSource)null;
             }

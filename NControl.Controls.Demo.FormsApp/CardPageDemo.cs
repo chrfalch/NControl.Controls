@@ -83,7 +83,7 @@ namespace NControl.Controls.Demo.FormsApp
 
 						Content = new StackLayout {
 							Padding = 22,
-							BackgroundColor = Color.Yellow,
+							BackgroundColor = Color.Aqua,
 							Orientation = StackOrientation.Vertical,
 							HorizontalOptions = LayoutOptions.FillAndExpand,
 							VerticalOptions = LayoutOptions.CenterAndExpand,
