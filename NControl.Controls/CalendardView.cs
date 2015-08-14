@@ -38,6 +38,10 @@ namespace NControl.Controls
 		/// </summary>
 		private readonly NControlView _ellipse;
 
+        private DateTime _currentMonth;
+        private DateTime _firstDate;
+        private DateTime _lastDate;
+
 		#endregion
 
 		#region Events
@@ -68,8 +72,10 @@ namespace NControl.Controls
 		/// </summary>
 		public CalendarView()
 		{
-			// Layout
-			var layout = new RelativeLayout ();
+            _currentMonth = GetFirstDayInMonth(DateTime.Now);
+
+            // Layout
+            var layout = new StackLayout { Spacing = 0 , VerticalOptions = LayoutOptions.FillAndExpand};
 
 			// Header
 			_monthYearLabel = new Label {
@@ -80,8 +86,6 @@ namespace NControl.Controls
 				YAlign = TextAlignment.Center,
 				HeightRequest = TopHeight,
 			};
-
-			_monthYearLabel.SetBinding (Label.TextProperty, MonthYearStringProperty.PropertyName);
 
 			// Prev month
 			var prevMonthBtn = new RippleButton {
@@ -94,8 +98,13 @@ namespace NControl.Controls
 				TextColor = Color.FromHex("#AAAAAA"),
 				Text = FontAwesomeLabel.FAChevronLeft,
 			};
-			prevMonthBtn.Command = new Command((obj) => 
-				this.SelectedDate = this.SelectedDate.AddMonths (-1));
+            prevMonthBtn.Command = new Command(
+                (obj) =>
+                {
+                    _currentMonth = _currentMonth.AddMonths(-1);
+                    UpdateCalendar();
+                },
+                (obj) => _currentMonth > MinDate - MinDate.TimeOfDay);
 
 			// Next month
 			var nextMonthBtn = new RippleButton{
@@ -108,8 +117,13 @@ namespace NControl.Controls
 				TextColor = Color.FromHex("#AAAAAAA"),
 				Text = FontAwesomeLabel.FAChevronRight,
 			};
-			nextMonthBtn.Command = new Command((obj) =>
-				this.SelectedDate = this.SelectedDate.AddMonths (1));
+            nextMonthBtn.Command = new Command(
+                (obj) =>
+                {
+                    _currentMonth = _currentMonth.AddMonths(1);
+                    UpdateCalendar();
+                },
+                (obj) => _currentMonth.AddMonths(1) <= MaxDate);
 
 			var headerLayout = new StackLayout {
 				Orientation = StackOrientation.Horizontal,
@@ -119,8 +133,7 @@ namespace NControl.Controls
 				}
 			};
 
-			layout.Children.Add (headerLayout, ()=> new Rectangle(0, 0, 
-				layout.Width, TopHeight));
+            layout.Children.Add(headerLayout);
 
 			// Day names
 			var dayNames = CultureInfo.CurrentCulture.DateTimeFormat.AbbreviatedDayNames;
@@ -147,80 +160,92 @@ namespace NControl.Controls
 				dayGrid.Children.Add (label, d, 0);
 			}
 
-			layout.Children.Add(dayGrid, ()=> new Rectangle (0, TopHeight,
-				layout.Width, DayNamesHeight));
+            layout.Children.Add(dayGrid);
 
 			// Calendar
 			_calendar = new NControlView{
-				DrawingFunction = DrawCalendar,
+				DrawingFunction = DrawCalendar
 			};
 
-			layout.Children.Add (_calendar, ()=> new Rectangle (
-				0, TopHeight+DayNamesHeight,
-				layout.Width, layout.Height - (TopHeight + DayNamesHeight)));
+            var calendarLayout = new AbsoluteLayout {
+                VerticalOptions = LayoutOptions.FillAndExpand,
+                HorizontalOptions = LayoutOptions.FillAndExpand};
 
-			// Day Number Labels
-			var lc = 0;
-			var dayNumberGrid = new Grid { 				
-				ColumnSpacing = 0, RowSpacing = 0, Padding = 0,
-				ColumnDefinitions = {
-					new ColumnDefinition{Width = new GridLength(100.0/7.0, GridUnitType.Star) },
-					new ColumnDefinition{Width = new GridLength(100.0/7.0, GridUnitType.Star) },
-					new ColumnDefinition{Width = new GridLength(100.0/7.0, GridUnitType.Star) },
-					new ColumnDefinition{Width = new GridLength(100.0/7.0, GridUnitType.Star) },
-					new ColumnDefinition{Width = new GridLength(100.0/7.0, GridUnitType.Star) },
-					new ColumnDefinition{Width = new GridLength(100.0/7.0, GridUnitType.Star) },
-					new ColumnDefinition{Width = new GridLength(100.0/7.0, GridUnitType.Star) },
-				},
-				RowDefinitions = {
-					new RowDefinition{ Height = new GridLength(100.0/5.0, GridUnitType.Star) },
-					new RowDefinition{ Height = new GridLength(100.0/5.0, GridUnitType.Star) },
-					new RowDefinition{ Height = new GridLength(100.0/5.0, GridUnitType.Star) },
-					new RowDefinition{ Height = new GridLength(100.0/5.0, GridUnitType.Star) },
-					new RowDefinition{ Height = new GridLength(100.0/5.0, GridUnitType.Star) },
-					new RowDefinition{ Height = new GridLength(100.0/5.0, GridUnitType.Star) },
-				}
-			};
-
-			layout.Children.Add (dayNumberGrid, ()=> new Rectangle (
-				0, TopHeight+DayNamesHeight,
-				layout.Width, layout.Height - (TopHeight + DayNamesHeight)));
-
-			for (var r = 0; r < 6; r++) {
-				for (var c = 0; c < 7; c++) {
-					
-					var dayLabel = new Label{
-						XAlign = TextAlignment.Center,
-						YAlign = TextAlignment.Center,
-						TextColor = Color.Black,
-						BackgroundColor = Color.Transparent,
-						Text = "A" + lc.ToString(),
-					};
-						
-					dayNumberGrid.Children.Add (dayLabel, c, r);
-					_dayNumberLabels [lc++] = dayLabel;
-				}
-			}
+            calendarLayout.Children.Add(_calendar);
+            AbsoluteLayout.SetLayoutBounds(_calendar, new Rectangle(0f, 0f, 1f, 1f));
+            AbsoluteLayout.SetLayoutFlags(_calendar, AbsoluteLayoutFlags.All);
+			
+            var dayNumberGrid = CreateDayNumberGrid();
+            calendarLayout.Children.Add(dayNumberGrid);
+            AbsoluteLayout.SetLayoutBounds(dayNumberGrid, new Rectangle(0f, 0f, 1f, 1f));
+            AbsoluteLayout.SetLayoutFlags(dayNumberGrid, AbsoluteLayoutFlags.All);
 
 			// Ellipse
 			_ellipse = new NControlView {
 				BackgroundColor = Color.Transparent,
 				DrawingFunction = (canvas, rect) =>{
-					canvas.DrawEllipse(rect, null, 
+                    var h = Math.Min(rect.Width, rect.Height);
+                    var dx = (rect.Width - h)/2;
+                    var dy = (rect.Height - h)/2;
+                    var r = new NGraphics.Rect(dx, dy, h, h);
+                    canvas.DrawEllipse(r, null, 
 						new NGraphics.SolidBrush(Color.FromHex("#DDDDDD").ToNColor()));
 				},
 				Scale = 0.0,
 			};	
 
-			layout.Children.Add (_ellipse, () => new Rectangle (
-				0, TopHeight + DayNamesHeight, 
-				Math.Min(_calendar.Width / 7, _calendar.Height/7),
-				Math.Min(_calendar.Width / 7, _calendar.Height/7)
-				)
-			);
+            calendarLayout.Children.Add(_ellipse);
+            AbsoluteLayout.SetLayoutBounds(_ellipse, new Rectangle(0f, 0f, 1/7f, 1/6f));
+            AbsoluteLayout.SetLayoutFlags(_ellipse, AbsoluteLayoutFlags.All);
 
+            layout.Children.Add(calendarLayout);
 			Content = layout;
 		}
+
+        private Grid CreateDayNumberGrid()
+        {
+            var lc = 0;
+            var dayNumberGrid = new Grid {  
+                VerticalOptions = LayoutOptions.FillAndExpand,
+                HorizontalOptions = LayoutOptions.FillAndExpand,            
+                ColumnSpacing = 0, RowSpacing = 0, Padding = 0,
+                ColumnDefinitions = {
+                    new ColumnDefinition{Width = new GridLength(100.0/7.0, GridUnitType.Star) },
+                    new ColumnDefinition{Width = new GridLength(100.0/7.0, GridUnitType.Star) },
+                    new ColumnDefinition{Width = new GridLength(100.0/7.0, GridUnitType.Star) },
+                    new ColumnDefinition{Width = new GridLength(100.0/7.0, GridUnitType.Star) },
+                    new ColumnDefinition{Width = new GridLength(100.0/7.0, GridUnitType.Star) },
+                    new ColumnDefinition{Width = new GridLength(100.0/7.0, GridUnitType.Star) },
+                    new ColumnDefinition{Width = new GridLength(100.0/7.0, GridUnitType.Star) },
+                },
+                RowDefinitions = {
+                    new RowDefinition{ Height = new GridLength(100.0/5.0, GridUnitType.Star) },
+                    new RowDefinition{ Height = new GridLength(100.0/5.0, GridUnitType.Star) },
+                    new RowDefinition{ Height = new GridLength(100.0/5.0, GridUnitType.Star) },
+                    new RowDefinition{ Height = new GridLength(100.0/5.0, GridUnitType.Star) },
+                    new RowDefinition{ Height = new GridLength(100.0/5.0, GridUnitType.Star) },
+                    new RowDefinition{ Height = new GridLength(100.0/5.0, GridUnitType.Star) },
+                }
+            };
+
+            for (var r = 0; r < 6; r++) {
+                for (var c = 0; c < 7; c++) {
+
+                    var dayLabel = new Label{
+                        XAlign = TextAlignment.Center,
+                        YAlign = TextAlignment.Center,
+                        TextColor = Color.Black,
+                        BackgroundColor = Color.Transparent,
+                        Text = "A" + lc.ToString(),
+                    };
+
+                    dayNumberGrid.Children.Add (dayLabel, c, r);
+                    _dayNumberLabels [lc++] = dayLabel;
+                }
+            }
+
+            return dayNumberGrid;
+        }
 
 		/// <summary>
 		/// Touchs down.
@@ -236,31 +261,44 @@ namespace NControl.Controls
 			if (p.Y < TopHeight + DayNamesHeight)
 				return false;
 
-			_ellipse.Scale = 0.0;
-			_ellipse.Opacity = 1.0;
+            var col = (int)(p.X * 7 / _calendar.Width);
+            var row = (int)((p.Y - TopHeight - DayNamesHeight) * 6 / _calendar.Height);
 
-			p.Y += ((_calendar.Height / 6) / 2);
 
-			_ellipse.TranslationX = Math.Floor(p.X / (_calendar.Width/7)) * (_calendar.Width/7);
-			_ellipse.TranslationY = Math.Floor(p.Y / (_calendar.Height/6)) * 
-				(_calendar.Height/6) - (TopHeight + DayNamesHeight + ((_calendar.Height/6)/2));
+			var choosenDate = _firstDate.AddDays(col + (row * 7));			
+            if (choosenDate > _lastDate)
+                return true;
 
-			_ellipse.ScaleTo (2);
-			_ellipse.FadeTo (0.0);
+            if (choosenDate < _currentMonth && _currentMonth > MinDate - MinDate.TimeOfDay)
+            {
+                _currentMonth = _currentMonth.AddMonths(-1);
+            }
+            else if (choosenDate >= _currentMonth.AddMonths(1) && _currentMonth.AddMonths(1) <= MaxDate)
+            {
+                _currentMonth = _currentMonth.AddMonths(1);
+            }
+            else if (choosenDate >= MinDate - MinDate.TimeOfDay && choosenDate <= MaxDate)
+            {
+                _ellipse.TranslationX = (col * _calendar.Width / 7);
+                _ellipse.TranslationY = (row * _calendar.Height /6 ); 
 
-			// Update selected date
-			var col = (int)Math.Round(_ellipse.TranslationX / (_calendar.Width / 7));
-			var row = (int)Math.Round(_ellipse.TranslationY / (_calendar.Height / 6));
-			var choosenDate = StartDate.AddDays(col + (row * 7));			
-			var callEvent = (choosenDate.Month == SelectedDate.Month);
+                _ellipse.Scale = 0.0;
+                _ellipse.Opacity = 1.0;
 
-            SelectedDate = new DateTime(choosenDate.Year, choosenDate.Month, choosenDate.Day,
-                SelectedDate.Hour, SelectedDate.Minute, SelectedDate.Second, DateTimeKind.Utc);
+                _ellipse.ScaleTo (2);
+                _ellipse.FadeTo (0.0);
 
-			// Call event
-			if (callEvent && OnDateSelected != null)
-				OnDateSelected (this, EventArgs.Empty);
-		
+                SelectedDate = choosenDate + SelectedDate.TimeOfDay;
+                if (OnDateSelected != null)
+                {
+                    OnDateSelected(this, EventArgs.Empty);
+                }
+
+                return true;
+            }
+
+            UpdateCalendar();
+
 			return true;
 		}
 
@@ -271,28 +309,32 @@ namespace NControl.Controls
 		/// <param name="rect">Rect.</param>
 		public void DrawCalendar (NGraphics.ICanvas canvas, NGraphics.Rect rect)
 		{
-			base.Draw (canvas, rect);
+            _monthYearLabel.Text = _currentMonth.ToString("MMMMM yyyy");
+
+            base.Draw (canvas, rect);
 
 			// Should we use last line?
 			// var drawLastLine = true;
 
 			var colWidth = rect.Width/7;
 			var rowHeight = rect.Height/6;
+            var hasEmptyRow = false;
 
 			// Find first week of day
 			var firstWeekDay = CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek;
-
-			// Find last of this day in previous month
-			var lastDayInPrevMonth = GetLastDayInMonth(SelectedDate.AddMonths(-1));
-			while (lastDayInPrevMonth.DayOfWeek != firstWeekDay)
-				lastDayInPrevMonth = lastDayInPrevMonth.AddDays (-1);
+            var date = _currentMonth;
+            while (date.DayOfWeek != firstWeekDay)
+            {
+                date = date.AddDays(-1);
+            }
+            _firstDate = date;
 
 			// Set up brushes
-			var selectedBrush = new NGraphics.SolidBrush(SelectedDateColor.ToNColor());
-			var prevNextBrush = new NGraphics.SolidBrush(Color.FromHex("#EEEEEE").ToNColor());
-
-			var currentDate = lastDayInPrevMonth;
-			StartDate = lastDayInPrevMonth;
+			var selectedBrush = new NGraphics.SolidBrush(SelectedBackground.ToNColor());
+            var regularBrush = new NGraphics.SolidBrush(RegularBackground.ToNColor());
+            var weekendBrush = new NGraphics.SolidBrush(WeekendBackground.ToNColor());
+            var notInMonthBrush = new NGraphics.SolidBrush(NotInMonthBackground.ToNColor());
+            var disabledBrush = new NGraphics.SolidBrush(DisabledBackground.ToNColor());
 
 			var col = 0;
 			var row = 0;
@@ -300,59 +342,67 @@ namespace NControl.Controls
 			for (int d = 0; d < _dayNumberLabels.Length; d++) {
 
 				// Update text
-				_dayNumberLabels [d].Text = currentDate.Day.ToString();
-
-				if (currentDate.Month != SelectedDate.Month) {
-
-					// Prev/next month
-					_dayNumberLabels [d].TextColor = Color.FromHex ("#CECECE");
-
-				} 
-				else 
-				{
-
-					// Background
-					canvas.DrawRectangle (new NGraphics.Rect (col * colWidth, row * rowHeight,
-						colWidth, rowHeight), null, prevNextBrush);
-					
-					if (currentDate.DayOfWeek == DayOfWeek.Sunday ||
-					    currentDate.DayOfWeek == DayOfWeek.Saturday) {
-
-						// Weekends
-						_dayNumberLabels [d].TextColor = Color.FromHex ("#CACACA");
-
-					} else {
-					
-						// Regular days
-						_dayNumberLabels [d].TextColor = Color.Black;
-					}
-				}
-
-
-				if (IsSameDay (SelectedDate, currentDate)) {
-					
-					// Selected colors
-					_dayNumberLabels[d].TextColor = Color.White;
-
-					// Background
-					canvas.DrawRectangle (new NGraphics.Rect (col * colWidth, row * rowHeight,
-						colWidth, rowHeight), null, selectedBrush);
-				}
-
-                if (IsSameDay (DateTime.Now, currentDate)) {
-
-                    // Today
-                    _dayNumberLabels[d].TextColor = Color.White;
-
-                    // Background
-                    var wh = Math.Min(colWidth, rowHeight);
-                    var rc = new NGraphics.Rect ((col * colWidth), (row * rowHeight), wh, wh);
-                    rc.Inflate (-1, -1);
-                    rc.X+=3;                    
-
-                    canvas.DrawEllipse (rc, null, new NGraphics.SolidBrush(Color.FromHex("#fc3d39").ToNColor()));
+                var label = _dayNumberLabels[d];
+                if (hasEmptyRow || (date.DayOfWeek == firstWeekDay && date >= _currentMonth.AddMonths(1)))
+                {
+                    hasEmptyRow = true;
+                    label.IsVisible = false;
                 }
-					
+                else
+                {
+                    label.IsVisible = true;
+                    label.Text = date.Day.ToString();
+                    _lastDate = date;
+
+                    if (HighlightDisabled && (date < MinDate - MinDate.TimeOfDay || date > MaxDate))
+                    {
+                        _dayNumberLabels[d].TextColor = DisabledColor;
+                        canvas.DrawRectangle (new NGraphics.Rect (col * colWidth, row * rowHeight,
+                            colWidth, rowHeight), null, disabledBrush);
+                    }
+                    else if (IsSameDay (SelectedDate, date))
+                    {
+                        // Selected date
+                        _dayNumberLabels[d].TextColor = SelectedColor;
+                        canvas.DrawRectangle (new NGraphics.Rect (col * colWidth, row * rowHeight,
+                            colWidth, rowHeight), null, selectedBrush);
+                    }
+                    else if (date.Month != _currentMonth.Month)
+                    {
+                        // Prev/next month
+                        _dayNumberLabels[d].TextColor = NotInMonthColor;
+                        canvas.DrawRectangle(new NGraphics.Rect(col * colWidth, row * rowHeight, colWidth, rowHeight), null, notInMonthBrush);
+                    }
+                    else if (date.DayOfWeek == DayOfWeek.Sunday || date.DayOfWeek == DayOfWeek.Saturday)
+                    {
+                        // Weekends
+                        _dayNumberLabels[d].TextColor = WeekendColor;
+                        canvas.DrawRectangle(new NGraphics.Rect(col * colWidth, row * rowHeight, colWidth, rowHeight), null, weekendBrush);
+                    }
+                    else
+                    {
+                        // Regular days
+                        _dayNumberLabels [d].TextColor = RegularColor; 
+                        canvas.DrawRectangle (new NGraphics.Rect (col * colWidth, row * rowHeight, colWidth, rowHeight), null, regularBrush);
+                    }
+
+
+                    if (IsSameDay (DateTime.Now, date)) {
+
+                        // Today
+                        _dayNumberLabels[d].TextColor = TodayColor;
+
+                        // Background
+                        var wh = Math.Min(colWidth, rowHeight);
+                        var dx = (colWidth - wh) / 2;
+                        var dy = (rowHeight - wh) / 2;
+                        var rc = new NGraphics.Rect ((col * colWidth) + dx, (row * rowHeight) + dy, wh, wh);
+                        rc.Inflate (-1, -1);       
+
+                        canvas.DrawEllipse (rc, null, new NGraphics.SolidBrush(TodayBackground.ToNColor()));
+                    }
+                }
+
 				// Col/row-counter
 				col++;
 				if (col == 7) {
@@ -360,13 +410,13 @@ namespace NControl.Controls
 					row++;
 				}
 
-				currentDate = currentDate.AddDays (1);
+                date = date.AddDays(1);
 			}
 
-			var colRowPen = new NGraphics.Pen (Color.FromHex ("#FFFFFF").ToNColor (), 1);
+            var colRowPen = new NGraphics.Pen(GridColor.ToNColor (), 1);
 
 			// Draw row lines
-			for (var r = 0; r < 7; r++) {
+            for (var r = 0; r < (hasEmptyRow ? 6 : 7) ; r++) {
 				canvas.DrawPath (new NGraphics.PathOp[] {
 					new NGraphics.MoveTo(0, r *rowHeight), 
 					new NGraphics.LineTo(rect.Width, r*rowHeight) 
@@ -377,20 +427,11 @@ namespace NControl.Controls
 			for (var c = 0; c < 7; c++) {
 				canvas.DrawPath (new NGraphics.PathOp[] {
 					new NGraphics.MoveTo(c*colWidth, 0), 
-					new NGraphics.LineTo(c*colWidth, rect.Height)
+                    new NGraphics.LineTo(c*colWidth, hasEmptyRow ? rect.Height - rowHeight : rect.Height)
 
 				}, colRowPen);
 			}	
 
-		}
-
-		/// <summary>
-		/// Gets or sets the start date.
-		/// </summary>
-		/// <value>The start date.</value>
-		private DateTime StartDate {
-			get;
-			set;
 		}
 
 		/// <summary>
@@ -428,38 +469,13 @@ namespace NControl.Controls
 				_monthYearLabel.FontFamily = value;
 			}
 		}
-
-		/// <summary>
-		/// The SelectedDateColor property.
-		/// </summary>
-		public static BindableProperty SelectedDateColorProperty = 
-			BindableProperty.Create<CalendarView, Color> (p => p.SelectedDateColor, Color.Accent,
-				propertyChanged: (bindable, oldValue, newValue) => {
-					var ctrl = (CalendarView)bindable;
-					ctrl.SelectedDateColor = newValue;
-				});
-
-		/// <summary>
-		/// Gets or sets the SelectedDateColor of the CalendarView instance.
-		/// </summary>
-		/// <value>The color of the buton.</value>
-		public Color SelectedDateColor {
-			get{ return (Color)GetValue (SelectedDateColorProperty); }
-			set {
-				SetValue (SelectedDateColorProperty, value);
-				UpdateCalendar ();
-			}
-		}
-
+            
 		/// <summary>
 		/// The SelectedDate property.
 		/// </summary>
-		public static BindableProperty SelectedDateProperty = 
-			BindableProperty.Create<CalendarView, DateTime> (p => p.SelectedDate, DateTime.MinValue,
-				propertyChanged: (bindable, oldValue, newValue) => {
-					var ctrl = (CalendarView)bindable;
-					ctrl.SelectedDate = newValue;
-				});
+		public static BindableProperty SelectedDateProperty = BindableProperty.Create<CalendarView, DateTime> (
+            p => p.SelectedDate, DateTime.MinValue, BindingMode.TwoWay,
+            propertyChanged: (b, o, n) => { ((CalendarView)b).UpdateCalendar(); });
 
 		/// <summary>
 		/// Gets or sets the SelectedDate of the Class instance.
@@ -467,12 +483,170 @@ namespace NControl.Controls
 		/// <value>The color of the buton.</value>
 		public DateTime SelectedDate {
 			get { return (DateTime)GetValue (SelectedDateProperty); }
-			set {
-				SetValue (SelectedDateProperty, value);
-				MonthYearString = value.ToString ("MMMMM yyyy");
-				UpdateCalendar ();
-			}
+			set { SetValue(SelectedDateProperty, value); }
 		}
+
+        public static BindableProperty MinDateProperty = BindableProperty.Create<CalendarView, DateTime>(
+            p => p.MinDate, DateTime.MinValue,
+            propertyChanged: (b, o, n) => { ((CalendarView)b).UpdateCalendar(); });
+
+        public DateTime MinDate
+        {
+            get  { return (DateTime)GetValue(MinDateProperty); }
+            set  { SetValue(MinDateProperty, value); } 
+        }
+
+        public static BindableProperty MaxDateProperty = BindableProperty.Create<CalendarView, DateTime>(
+            p => p.MaxDate, DateTime.MaxValue,
+            propertyChanged: (b, o, n) => { ((CalendarView)b).UpdateCalendar(); });
+
+        public DateTime MaxDate
+        {
+            get  { return (DateTime)GetValue(MaxDateProperty); }
+            set  { SetValue(MaxDateProperty, value); } 
+        }
+
+        public static BindableProperty HighlightDisabledProperty = BindableProperty.Create<CalendarView, bool>(
+            p => p.HighlightDisabled, true,
+            propertyChanged: (b, o, n) => { ((CalendarView)b).UpdateCalendar(); });
+
+        public bool HighlightDisabled
+        {
+            get { return (bool)GetValue(HighlightDisabledProperty); }
+            set { SetValue(HighlightDisabledProperty, value); }
+        }
+
+        public static BindableProperty DisabledColorProperty = BindableProperty.Create<CalendarView, Color>(
+            p => p.DisabledColor, Color.White,
+            propertyChanged: (b, o, n) => { ((CalendarView)b).UpdateCalendar(); });
+        
+        #region Colors
+
+        public Color DisabledColor
+        {
+            get { return (Color)GetValue(DisabledColorProperty); }
+            set { SetValue(DisabledColorProperty, value); }
+        }
+
+        public static BindableProperty DisabledBackgroundProperty = BindableProperty.Create<CalendarView, Color>(
+            p => p.DisabledBackground, Color.Gray,
+            propertyChanged: (b, o, n) => { ((CalendarView)b).UpdateCalendar(); });
+
+        public Color DisabledBackground
+        {
+            get { return (Color)GetValue(DisabledBackgroundProperty); }
+            set { SetValue(DisabledBackgroundProperty, value); }
+        }
+
+        public static BindableProperty SelectedColorProperty = BindableProperty.Create<CalendarView, Color>(
+            p => p.SelectedColor, Color.White,
+            propertyChanged: (b, o, n) => { ((CalendarView)b).UpdateCalendar(); });
+
+        public Color SelectedColor
+        {
+            get { return (Color)GetValue(SelectedColorProperty); }
+            set { SetValue(SelectedColorProperty, value); }
+        }
+
+        public static BindableProperty SelectedBackgroundProperty = BindableProperty.Create<CalendarView, Color>(
+            p => p.SelectedBackground, Color.Accent,
+            propertyChanged: (b, o, n) => { ((CalendarView)b).UpdateCalendar(); });
+
+        public Color SelectedBackground
+        {
+            get { return (Color)GetValue(SelectedBackgroundProperty); }
+            set { SetValue(SelectedBackgroundProperty, value); }
+        }
+
+        public static BindableProperty TodayColorProperty = BindableProperty.Create<CalendarView, Color>(
+            p => p.TodayColor, Color.White,
+            propertyChanged: (b, o, n) => { ((CalendarView)b).UpdateCalendar(); });
+        
+        public Color TodayColor
+        {
+            get { return (Color)GetValue(TodayColorProperty); }
+            set { SetValue(TodayColorProperty, value); }
+        }
+
+        public static BindableProperty TodayBackgroundProperty = BindableProperty.Create<CalendarView, Color>(
+            p => p.TodayBackground, Color.FromHex("#fc3d39"),
+            propertyChanged: (b, o, n) => { ((CalendarView)b).UpdateCalendar(); });
+
+        public Color TodayBackground
+        {
+            get { return (Color)GetValue(TodayBackgroundProperty); }
+            set { SetValue(TodayBackgroundProperty, value); }
+        }
+
+        public static BindableProperty WeekendColorProperty = BindableProperty.Create<CalendarView, Color>(
+            p => p.WeekendColor, Color.FromHex("#fc3d39"),
+            propertyChanged: (b, o, n) => { ((CalendarView)b).UpdateCalendar(); });
+
+        public Color WeekendColor
+        {
+            get { return (Color)GetValue(WeekendColorProperty); }
+            set { SetValue(WeekendColorProperty, value); }
+        }
+
+        public static BindableProperty WeekendBackgroundProperty = BindableProperty.Create<CalendarView, Color>(
+            p => p.WeekendBackground, Color.FromHex("#EEEEEE"),
+            propertyChanged: (b, o, n) => { ((CalendarView)b).UpdateCalendar(); });
+
+        public Color WeekendBackground
+        {
+            get { return (Color)GetValue(WeekendBackgroundProperty); }
+            set { SetValue(WeekendBackgroundProperty, value); }
+        }
+
+        public static BindableProperty RegularColorProperty = BindableProperty.Create<CalendarView, Color>(
+            p => p.RegularColor, Color.Black,
+            propertyChanged: (b, o, n) => { ((CalendarView)b).UpdateCalendar(); });
+
+        public Color RegularColor
+        {
+            get { return (Color)GetValue(RegularColorProperty); }
+            set { SetValue(RegularColorProperty, value); }
+        }
+
+        public static BindableProperty RegularBackgroundProperty = BindableProperty.Create<CalendarView, Color>(
+            p => p.RegularBackground, Color.FromHex("#EEEEEE"),
+            propertyChanged: (b, o, n) => { ((CalendarView)b).UpdateCalendar(); });
+
+        public Color RegularBackground
+        {
+            get { return (Color)GetValue(RegularBackgroundProperty); }
+            set { SetValue(RegularBackgroundProperty, value); }
+        }
+
+        public static BindableProperty NotInMonthColorProperty = BindableProperty.Create<CalendarView, Color>(
+            p => p.NotInMonthColor, Color.FromHex("#CECECE"),
+            propertyChanged: (b, o, n) => { ((CalendarView)b).UpdateCalendar(); });
+
+        public Color NotInMonthColor
+        {
+            get { return (Color)GetValue(NotInMonthColorProperty); }
+            set { SetValue(NotInMonthColorProperty, value); }
+        }
+
+        public static BindableProperty NotInMonthBackgroundProperty = BindableProperty.Create<CalendarView, Color>(
+            p => p.NotInMonthBackground, Color.White,
+            propertyChanged: (b, o, n) => { ((CalendarView)b).UpdateCalendar(); });
+
+        public Color NotInMonthBackground
+        {
+            get { return (Color)GetValue(NotInMonthBackgroundProperty); }
+            set { SetValue(NotInMonthBackgroundProperty, value); }
+        }
+
+        public static BindableProperty GridColorProperty = BindableProperty.Create<CalendarView, Color>(
+            p => p.GridColor, Color.White,
+            propertyChanged: (b, o, n) => { ((CalendarView)b).UpdateCalendar(); });
+
+        public Color GridColor
+        {
+            get { return (Color)GetValue(GridColorProperty); }
+            set { SetValue(GridColorProperty, value); }
+        }
 
 		/// <summary>
 		/// The BorderColor property.
@@ -496,37 +670,18 @@ namespace NControl.Controls
 			}
 		}
 
-		/// <summary>
-		/// The MonthYearString property.
-		/// </summary>
-		private static BindableProperty MonthYearStringProperty = 
-			BindableProperty.Create<CalendarView, string> (p => p.MonthYearString, null,
-				propertyChanged: (bindable, oldValue, newValue) => {
-					var ctrl = (CalendarView)bindable;
-					ctrl.MonthYearString = newValue;
-				});
+        #endregion
 
-		/// <summary>
-		/// Gets or sets the MonthYearString of the CalendarView instance.
-		/// </summary>
-		/// <value>The color of the buton.</value>
-		private string MonthYearString {
-			get{ return (string)GetValue (MonthYearStringProperty); }
-			set {
-				SetValue (MonthYearStringProperty, value);
-				_monthYearLabel.Text = value;
-			}
-		}
-
-		/// <summary>
+        /// <summary>
 		/// Gets the first day in month.
 		/// </summary>
 		/// <returns>The first day in month.</returns>
 		/// <param name="date">Date.</param>
 		private DateTime GetFirstDayInMonth(DateTime date)
 		{
-			return date.AddDays(1-date.Day);
+			return date.Date.AddDays(1-date.Day);
 		}
+          
 
 		/// <summary>
 		/// Gets the last day in month.
@@ -535,8 +690,7 @@ namespace NControl.Controls
 		/// <param name="date">Date.</param>
 		public DateTime GetLastDayInMonth(DateTime date)
 		{
-            return new DateTime(date.Year, date.Month, DateTime.DaysInMonth(date.Year, date.Month), 
-                12, 0, 0, DateTimeKind.Utc);
+            return date.Date.AddDays(-date.Day).AddMonths(1);
 		}
 
 		/// <summary>
