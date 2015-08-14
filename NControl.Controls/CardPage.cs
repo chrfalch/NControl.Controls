@@ -5,7 +5,15 @@ using System.Threading.Tasks;
 
 namespace NControl.Controls
 {
-	/// <summary>
+    public enum CardPosition
+    {
+        Custom,
+        Top,
+        Bottom,
+        Center
+    }
+
+    /// <summary>
 	/// Card page. Based on custom transitions 
 	/// </summary>
 	public class CardPage: ContentPage
@@ -15,12 +23,12 @@ namespace NControl.Controls
 		/// <summary>
 		/// The height of the requested.
 		/// </summary>
-		private double _requestedHeight;
+		private double _requestedHeight = -1;
 
 		/// <summary>
 		/// The width of the requested.
 		/// </summary>
-		private double _requestedWidth;
+		private double _requestedWidth = -1;
 
 		/// <summary>
 		/// The helper.
@@ -60,8 +68,9 @@ namespace NControl.Controls
                 throw new InvalidOperationException("Error loading NControls - did you remember to call " + 
                     "NControls.Init() in your platform startup code?");
 
-			CardPadding = new Thickness (40, 100, 40, 200);
+			_cardPadding = new Thickness (40, 100, 40, 100);
 			BackgroundColor = Color.Transparent;
+            _hasHaddow = true;
 
 			NavigationPage.SetHasNavigationBar (this, false);
 			NavigationPage.SetHasBackButton (this, false);
@@ -90,17 +99,9 @@ namespace NControl.Controls
 
                 _layout.Children.Add(_overlay, () => _layout.Bounds);
 
-                _layout.Children.Add(_shadowLayer, () => new Rectangle(
-                   (_platformHelper.ControlAnimatesItself ? CardPadding.Left : 0),
-                   (_platformHelper.ControlAnimatesItself ? CardPadding.Top : 0),
-                   _layout.Width - (_platformHelper.ControlAnimatesItself ? (CardPadding.Right + CardPadding.Left) : 0),
-                   _layout.Height - (_platformHelper.ControlAnimatesItself ? (CardPadding.Bottom + CardPadding.Top) : 0)));
+                _layout.Children.Add(_shadowLayer, () => this.LayerPosition);
 
-                _layout.Children.Add(_contentView, () => new Rectangle(
-                    (_platformHelper.ControlAnimatesItself ? CardPadding.Left : 0),
-                    (_platformHelper.ControlAnimatesItself ? CardPadding.Top : 0),
-                    _layout.Width - (_platformHelper.ControlAnimatesItself ? (CardPadding.Right + CardPadding.Left) : 0),
-                    _layout.Height - (_platformHelper.ControlAnimatesItself ? (CardPadding.Bottom + CardPadding.Top) : 0)));
+                _layout.Children.Add(_contentView, () => this.LayerPosition);
 
                 if (_platformHelper.ControlAnimatesItself)
                 {
@@ -126,6 +127,40 @@ namespace NControl.Controls
             }
         }
 
+        private Rectangle LayerPosition 
+        { 
+            get 
+            { 
+                if (!_platformHelper.ControlAnimatesItself)
+                    return new Rectangle(0, 0, _layout.Width, _layout.Height);
+
+                if (Position == CardPosition.Custom)
+                {
+                    return new Rectangle(CardPadding.Left, CardPadding.Top,
+                        _layout.Width - CardPadding.Left - CardPadding.Right,
+                        _layout.Height - CardPadding.Bottom - CardPadding.Top);
+                }
+                var screen = _platformHelper.GetScreenSize();
+                var width = WidthRequest > 0 
+                    ? RequestedWidth 
+                    : (_contentView.Content.Width < 0 ? _layout.Width : _contentView.Content.Width);
+
+                var height = HeightRequest > 0 
+                    ? RequestedHeight
+                    : (_contentView.Content.Height < 0 ? _layout.Height : _contentView.Content.Height);
+
+                var dx = (screen.Width - width) / 2;
+                var dy = (screen.Height - height) / 2;
+
+                if (Position == CardPosition.Bottom)
+                    return new Rectangle(dx,2 * dy, width, height);
+                if (Position == CardPosition.Center)
+                    return new Rectangle(dx, dy, width, height);
+
+                return new Rectangle(dx, 0, width, height);
+            } 
+        }
+
 		/// <summary>
 		/// Raises the appearing event.
 		/// </summary>
@@ -133,10 +168,11 @@ namespace NControl.Controls
 		{
 			base.OnAppearing ();
 
-			if (_platformHelper.ControlAnimatesItself) {
-				_overlay.FadeTo (0.2F);
-				_shadowLayer.TranslateTo (0.0, 0.0, 250, Easing.CubicInOut);
-				_contentView.TranslateTo (0.0, 0.0, 250, Easing.CubicInOut);
+			if (_platformHelper.ControlAnimatesItself) 
+            {
+				_overlay.FadeTo (0.5F);
+				_shadowLayer.TranslateTo (0.0, 0.0, 150, Easing.CubicInOut);
+				_contentView.TranslateTo (0.0, 0.0, 150, Easing.CubicInOut);
 			} 
 		}
 
@@ -167,29 +203,67 @@ namespace NControl.Controls
 			{
 				var height = value;
 				var padding = (_platformHelper.GetScreenSize().Height - height)/2;
-				CardPadding = new Thickness (CardPadding.Left, padding, CardPadding.Right, padding);
+                CardPadding = new Thickness (CardPadding.Left, padding, CardPadding.Right, padding);
 
 				_requestedHeight = value;
 				InvalidateMeasure ();
 			}
 		}
 
-		/// <summary>
-		/// Gets or sets the width of the requested.
-		/// </summary>
-		/// <value>The width of the requested.</value>
-		public virtual double RequestedWidth 
-		{			
-			get { return _requestedWidth; }
-			set 
-			{
-				var padding = (_platformHelper.GetScreenSize().Width - value)/2;
-				CardPadding = new Thickness (padding, CardPadding.Top, padding, CardPadding.Bottom);
+        /// <summary>
+        /// Gets or sets the width of the requested.
+        /// </summary>
+        /// <value>The width of the requested.</value>
+        public virtual double RequestedWidth 
+        {           
+            get { return _requestedWidth; }
+            set 
+            {
+                var padding = (_platformHelper.GetScreenSize().Width - value)/2;
+                CardPadding = new Thickness (padding, CardPadding.Top, padding, CardPadding.Bottom);
 
-				_requestedWidth = value;
-				InvalidateMeasure ();
-			}
-		}			
+                _requestedWidth = value;
+                InvalidateMeasure ();
+            }
+        }   
+
+        private bool _hasHaddow;
+        public bool HasShaddow
+        {
+            get { return _hasHaddow; }
+            set 
+            {
+                if (_hasHaddow == value) return;
+                _hasHaddow = value;
+
+                if (_hasHaddow)
+                    _layout.Children.Add(_shadowLayer, () => this.LayerPosition);
+                else
+                    _layout.Children.Remove(_shadowLayer);
+            }
+        }
+
+        private CardPosition _position = CardPosition.Custom;
+        public CardPosition Position
+        {
+            get { return _position; }
+            set 
+            {
+                if (_position == value) return;
+                _position = value;
+            }
+        }
+
+        private Thickness _cardPadding;
+        public Thickness CardPadding 
+        {
+            get { return _cardPadding; }
+            set 
+            { 
+                _cardPadding = value;
+                Position = CardPosition.Custom;
+            }
+        }	
 
 		/// <summary>
 		/// Gets or Sets the View element representing the content of the Page.
@@ -209,7 +283,7 @@ namespace NControl.Controls
 		/// Shows the card async
 		/// </summary>
 		/// <returns>The async.</returns>
-		public Task ShowAsync()
+		public virtual Task ShowAsync()
 		{
 			return _platformHelper.ShowAsync (this);
 		}
@@ -218,7 +292,7 @@ namespace NControl.Controls
 		/// Closes the async.
 		/// </summary>
 		/// <returns>The async.</returns>
-		public async Task CloseAsync()
+		public virtual async Task CloseAsync()
 		{
 			if (_platformHelper.ControlAnimatesItself) {
 
@@ -231,20 +305,8 @@ namespace NControl.Controls
                 await _overlay.FadeTo(0.0F, 150, Easing.CubicInOut);
 
             }
+
             await _platformHelper.CloseAsync (this);
-		}
-
-		#endregion
-
-		#region Overridable Members
-
-		/// <summary>
-		/// Defines the insets/padding for the card
-		/// </summary>
-		/// <value>The card insets.</value>
-		public Thickness CardPadding {
-			get;
-			set;
 		}
 
 		#endregion
