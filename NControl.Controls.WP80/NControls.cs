@@ -20,7 +20,6 @@ namespace NControl.Controls.WP80
         /// </summary>
         public static void Init()
         {
-            NControl.WP80.NControlViewRenderer.Init();
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
             FontLoader.LoadFonts(assemblies, (fontName, s) =>
             {

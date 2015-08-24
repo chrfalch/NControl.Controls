@@ -19,8 +19,7 @@ namespace NControl.Controls.WP81
         /// Init this instance to 
         /// </summary>
         public static void Init()
-        {            
-			NControl.WP81.NControlViewRenderer.Init();
+        {            			
 		    var assemblies = AppDomain.CurrentDomain.GetAssemblies();
 			FontLoader.LoadFonts (assemblies, (fontName, s) => {
 
