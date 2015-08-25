@@ -40,7 +40,7 @@ namespace NControl.Controls.WP81
         {
             base.OnElementPropertyChanged(sender, e);
 
-            if (e.PropertyName == RoundCornerView.BackgroundColorProperty.PropertyName ||
+            if (e.PropertyName == VisualElement.BackgroundColorProperty.PropertyName ||
                 e.PropertyName == RoundCornerView.BorderColorProperty.PropertyName ||
                 e.PropertyName == RoundCornerView.CornerRadiusProperty.PropertyName ||
                 e.PropertyName == RoundCornerView.BorderWidthProperty.PropertyName)
@@ -54,28 +54,45 @@ namespace NControl.Controls.WP81
         {
             base.UpdateClip();
 
-            if (Control.Child == null)
-                return;
-
             if (Control.ActualWidth == 0 || Control.ActualHeight == 0)
                 return;
 
             if (Element.IsClippedToBounds)
             {
-                var el = Element as RoundCornerView;
                 var width = Control.ActualWidth - ((Element as RoundCornerView).BorderWidth * 4);
                 var height = Control.ActualHeight - ((Element as RoundCornerView).BorderWidth * 4);
                 if (width > 0 && height > 0)
-                    Control.Child.Clip = new RectangleGeometry
+                {
+
+                    Clip = new RectangleGeometry
                     {
-                        Rect = new Rect((Element as RoundCornerView).BorderWidth,
-                            (Element as RoundCornerView).BorderWidth, width, height),
+                        Rect = new Rect(0, 0, Control.ActualWidth, Control.ActualHeight),
                         RadiusX = (Element as RoundCornerView).CornerRadius,
                         RadiusY = (Element as RoundCornerView).CornerRadius,
+
                     };
+
+                    if (Control.Child != null)
+                    {
+                        var el = Element as RoundCornerView;
+
+                        Control.Child.Clip = new RectangleGeometry
+                        {
+                            Rect = new Rect((Element as RoundCornerView).BorderWidth,
+                                (Element as RoundCornerView).BorderWidth, width, height),
+                            RadiusX = (Element as RoundCornerView).CornerRadius,
+                            RadiusY = (Element as RoundCornerView).CornerRadius,
+                        };
+                    }
+                }
             }
             else
-                Control.Child.Clip = null;
+            {
+                if (Control.Child != null)
+                    Control.Child.Clip = null;
+
+                Clip = null;
+            }
         }
 
         /// <summary>
