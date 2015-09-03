@@ -239,7 +239,30 @@ namespace NControl.Controls
 		#endregion
 
 		#region Properties
+		/// <summary>
+		/// The TextColor property.
+		/// </summary>
+		public static BindableProperty TextColorProperty =
+            BindableProperty.Create<FloatingLabelControl, Color>(p => p.TextColor, Color.Black, propertyChanged:
+                (bindable, oldValue, newValue) =>
+                {
+                    var ctrl = (FloatingLabelControl)bindable;
+                    ctrl.TextColor = newValue;
+                });
 
+		/// <summary>
+		/// Gets or Sets the TextColor property.
+		/// </summary>
+        public Color TextColor
+        {
+            get { return (Color)GetValue(TextColorProperty); }
+            set
+            {
+                SetValue(TextColorProperty, value);
+                _textEntry.TextColor = value;
+            }
+        }
+		
 		/// <summary>
 		/// The LabelFontSize property.
 		/// </summary>
