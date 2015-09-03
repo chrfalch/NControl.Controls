@@ -24,7 +24,8 @@ namespace NControl.Controls.Demo.FormsApp
 				new PagingViewPage(),
 				new TabStripPage(),
 				new MaterialDesignIconsPage(),
-			};
+                new CalendarPage(),
+            };
 
 			BindingContext = new ViewModel("Should say CardPage");
 

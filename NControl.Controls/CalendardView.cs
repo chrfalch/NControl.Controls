@@ -65,39 +65,39 @@ namespace NControl.Controls
 		/// </summary>
 		private const double DayNamesHeight = 24;
 
-		#endregion
+        #endregion
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="Unizite.FormsApp.Controls.CalendarView"/> class.
-		/// </summary>
-		public CalendarView()
-		{
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Unizite.FormsApp.Controls.CalendarView"/> class.
+        /// </summary>
+        public CalendarView()
+        {
             _currentMonth = GetFirstDayInMonth(DateTime.Now);
 
             // Layout
-            var layout = new StackLayout { Spacing = 0 , VerticalOptions = LayoutOptions.FillAndExpand};
+            var layout = new StackLayout { Spacing = 0, VerticalOptions = LayoutOptions.FillAndExpand };
 
-			// Header
-			_monthYearLabel = new Label {
-				FontAttributes = FontAttributes.Bold,
-				HorizontalOptions = LayoutOptions.CenterAndExpand,
-				VerticalOptions = LayoutOptions.CenterAndExpand,
-				XAlign = TextAlignment.Center,
-				YAlign = TextAlignment.Center,
-				HeightRequest = TopHeight,
-			};
+            // Header
+            _monthYearLabel = new Label {
+                FontAttributes = FontAttributes.Bold,
+                HorizontalOptions = LayoutOptions.CenterAndExpand,
+                VerticalOptions = LayoutOptions.CenterAndExpand,
+                XAlign = TextAlignment.Center,
+                YAlign = TextAlignment.Center,
+                HeightRequest = TopHeight,
+            };
 
-			// Prev month
-			var prevMonthBtn = new RippleButton {
-				BackgroundColor = Color.Transparent,
-				FontFamily = FontAwesomeLabel.FontAwesomeName,
-				HorizontalOptions = LayoutOptions.Start,
-				VerticalOptions = LayoutOptions.CenterAndExpand,
-				HeightRequest = TopHeight,
-				WidthRequest = 34,
-				TextColor = Color.FromHex("#AAAAAA"),
-				Text = FontAwesomeLabel.FAChevronLeft,
-			};
+            // Prev month
+            var prevMonthBtn = new RippleButton {
+                BackgroundColor = Color.Transparent,
+                FontFamily = FontAwesomeLabel.FontAwesomeName,
+                HorizontalOptions = LayoutOptions.Start,
+                VerticalOptions = LayoutOptions.CenterAndExpand,
+                HeightRequest = TopHeight,
+                WidthRequest = 34,
+                TextColor = Color.FromHex("#AAAAAA"),
+                Text = FontAwesomeLabel.FAChevronLeft,
+            };
             prevMonthBtn.Command = new Command(
                 (obj) =>
                 {
@@ -106,17 +106,17 @@ namespace NControl.Controls
                 },
                 (obj) => _currentMonth > MinDate - MinDate.TimeOfDay);
 
-			// Next month
-			var nextMonthBtn = new RippleButton{
-				BackgroundColor = Color.Transparent,
-				FontFamily = FontAwesomeLabel.FontAwesomeName,
-				HorizontalOptions = LayoutOptions.End,
-				VerticalOptions = LayoutOptions.CenterAndExpand,
-				HeightRequest = TopHeight,
-				WidthRequest = 34,
-				TextColor = Color.FromHex("#AAAAAAA"),
-				Text = FontAwesomeLabel.FAChevronRight,
-			};
+            // Next month
+            var nextMonthBtn = new RippleButton {
+                BackgroundColor = Color.Transparent,
+                FontFamily = FontAwesomeLabel.FontAwesomeName,
+                HorizontalOptions = LayoutOptions.Start,
+                VerticalOptions = LayoutOptions.CenterAndExpand,
+                HeightRequest = TopHeight,
+                WidthRequest = 34,
+                TextColor = Color.FromHex("#AAAAAA"),
+                Text = FontAwesomeLabel.FAChevronRight,
+            };
             nextMonthBtn.Command = new Command(
                 (obj) =>
                 {
@@ -125,42 +125,43 @@ namespace NControl.Controls
                 },
                 (obj) => _currentMonth.AddMonths(1) <= MaxDate);
 
-			var headerLayout = new StackLayout {
-				Orientation = StackOrientation.Horizontal,
-				HorizontalOptions = LayoutOptions.FillAndExpand,
-				Children = {
-					prevMonthBtn, _monthYearLabel, nextMonthBtn
-				}
-			};
+            var headerLayout = new StackLayout {
+                Orientation = StackOrientation.Horizontal,
+                HorizontalOptions = LayoutOptions.FillAndExpand,
+                Children = {
+                    prevMonthBtn, _monthYearLabel, nextMonthBtn
+                }
+            };
 
             layout.Children.Add(headerLayout);
 
-			// Day names
-			var dayNames = CultureInfo.CurrentCulture.DateTimeFormat.AbbreviatedDayNames;
-			var firstDayOfWeek = CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek;
+            // Day names
+            var dayNames = CultureInfo.CurrentCulture.DateTimeFormat.AbbreviatedDayNames;
+            var firstDayOfWeek = CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek;
 
-			var dayGrid = new Grid {
-				HeightRequest = DayNamesHeight,
-			};
+            var dayGrid = new Grid {
+                HeightRequest = DayNamesHeight,
+            };
 
-			var currentWeekDay = firstDayOfWeek;
-			for (var d = 0; d < 7; d++) {
-				var label = new Label{
-					BackgroundColor= Color.Transparent,
-					XAlign = TextAlignment.Center,
-					YAlign = TextAlignment.Center,
-					Text = dayNames[(int)currentWeekDay]
-				};
+            var currentWeekDay = firstDayOfWeek;
+            for (var d = 0; d < 7; d++) {
+                var label = new Label {
+                    BackgroundColor = Color.Transparent,
+                    XAlign = TextAlignment.Center,
+                    YAlign = TextAlignment.Center,
+                    Text = dayNames[(int)currentWeekDay]
+                };
 
-				_dayNameLabels [d] = label;
-				currentWeekDay++;
-				if((int)currentWeekDay == 7)
-					currentWeekDay = 0;
+                _dayNameLabels[d] = label;
+                currentWeekDay++;
+                if ((int)currentWeekDay == 7)
+                    currentWeekDay = 0;
 
-				dayGrid.Children.Add (label, d, 0);
-			}
+                dayGrid.Children.Add(label, d, 0);
+            }
 
             layout.Children.Add(dayGrid);
+            layout.Children.Add(new BoxView { HeightRequest = 8});
 
 			// Calendar
 			_calendar = new NControlView{
@@ -390,16 +391,25 @@ namespace NControl.Controls
                     if (IsSameDay (DateTime.Now, date)) {
 
                         // Today
-                        _dayNumberLabels[d].TextColor = TodayColor;
+                        
+                        // Background and color if not selected
+                        if(!IsSameDay(SelectedDate, date))
+                        {
 
-                        // Background
-                        var wh = Math.Min(colWidth, rowHeight);
-                        var dx = (colWidth - wh) / 2;
-                        var dy = (rowHeight - wh) / 2;
-                        var rc = new NGraphics.Rect ((col * colWidth) + dx, (row * rowHeight) + dy, wh, wh);
-                        rc.Inflate (-1, -1);       
+                            _dayNumberLabels[d].TextColor = TodayColor;
 
-                        canvas.DrawEllipse (rc, null, new NGraphics.SolidBrush(TodayBackground.ToNColor()));
+                            var wh = Math.Min(colWidth, rowHeight);
+                            var dx = (colWidth - wh) / 2;
+                            var dy = (rowHeight - wh) / 2;
+                            var rc = new NGraphics.Rect ((col * colWidth) + dx, (row * rowHeight) + dy, wh, wh);
+                            rc.Inflate (-1, -1);       
+
+                            canvas.DrawEllipse (rc, null, new NGraphics.SolidBrush(TodayBackground.ToNColor()));
+                        }
+                        else
+                        {
+                            _dayNumberLabels[d].TextColor = TodayBackground;
+                        }
                     }
                 }
 
