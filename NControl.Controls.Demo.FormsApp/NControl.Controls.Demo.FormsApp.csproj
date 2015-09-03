@@ -33,6 +33,7 @@
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="CalendarPage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MyApp.cs" />
     <Compile Include="RoundCornerViewPage.cs" />
