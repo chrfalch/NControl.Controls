@@ -111,6 +111,7 @@ namespace NControl.Controls
 				{
 					var tabItemControl = new TabBarButton(null, tabChild.Title);
 					tabItemControl.FontFamily = FontFamily;
+                    tabItemControl.FontSize = FontSize;
 					tabItemControl.SelectedColor = TabIndicatorColor;						
 					_buttonStack.Children.Add(tabItemControl);
 				}
@@ -294,10 +295,35 @@ namespace NControl.Controls
 			get{ return _children;}
 		}
 
-		/// <summary>
-		/// The FontFamily property.
+        /// <summary>
+		/// The FontSize property.
 		/// </summary>
-		public static BindableProperty FontFamilyProperty = 
+		public static BindableProperty FontSizeProperty =
+            BindableProperty.Create<TabStripControl, double>(p => p.FontSize, 14,
+                propertyChanged: (bindable, oldValue, newValue) => {
+                    var ctrl = (TabStripControl)bindable;
+                    ctrl.FontSize = newValue;
+                });
+
+        /// <summary>
+        /// Gets or sets the FontSize of the TabBarButton instance.
+        /// </summary>
+        /// <value>The color of the buton.</value>
+        public double FontSize
+        {
+            get { return (double)GetValue(FontSizeProperty); }
+            set
+            {
+                SetValue(FontSizeProperty, value);
+                foreach (var tabBtn in _buttonStack.Children)
+                    ((TabBarButton)tabBtn).FontSize = value;
+            }
+        }
+
+        /// <summary>
+        /// The FontFamily property.
+        /// </summary>
+        public static BindableProperty FontFamilyProperty = 
 			BindableProperty.Create<TabStripControl, string> (p => p.FontFamily, null,
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (TabStripControl)bindable;
@@ -502,10 +528,34 @@ namespace NControl.Controls
 			}
 		}
 
-		/// <summary>
-		/// The FontFamily property.
+        /// <summary>
+		/// The FontSize property.
 		/// </summary>
-		public static BindableProperty FontFamilyProperty = 
+		public static BindableProperty FontSizeProperty =
+            BindableProperty.Create<TabBarButton, double>(p => p.FontSize, 14,
+                propertyChanged: (bindable, oldValue, newValue) => {
+                    var ctrl = (TabBarButton)bindable;
+                    ctrl.FontSize = newValue;
+                });
+
+        /// <summary>
+        /// Gets or sets the FontSize of the TabBarButton instance.
+        /// </summary>
+        /// <value>The color of the buton.</value>
+        public double FontSize
+        {
+            get { return (double)GetValue(FontSizeProperty); }
+            set
+            {
+                SetValue(FontSizeProperty, value);
+                _label.FontSize = value;
+            }
+        }
+
+        /// <summary>
+        /// The FontFamily property.
+        /// </summary>
+        public static BindableProperty FontFamilyProperty = 
 			BindableProperty.Create<TabBarButton, string> (p => p.FontFamily, null,
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (TabBarButton)bindable;
