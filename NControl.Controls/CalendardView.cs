@@ -201,6 +201,7 @@ namespace NControl.Controls
 
             layout.Children.Add(calendarLayout);
 			Content = layout;
+
 		}
 
         private Grid CreateDayNumberGrid()
@@ -235,8 +236,10 @@ namespace NControl.Controls
                     var dayLabel = new Label{
                         XAlign = TextAlignment.Center,
                         YAlign = TextAlignment.Center,
+						HorizontalOptions = LayoutOptions.CenterAndExpand,
+						VerticalOptions = LayoutOptions.CenterAndExpand,
                         TextColor = Color.Black,
-                        BackgroundColor = Color.Transparent,
+						BackgroundColor = Color.Transparent,
                         Text = "A" + lc.ToString(),
                     };
 
@@ -344,6 +347,9 @@ namespace NControl.Controls
 
 				// Update text
                 var label = _dayNumberLabels[d];
+				label.XAlign = TextAlignment.Center;
+				label.YAlign = TextAlignment.Center;
+
                 if (hasEmptyRow || (date.DayOfWeek == firstWeekDay && date >= _currentMonth.AddMonths(1)))
                 {
                     hasEmptyRow = true;
