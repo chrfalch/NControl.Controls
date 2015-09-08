@@ -39,24 +39,26 @@
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NControl, Version=0.2.5729.16650, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NControl.0.6.39\lib\MonoAndroid10\NControl.dll</HintPath>
+    <Reference Include="NControl, Version=0.2.5729.24380, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NControl.0.7\lib\MonoAndroid10\NControl.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="NControl.Droid, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NControl.0.6.39\lib\MonoAndroid10\NControl.Droid.dll</HintPath>
+      <HintPath>..\packages\NControl.0.7\lib\MonoAndroid10\NControl.Droid.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NGraphics, Version=0.2.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NGraphics.0.3.1\lib\MonoAndroid10\NGraphics.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NGraphics.Android, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NGraphics.0.3.1\lib\MonoAndroid10\NGraphics.Android.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Mono.Android" />
-    <Reference Include="NGraphics">
-      <HintPath>..\packages\NGraphics.0.2.2\lib\MonoAndroid10\NGraphics.dll</HintPath>
-    </Reference>
-    <Reference Include="NGraphics.Android">
-      <HintPath>..\packages\NGraphics.0.2.2\lib\MonoAndroid10\NGraphics.Android.dll</HintPath>
-    </Reference>
     <Reference Include="Xamarin.Forms.Platform.Android">
       <HintPath>..\packages\Xamarin.Forms.1.4.4.6392\lib\MonoAndroid10\Xamarin.Forms.Platform.Android.dll</HintPath>
     </Reference>
