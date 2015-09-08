@@ -19,30 +19,24 @@ namespace NControl.Controls.iOS
 		/// </summary>
 		public static void Init()
 		{
-			NControl.iOS.NControlViewRenderer.Init ();
 			NControl.Controls.FontLoader.LoadFonts (AppDomain.CurrentDomain.GetAssemblies(), (fontName, s) => {
 
-//				var data = new byte[s.Length];
-//				s.Read (data, 0, data.Length);
-//
-//				using(var dataProvider = new CGDataProvider (data, 0, data.Length))
-//				{
-//					using(var cgFont = CGFont.CreateFromProvider (dataProvider))
-//					{
-//
-//						NSError error;
-//
-//						var registered = CTFontManager.RegisterGraphicsFont(cgFont, out error);
-//						if (!registered)
-//						{
-//							// If the error code is 105 then the font we are trying to register is already registered
-//							// We will not report this as an error.
-//							if (error.Code != 105)
-//								throw new ArgumentException("Error registering: " + fontName + 
-//									" (" + error.LocalizedDescription + ")");
-//						}
-//					}
-//				}
+				var data = new byte[s.Length];
+				s.Read (data, 0, data.Length);
+
+				var dataProvider = new CGDataProvider (data, 0, data.Length);
+				var cgFont = CGFont.CreateFromProvider (dataProvider);
+				NSError error;
+
+				var registered = CTFontManager.RegisterGraphicsFont(cgFont, out error);
+				if (!registered)
+				{
+					// If the error code is 105 then the font we are trying to register is already registered
+					// We will not report this as an error.
+					if (error.Code != 105)
+						throw new ArgumentException("Error registering: " + fontName + 
+							" (" + error.LocalizedDescription + ")");
+				}
 			});
 		}
 	}

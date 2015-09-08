@@ -13,8 +13,9 @@ namespace NControl.Controls.Demo.FormsApp
 		{
 			var demoPageList = new ContentPage[] {
 				new CustomFontPage(),
-				new RoundCornerViewPage(),
+				new MaterialDesignIconsPage(),
 				new FontAwesomeLabelPage(),
+				new RoundCornerViewPage(),
 				new FloatingLabelPage(),
 				new ActionButtonPage(),
 				new CardPageDemo{BindingContext = new ViewModel("CardPage")},
@@ -23,7 +24,7 @@ namespace NControl.Controls.Demo.FormsApp
 				new GalleryPage(),
 				new PagingViewPage(),
 				new TabStripPage(),
-				new MaterialDesignIconsPage(),
+
                 new CalendarPage(),
             };
 

@@ -19,8 +19,7 @@ namespace NControl.Controls.Droid
 		/// Init this instance  
 		/// </summary>
 		public static void Init()
-		{
-			NControl.Droid.NControlViewRenderer.Init ();
+		{			
 			NControl.Controls.FontLoader.LoadFonts (AppDomain.CurrentDomain.GetAssemblies(), (fontName, s) => {
 
 				fontName = fontName.ToLowerInvariant();
