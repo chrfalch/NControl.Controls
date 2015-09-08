@@ -18,6 +18,7 @@ using Colors = System.Windows.Media.Colors;
 using Grid = System.Windows.Controls.Grid;
 using Rectangle = System.Windows.Shapes.Rectangle;
 using Coding4Fun.Toolkit.Controls;
+using NControl.Win;
 
 [assembly: Dependency(typeof(CardPageHelper))]
 namespace NControl.Controls.WP81
@@ -25,12 +26,12 @@ namespace NControl.Controls.WP81
     /// <summary>
     /// CardPage helper implementation
     /// </summary>
-    public class CardPageHelper: ICardPageHelper
+    public class CardPageHelper: ICardPageHelper, IPopupInformationProvider
     {
         /// <summary>
         /// List of presented wrappers
         /// </summary>
-        private Stack<CardPageWrapperPopup> _presentationContext = new Stack<CardPageWrapperPopup>();
+        private static Stack<CardPageWrapperPopup> _presentationContext = new Stack<CardPageWrapperPopup>();
 
         /// <summary>
         /// Returns the screen size
@@ -48,7 +49,7 @@ namespace NControl.Controls.WP81
                 Title = card.Title,                
             };
 
-            _presentationContext.Push(cardPageWrapper);
+            _presentationContext.Push(cardPageWrapper);            
             cardPageWrapper.Show();
             
             return Task.FromResult(true);
@@ -65,7 +66,15 @@ namespace NControl.Controls.WP81
             currentCardPageWrapper.Hide();
             return Task.FromResult(true);
         }
-        
+
+        public FrameworkElement GetPopupParent()
+        {
+            if (!_presentationContext.Any())
+                return null;
+
+            return _presentationContext.Peek().GetVisualParent();
+        }
+
         public bool ControlAnimatesItself {
             get { return false;  }
         }

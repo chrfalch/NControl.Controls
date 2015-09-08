@@ -1,13 +1,23 @@
-﻿using System;
+﻿using NControl.Abstractions;
+using System;
 using Xamarin.Forms;
 
 namespace NControl.Controls.Demo.FormsApp
 {
 	public class CardPageDemo: ContentPage
 	{
-		public CardPageDemo ()
-		{
-			Title = "CardPage";
+        public CardPageDemo()
+        {
+            Title = "CardPage";
+
+            var raiseExceptionButton = new NControlView
+            {
+                BackgroundColor = Color.Red,
+                HeightRequest = 300,
+                Content = new Label { Text = "Click to raise exception" },
+            };
+
+            raiseExceptionButton.OnTouchesBegan += (s, e) => { throw new InvalidOperationException("Whoopps"); };
 
 			Content = new StackLayout{
 				Padding = 24,
@@ -49,8 +59,9 @@ namespace NControl.Controls.Demo.FormsApp
 							);
 
 						})
-					}
-				}
+					},
+                    raiseExceptionButton
+                }
 			};				
 		}
 
@@ -65,8 +76,17 @@ namespace NControl.Controls.Demo.FormsApp
 						Text = "Show Modal View"
 					};
 
-					var closeCardButton = new Button {
-						Text = "Close"
+                    var showAlert = new Button {
+                        Text = "Show Alert",
+                        Command = new Command(()=> DisplayAlert("NControl.Controls", "Welcome to the popup!", "Cancel"))
+                    };
+
+					var closeCardButton = new RippleButton {
+						Text = "Close",
+                        BorderColor = Color.Blue,
+                        BorderWidth = 1,
+                        CornerRadius = 4,
+                        HeightRequest = 44,
 					};
 
 					var label = new Label {
@@ -74,11 +94,19 @@ namespace NControl.Controls.Demo.FormsApp
 						YAlign = TextAlignment.Center 
 					};
 
-					label.SetBinding (Label.TextProperty, "Title");
+                    label.SetBinding (Label.TextProperty, "Title");
 
-					var page = new CardPage {
+                    var touchCount = 1;
+                    var touchLabel = new Label { Text = "Click me: " + touchCount.ToString() };
+                    var touchButton = new NControlView { HeightRequest = 65, Content = touchLabel };
+                    touchButton.OnTouchesBegan += (s, e) => {
+                        touchCount++;
+                        touchLabel.Text = "Click me: " + touchCount.ToString();
+                    };
 
-						RequestedHeight = 240,
+                    var page = new CardPage {
+
+						RequestedHeight = 320,
 						RequestedWidth = 250,
 
 						Content = new StackLayout {
@@ -95,18 +123,19 @@ namespace NControl.Controls.Demo.FormsApp
 									YAlign = TextAlignment.Center 
 								},
 								showModalViewButton,
-								closeCardButton,
+                                touchButton,
+                                closeCardButton,
 							}
 						}
 					};
 
 					page.BindingContext = this.BindingContext;
 					var currentApp = Xamarin.Forms.Application.Current;
-					closeCardButton.Clicked += async (sender, e) => {
+					closeCardButton.Command = new Command( async () => {
 						await page.CloseAsync ();
 						if (currentApp != Xamarin.Forms.Application.Current)
 							throw new InvalidOperationException ("Application.Current changed");
-					};
+					});
 
 					showModalViewButton.Clicked += async (sender, e) => {
 

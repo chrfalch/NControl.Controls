@@ -18,19 +18,20 @@ using Colors = System.Windows.Media.Colors;
 using Grid = System.Windows.Controls.Grid;
 using Rectangle = System.Windows.Shapes.Rectangle;
 using Coding4Fun.Toolkit.Controls;
+using NControl.Win;
 
-[assembly: Xamarin.Forms.Dependency(typeof(CardPageHelper))]
+[assembly: Dependency(typeof(CardPageHelper))]
 namespace NControl.Controls.WP80
 {
     /// <summary>
     /// CardPage helper implementation
     /// </summary>
-    public class CardPageHelper : ICardPageHelper
+    public class CardPageHelper : ICardPageHelper, IPopupInformationProvider
     {
         /// <summary>
         /// List of presented wrappers
         /// </summary>
-        private Stack<CardPageWrapperPopup> _presentationContext = new Stack<CardPageWrapperPopup>();
+        private static Stack<CardPageWrapperPopup> _presentationContext = new Stack<CardPageWrapperPopup>();
 
         /// <summary>
         /// Returns the screen size
@@ -65,6 +66,14 @@ namespace NControl.Controls.WP80
             var currentCardPageWrapper = _presentationContext.Pop();
             currentCardPageWrapper.Hide();
             return Task.FromResult(true);
+        }
+
+        public FrameworkElement GetPopupParent()
+        {
+            if (!_presentationContext.Any())
+                return null;
+
+            return _presentationContext.Peek().GetVisualParent();
         }
 
         public bool ControlAnimatesItself
@@ -109,7 +118,7 @@ namespace NControl.Controls.WP80
             var el = (UIElement)Xamarin.Forms.Platform.WinPhone.ViewExtensions.GetRenderer(_card);
 
             this.Body = new Border
-            {                
+            {
                 Width = Application.Current.Host.Content.ActualWidth - 45,
                 Height = _card.RequestedHeight,
                 Background = new SolidColorBrush(Colors.Blue),

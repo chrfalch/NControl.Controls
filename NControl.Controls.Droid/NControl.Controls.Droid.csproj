@@ -39,12 +39,12 @@
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NControl, Version=0.2.5716.19205, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NControl.0.6.24\lib\MonoAndroid10\NControl.dll</HintPath>
+    <Reference Include="NControl, Version=0.2.5729.16650, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NControl.0.6.39\lib\MonoAndroid10\NControl.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="NControl.Droid, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NControl.0.6.24\lib\MonoAndroid10\NControl.Droid.dll</HintPath>
+      <HintPath>..\packages\NControl.0.6.39\lib\MonoAndroid10\NControl.Droid.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
