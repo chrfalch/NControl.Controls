@@ -63,9 +63,14 @@ namespace NControl.Controls.iOS
 		{
 			if (Control == null)
 				return;
-			
-			(Control as UITextField).TextAlignment = (Element as ExtendedEntry).XAlign.ToUITextAlignment ();
-		}
+
+            if ((Element as ExtendedEntry).HorizontalTextAlignment == TextAlignment.Start)
+                (Control as UITextField).TextAlignment = UITextAlignment.Left;
+            else if ((Element as ExtendedEntry).HorizontalTextAlignment == TextAlignment.Center)
+                (Control as UITextField).TextAlignment = UITextAlignment.Center;
+            else if ((Element as ExtendedEntry).HorizontalTextAlignment == TextAlignment.End)
+                (Control as UITextField).TextAlignment = UITextAlignment.Right;
+        }
 	}
 }
 
