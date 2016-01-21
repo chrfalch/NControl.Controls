@@ -11,15 +11,19 @@ namespace NControl.Controls
 	/// <summary>
 	/// Tab strip control.
 	/// </summary>
-	public class TabStripControl:NControlView
+	public class TabStripControl: NControlView
 	{
 		#region Private Members
 
 		/// <summary>
+		/// The in transition.
+		/// </summary>
+		private bool _inTransition = false;
+
+		/// <summary>
 		/// The list of views that can be displayed.
 		/// </summary>
-		private readonly ObservableCollection<TabItem> _children = 
-			new ObservableCollection<TabItem> ();
+		private readonly ObservableCollection<TabItem> _children = new ObservableCollection<TabItem> ();
 
 		/// <summary>
 		/// The tab control.
@@ -45,6 +49,20 @@ namespace NControl.Controls
 		/// The layout.
 		/// </summary>
 		private readonly RelativeLayout _mainLayout;
+
+		/// <summary>
+		/// The shadow.
+		/// </summary>
+		private readonly NControlView _shadow;
+
+		#endregion
+
+		#region Events
+
+		/// <summary>
+		/// Occurs when tab activated.
+		/// </summary>
+		public event EventHandler<int> TabActivated;
 
 		#endregion
 
@@ -109,9 +127,11 @@ namespace NControl.Controls
 
 				foreach(var tabChild in Children)
 				{
-					var tabItemControl = new TabBarButton(null, tabChild.Title);
-					tabItemControl.FontFamily = FontFamily;
-                    tabItemControl.FontSize = FontSize;
+					var tabItemControl = new TabBarButton(tabChild.Title);
+					if(FontFamily != null)
+						tabItemControl.FontFamily = FontFamily;
+
+					tabItemControl.FontSize = FontSize;
 					tabItemControl.SelectedColor = TabIndicatorColor;						
 					_buttonStack.Children.Add(tabItemControl);
 				}
@@ -135,7 +155,7 @@ namespace NControl.Controls
 				0, TabHeight, _mainLayout.Width, 1));
 
 			// Shadow
-			var shadow = new NControlView {				
+			_shadow = new NControlView {				
 				DrawingFunction = (canvas, rect)=> {
 
 					canvas.DrawRectangle(rect, null, new NGraphics.LinearGradientBrush(
@@ -145,42 +165,58 @@ namespace NControl.Controls
 				}
 			};
 
-			_mainLayout.Children.Add (shadow, () => new Rectangle(
+			_mainLayout.Children.Add (_shadow, () => new Rectangle(
 				0, TabHeight, _mainLayout.Width, 6));
+
+			_shadow.IsVisible = false;
+
+			SizeChanged += (object sender, EventArgs e) => {
+				_buttonStack.ForceLayout();
+				ForceLayout();
+			};
 		}
-			
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="NControl.Controls.TabStripControl"/> class.
 		/// </summary>
 		/// <param name="view">View.</param>
 		public void Activate (TabItem tabChild, bool animate)
 		{
-			var existingChild = Children.FirstOrDefault (t => t.View == _contentView.Children.FirstOrDefault ());
+			var existingChild = Children.FirstOrDefault (t => t.View == 
+				_contentView.Children.FirstOrDefault (v => v.IsVisible));
+
 			if (existingChild == tabChild)
 				return;
-			
+
 			var idxOfExisting = existingChild != null ? Children.IndexOf (existingChild) : -1;
 			var idxOfNew = Children.IndexOf (tabChild);
 
 			if (idxOfExisting > -1 && animate) 
 			{
+				_inTransition = true;
+
 				// Animate
 				var translation = idxOfExisting < idxOfNew ? 
 					_contentView.Width : - _contentView.Width;
 
 				tabChild.View.TranslationX = translation;
-				if(tabChild.View.Parent != _contentView)
-					_contentView.Children.Add(tabChild.View);			
+				if (tabChild.View.Parent != _contentView)
+					_contentView.Children.Add(tabChild.View);
+				else
+					tabChild.View.IsVisible = true;
 
 				var newElementWidth = _buttonStack.Children.ElementAt (idxOfNew).Width;
 				var newElementLeft = _buttonStack.Children.ElementAt (idxOfNew).X;
 
 				var animation = new Animation ();
 				var existingViewOutAnimation = new Animation ((d) => existingChild.View.TranslationX = d,
-					0, -translation, Easing.CubicInOut, () => _contentView.Children.Remove (existingChild.View));
+					0, -translation, Easing.CubicInOut, () => {
+						existingChild.View.IsVisible = false;
+						_inTransition = false;
+					});
 
 				var newViewInAnimation = new Animation ((d) => tabChild.View.TranslationX = d,
-                     translation, 0, Easing.CubicInOut);
+					translation, 0, Easing.CubicInOut);
 
 				var existingTranslation = _indicator.TranslationX;
 
@@ -207,6 +243,9 @@ namespace NControl.Controls
 
 			foreach (var tabBtn in _buttonStack.Children)
 				((TabBarButton)tabBtn).IsSelected = _buttonStack.Children.IndexOf(tabBtn) == idxOfNew;
+
+			if (TabActivated != null)
+				TabActivated(this, idxOfNew);
 		}
 
 		/// <summary>
@@ -217,7 +256,7 @@ namespace NControl.Controls
 		{
 			base.TouchesBegan(points);
 
-            return HandleTouches(points, false);
+			return HandleTouches(points, false);
 		}
 
 		/// <summary>
@@ -246,7 +285,7 @@ namespace NControl.Controls
 		/// Handles the touches.
 		/// </summary>
 		/// <param name="points">Points.</param>
-        private bool HandleTouches(IEnumerable<NGraphics.Point> points, bool activate = true)
+		private bool HandleTouches(IEnumerable<NGraphics.Point> points, bool activate = true)
 		{
 			// Find selected item based on click
 			var p = points.First();
@@ -254,12 +293,12 @@ namespace NControl.Controls
 			{
 				if (p.X >= child.X && p.X <= child.X + child.Width && 
 					p.Y >= child.Y && p.Y <= child.Y + _tabControl.Height) {
-					
-                    if (activate)
-                    {
-                        var idx = _buttonStack.Children.IndexOf(child);
-                        Activate(Children[idx], true);
-                    }
+
+					if (activate)
+					{
+						var idx = _buttonStack.Children.IndexOf(child);
+						Activate(Children[idx], true);
+					}
 
 					return true;
 				}
@@ -277,12 +316,15 @@ namespace NControl.Controls
 		{
 			base.LayoutChildren (x, y, width, height);
 
-			if (_indicator.WidthRequest == 0 && width > 0) 
+			if (width > 0 && !_inTransition) 
 			{
-				var existingChild = Children.FirstOrDefault (t => t.View == _contentView.Children.FirstOrDefault ());
+				var existingChild = Children.FirstOrDefault (t => 
+					t.View == _contentView.Children.FirstOrDefault (v => v.IsVisible));
+
 				var idxOfExisting = existingChild != null ? Children.IndexOf (existingChild) : -1;
 
-				_indicator.WidthRequest = _buttonStack.Children.ElementAt (idxOfExisting).Width;
+				_indicator.WidthRequest = _buttonStack.Children.ElementAt(idxOfExisting).Width;
+				_indicator.TranslationX = _buttonStack.Children.ElementAt(idxOfExisting).X;
 			}
 		}
 
@@ -295,35 +337,35 @@ namespace NControl.Controls
 			get{ return _children;}
 		}
 
-        /// <summary>
+		/// <summary>
 		/// The FontSize property.
 		/// </summary>
 		public static BindableProperty FontSizeProperty =
-            BindableProperty.Create<TabStripControl, double>(p => p.FontSize, 14,
-                propertyChanged: (bindable, oldValue, newValue) => {
-                    var ctrl = (TabStripControl)bindable;
-                    ctrl.FontSize = newValue;
-                });
+			BindableProperty.Create<TabStripControl, double>(p => p.FontSize, 14,
+				propertyChanged: (bindable, oldValue, newValue) => {
+					var ctrl = (TabStripControl)bindable;
+					ctrl.FontSize = newValue;
+				});
 
-        /// <summary>
-        /// Gets or sets the FontSize of the TabBarButton instance.
-        /// </summary>
-        /// <value>The color of the buton.</value>
-        public double FontSize
-        {
-            get { return (double)GetValue(FontSizeProperty); }
-            set
-            {
-                SetValue(FontSizeProperty, value);
-                foreach (var tabBtn in _buttonStack.Children)
-                    ((TabBarButton)tabBtn).FontSize = value;
-            }
-        }
+		/// <summary>
+		/// Gets or sets the FontSize of the TabBarButton instance.
+		/// </summary>
+		/// <value>The color of the buton.</value>
+		public double FontSize
+		{
+			get { return (double)GetValue(FontSizeProperty); }
+			set
+			{
+				SetValue(FontSizeProperty, value);
+				foreach (var tabBtn in _buttonStack.Children)
+					((TabBarButton)tabBtn).FontSize = value;
+			}
+		}
 
-        /// <summary>
-        /// The FontFamily property.
-        /// </summary>
-        public static BindableProperty FontFamilyProperty = 
+		/// <summary>
+		/// The FontFamily property.
+		/// </summary>
+		public static BindableProperty FontFamilyProperty = 
 			BindableProperty.Create<TabStripControl, string> (p => p.FontFamily, null,
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (TabStripControl)bindable;
@@ -406,7 +448,32 @@ namespace NControl.Controls
 				SetValue (TabBackColorProperty, value);
 				_tabControl.BackgroundColor = value;
 			}
-		}			
+		}		
+
+		/// <summary>
+		/// The Shadow property.
+		/// </summary>
+		public static BindableProperty ShadowProperty = 
+			BindableProperty.Create<TabStripControl, bool>(p => p.Shadow, false,
+				BindingMode.TwoWay,
+				propertyChanged: (bindable, oldValue, newValue) => {
+					var ctrl = (TabStripControl)bindable;
+					ctrl.Shadow = newValue;
+				});
+
+		/// <summary>
+		/// Gets or sets the Shadow of the TabControl instance.
+		/// </summary>
+		/// <value>The color of the buton.</value>
+		public bool Shadow
+		{
+			get{ return (bool)GetValue(ShadowProperty); }
+			set
+			{
+				SetValue(ShadowProperty, value);
+				_shadow.IsVisible = value;
+			}
+		}
 	}
 
 	/// <summary>
@@ -431,6 +498,15 @@ namespace NControl.Controls
 		/// </summary>
 		/// <param name="name">Name.</param>
 		/// <param name="view">View.</param>
+		public TabItem()
+		{			
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="NControl.Controls.TabChild"/> class.
+		/// </summary>
+		/// <param name="name">Name.</param>
+		/// <param name="view">View.</param>
 		public TabItem(string title, View view)
 		{
 			Title = title;
@@ -443,7 +519,7 @@ namespace NControl.Controls
 	/// </summary>
 	public class TabBarIndicator: View
 	{
-		       
+
 	}
 
 	/// <summary>
@@ -451,40 +527,19 @@ namespace NControl.Controls
 	/// </summary>
 	public class TabBarButton: NControlView
 	{
-		private readonly FontAwesomeLabel _imageLabel;
-		private readonly FontAwesomeLabel _selectedImageLabel;
 		private readonly Label _label;
 
 		public Color DarkTextColor = Color.Black;
 		public Color AccentColor = Color.Accent;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Clooger.FormsApp.UserControls.TabBarButton"/> class.
+		/// Initializes a new instance of the <see cref="DesaCo.TabBarButton"/> class.
 		/// </summary>
-		public TabBarButton(string imageName, string buttonText)
-		{			
-			if (!string.IsNullOrWhiteSpace (imageName)) {
-				_imageLabel = new FontAwesomeLabel {
-					Text = imageName,
-					XAlign = TextAlignment.Center,
-					YAlign = TextAlignment.Center,                
-					TextColor = DarkTextColor,
-					IsVisible = true
-				};			
-
-				_selectedImageLabel = new FontAwesomeLabel {
-					Text = imageName,
-					XAlign = TextAlignment.Center,
-					YAlign = TextAlignment.Center,                
-					TextColor = AccentColor,
-					IsVisible = false,
-				};
-			}
-
-			_label = new Label {
-				Text = buttonText,
-				XAlign = TextAlignment.Center,
-				YAlign = TextAlignment.Center,                
+		public TabBarButton()
+		{
+			_label = new Label {				
+				HorizontalTextAlignment = TextAlignment.Center,
+				VerticalTextAlignment = TextAlignment.Center,                
 				FontSize = 14,
 				LineBreakMode = LineBreakMode.TailTruncation,					
 				TextColor = DarkTextColor,
@@ -497,13 +552,38 @@ namespace NControl.Controls
 				Padding = 10,
 			};
 
-			if (!string.IsNullOrWhiteSpace (imageName))
-				(Content as StackLayout).Children.Add (new Grid { ColumnSpacing = 0, RowSpacing = 0, Padding = 0, 
-					HeightRequest = 38,
-					Children = { _imageLabel, _selectedImageLabel }
+			(Content as StackLayout).Children.Add (_label);
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Clooger.FormsApp.UserControls.TabBarButton"/> class.
+		/// </summary>
+		public TabBarButton(string buttonText): this()
+		{			
+			_label.Text = buttonText;
+		}
+
+		/// <summary>
+		/// The ButtonText property.
+		/// </summary>
+		public static BindableProperty ButtonTextProperty = 
+			BindableProperty.Create<TabBarButton, string> (p => p.ButtonText, null,
+				defaultBindingMode: BindingMode.TwoWay,
+				propertyChanged: (bindable, oldValue, newValue) => {
+					var ctrl = (TabBarButton)bindable;
+					ctrl.ButtonText = newValue;
 				});
 
-			(Content as StackLayout).Children.Add (_label);
+		/// <summary>
+		/// Gets or sets the ButtonText of the TabBarButton instance.
+		/// </summary>
+		/// <value>The color of the buton.</value>
+		public string ButtonText {
+			get{ return (string)GetValue (ButtonTextProperty); }
+			set {
+				SetValue (ButtonTextProperty, value);
+				_label.Text = value;
+			}
 		}
 
 		/// <summary>
@@ -528,34 +608,34 @@ namespace NControl.Controls
 			}
 		}
 
-        /// <summary>
+		/// <summary>
 		/// The FontSize property.
 		/// </summary>
 		public static BindableProperty FontSizeProperty =
-            BindableProperty.Create<TabBarButton, double>(p => p.FontSize, 14,
-                propertyChanged: (bindable, oldValue, newValue) => {
-                    var ctrl = (TabBarButton)bindable;
-                    ctrl.FontSize = newValue;
-                });
+			BindableProperty.Create<TabBarButton, double>(p => p.FontSize, 14,
+				propertyChanged: (bindable, oldValue, newValue) => {
+					var ctrl = (TabBarButton)bindable;
+					ctrl.FontSize = newValue;
+				});
 
-        /// <summary>
-        /// Gets or sets the FontSize of the TabBarButton instance.
-        /// </summary>
-        /// <value>The color of the buton.</value>
-        public double FontSize
-        {
-            get { return (double)GetValue(FontSizeProperty); }
-            set
-            {
-                SetValue(FontSizeProperty, value);
-                _label.FontSize = value;
-            }
-        }
+		/// <summary>
+		/// Gets or sets the FontSize of the TabBarButton instance.
+		/// </summary>
+		/// <value>The color of the buton.</value>
+		public double FontSize
+		{
+			get { return (double)GetValue(FontSizeProperty); }
+			set
+			{
+				SetValue(FontSizeProperty, value);
+				_label.FontSize = value;
+			}
+		}
 
-        /// <summary>
-        /// The FontFamily property.
-        /// </summary>
-        public static BindableProperty FontFamilyProperty = 
+		/// <summary>
+		/// The FontFamily property.
+		/// </summary>
+		public static BindableProperty FontFamilyProperty = 
 			BindableProperty.Create<TabBarButton, string> (p => p.FontFamily, null,
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (TabBarButton)bindable;
@@ -590,12 +670,6 @@ namespace NControl.Controls
 					_label.TextColor = AccentColor;
 				else
 					_label.TextColor = DarkTextColor;
-
-				if(_selectedImageLabel != null)
-					_selectedImageLabel.IsVisible = value;
-
-				if(_imageLabel != null)
-					_imageLabel.IsVisible = !value;
 			}
 		}	
 
@@ -644,4 +718,5 @@ namespace NControl.Controls
 		}
 	}
 }
+
 	
