@@ -33,12 +33,12 @@
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NControl, Version=0.2.5854.32880, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NControl.0.7.2\lib\Xamarin.iOS10\NControl.dll</HintPath>
+    <Reference Include="NControl, Version=0.2.5872.20240, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NControl.0.8.0\lib\Xamarin.iOS10\NControl.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="NControl.iOS, Version=0.2.5854.32883, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NControl.0.7.2\lib\Xamarin.iOS10\NControl.iOS.dll</HintPath>
+    <Reference Include="NControl.iOS, Version=0.2.5872.20246, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NControl.0.8.0\lib\Xamarin.iOS10\NControl.iOS.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="NGraphics, Version=0.2.2.0, Culture=neutral, processorArchitecture=MSIL">

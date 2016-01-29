@@ -96,12 +96,12 @@
     <CodesignKey>iPhone Distribution</CodesignKey>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NControl, Version=0.2.5729.24380, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NControl.0.7\lib\Xamarin.iOS10\NControl.dll</HintPath>
+    <Reference Include="NControl, Version=0.2.5872.20240, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NControl.0.8.0\lib\Xamarin.iOS10\NControl.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="NControl.iOS, Version=0.2.5729.24382, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NControl.0.7\lib\Xamarin.iOS10\NControl.iOS.dll</HintPath>
+    <Reference Include="NControl.iOS, Version=0.2.5872.20246, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NControl.0.8.0\lib\Xamarin.iOS10\NControl.iOS.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="NGraphics, Version=0.2.2.0, Culture=neutral, processorArchitecture=MSIL">

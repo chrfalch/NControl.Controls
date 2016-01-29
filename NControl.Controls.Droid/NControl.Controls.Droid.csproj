@@ -44,12 +44,12 @@
       <HintPath>..\packages\Xamarin.Forms.2.0.0.6490\lib\MonoAndroid10\FormsViewGroup.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="NControl, Version=0.2.5854.32880, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NControl.0.7.2\lib\MonoAndroid10\NControl.dll</HintPath>
+    <Reference Include="NControl, Version=0.2.5872.20240, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NControl.0.8.0\lib\MonoAndroid10\NControl.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="NControl.Droid, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NControl.0.7.2\lib\MonoAndroid10\NControl.Droid.dll</HintPath>
+      <HintPath>..\packages\NControl.0.8.0\lib\MonoAndroid10\NControl.Droid.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="NGraphics, Version=0.2.2.0, Culture=neutral, processorArchitecture=MSIL">
