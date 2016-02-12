@@ -79,7 +79,7 @@ namespace NControl.Controls
 				Orientation = StackOrientation.Horizontal,
 				Padding = 0,
 				Spacing = 0,
-				HorizontalOptions = LayoutOptions.Start,
+				HorizontalOptions = LayoutOptions.FillAndExpand,
 				VerticalOptions= LayoutOptions.FillAndExpand,
 			};
 
@@ -170,10 +170,6 @@ namespace NControl.Controls
 
 			_shadow.IsVisible = false;
 
-			SizeChanged += (object sender, EventArgs e) => {
-				_buttonStack.ForceLayout();
-				ForceLayout();
-			};
 		}
 
 		/// <summary>
