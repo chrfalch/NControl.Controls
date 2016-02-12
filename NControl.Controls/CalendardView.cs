@@ -192,7 +192,7 @@ namespace NControl.Controls
                     canvas.DrawEllipse(r, null, 
 						new NGraphics.SolidBrush(Color.FromHex("#DDDDDD").ToNColor()));
 				},
-				Scale = 0.0,
+				Scale = 0.00001,
 			};	
 
             calendarLayout.Children.Add(_ellipse);
@@ -286,7 +286,7 @@ namespace NControl.Controls
                 _ellipse.TranslationX = (col * _calendar.Width / 7);
                 _ellipse.TranslationY = (row * _calendar.Height /6 ); 
 
-                _ellipse.Scale = 0.0;
+                _ellipse.Scale = 0.00001;
                 _ellipse.Opacity = 1.0;
 
                 _ellipse.ScaleTo (2);

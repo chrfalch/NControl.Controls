@@ -496,7 +496,7 @@ namespace NControl.Controls
 				DrawingFunction = (canvas, rect) =>{
 					canvas.DrawEllipse(rect, null, new NGraphics.SolidBrush(RippleColor.ToNColor()));
 				},
-				Scale = 0.0,
+				Opacity = 0.0,
 			};				
 
 			layout.Children.Add (_ellipse, () => new Rectangle (
@@ -518,7 +518,7 @@ namespace NControl.Controls
 			_animationLock = true;
 			var position = new Point (x, y);
 
-			_ellipse.Scale = 0.0;
+			_ellipse.Scale = 0.00001;
 			_ellipse.Opacity = 1.0;
 
 			var layout = Content as RelativeLayout;
