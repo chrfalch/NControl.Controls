@@ -19,7 +19,7 @@
        <dependencies>
          <dependency id="Xamarin.Forms" version="2.0.1.6505" />
          <dependency id="NGraphics" version="0.4.0" />
-         <dependency id="NControl" version="0.8.5" />
+         <dependency id="NControl" version="0.8.6" />
        </dependencies>
    </metadata>
    <files>
