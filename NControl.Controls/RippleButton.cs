@@ -73,8 +73,8 @@ namespace NControl.Controls
 			// Add title and icon
             _labelText = new Label{ 
 				BackgroundColor = Color.Transparent,
-				XAlign = TextAlignment.Center,
-				YAlign = TextAlignment.Center,
+				HorizontalTextAlignment = TextAlignment.Center,
+                VerticalTextAlignment = TextAlignment.Center,
 				TextColor = Color.Black,				
 				InputTransparent = true,
 			};

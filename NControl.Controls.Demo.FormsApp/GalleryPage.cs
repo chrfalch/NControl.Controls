@@ -19,28 +19,28 @@ namespace NControl.Controls.Demo.FormsApp
 				Children = {
 					new Label {
 						BackgroundColor = Color.Red, 
-						Text = "First", 
-						XAlign = TextAlignment.Center,
-						YAlign = TextAlignment.Center
+						Text = "First",
+                        HorizontalTextAlignment = TextAlignment.Center,
+                        VerticalTextAlignment  = TextAlignment.Center
 					}
 					,
 					new Label {
 						BackgroundColor = Color.Green, 
-						Text = "Second", 
-						XAlign = TextAlignment.Center,
-						YAlign = TextAlignment.Center 
+						Text = "Second",
+                        HorizontalTextAlignment = TextAlignment.Center,
+                        VerticalTextAlignment  = TextAlignment.Center 
 					},
 					new Label {
 						BackgroundColor = Color.Aqua, 
-						Text = "Third", 
-						XAlign = TextAlignment.Center,
-						YAlign = TextAlignment.Center 
+						Text = "Third",
+                        HorizontalTextAlignment = TextAlignment.Center,
+                        VerticalTextAlignment  = TextAlignment.Center 
 					},
 					new Label {
 						BackgroundColor = Color.Blue, 
-						Text = "Last", 
-						XAlign = TextAlignment.Center,
-						YAlign = TextAlignment.Center 
+						Text = "Last",
+                        HorizontalTextAlignment = TextAlignment.Center,
+                        VerticalTextAlignment  = TextAlignment.Center 
 					},
 				}
 			};

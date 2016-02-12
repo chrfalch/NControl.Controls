@@ -111,8 +111,8 @@ namespace NControl.Controls
 			};
 
 			ButtonIconLabel = new FontAwesomeLabel{
-				XAlign = TextAlignment.Center,
-				YAlign = TextAlignment.Center,
+				HorizontalTextAlignment = TextAlignment.Center,
+				VerticalTextAlignment = TextAlignment.Center,
 				TextColor = Color.White,
 				Text = FontAwesomeLabel.FAPlus,
 				FontSize = 14,

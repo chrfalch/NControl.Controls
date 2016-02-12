@@ -17,8 +17,8 @@ namespace NControl.Controls.Demo.FormsApp
 			base.OnAppearing ();
 
 			var label = new Label{ 
-				XAlign = TextAlignment.Center,
-				YAlign = TextAlignment.Center,
+				HorizontalTextAlignment = TextAlignment.Center,
+                VerticalTextAlignment = TextAlignment.Center,
 				InputTransparent = true,
 			};
 
