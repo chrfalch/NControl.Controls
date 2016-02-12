@@ -24,7 +24,7 @@ namespace NControl.Controls.Demo.FormsApp
 				new GalleryPage(),
 				new PagingViewPage(),
 				new TabStripPage(),
-
+				new SvgImagePage(),
                 new CalendarPage(),
             };
 
