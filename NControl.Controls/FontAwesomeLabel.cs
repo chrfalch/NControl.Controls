@@ -47,8 +47,8 @@ namespace NControl.Controls
 		{
 			FontFamily = FontAwesomeName;
 			FontSize = 18;
-			XAlign = TextAlignment.Center;
-			YAlign = TextAlignment.Center;
+            HorizontalTextAlignment = TextAlignment.Center;
+            VerticalTextAlignment = TextAlignment.Center;
 		}
 
 		#region Icon Constants

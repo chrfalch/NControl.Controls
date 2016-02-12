@@ -21,14 +21,14 @@ namespace NControl.Controls.Demo.FormsApp
 						Text = "Custom Font",
 						FontFamily = "Clink Clank",
 						BackgroundColor = Xamarin.Forms.Color.White,
-						XAlign = Xamarin.Forms.TextAlignment.Center,
-						YAlign = Xamarin.Forms.TextAlignment.Center,
+						HorizontalTextAlignment = Xamarin.Forms.TextAlignment.Center,
+                        VerticalTextAlignment = Xamarin.Forms.TextAlignment.Center,
 						TextColor = Xamarin.Forms.Color.Blue,
 						FontSize = 24,
 					},
 					new Label() {
-						XAlign = Xamarin.Forms.TextAlignment.Center,
-						YAlign = Xamarin.Forms.TextAlignment.Center,
+						HorizontalTextAlignment = Xamarin.Forms.TextAlignment.Center,
+                        VerticalTextAlignment  = Xamarin.Forms.TextAlignment.Center,
 						FontSize = 10,
 						Text = "This font is added to the demo project as " + 
 							"an embedded resource. The font loader in " + 

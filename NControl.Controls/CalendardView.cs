@@ -82,8 +82,8 @@ namespace NControl.Controls
                 FontAttributes = FontAttributes.Bold,
                 HorizontalOptions = LayoutOptions.CenterAndExpand,
                 VerticalOptions = LayoutOptions.CenterAndExpand,
-                XAlign = TextAlignment.Center,
-                YAlign = TextAlignment.Center,
+                HorizontalTextAlignment  = TextAlignment.Center,
+                VerticalTextAlignment = TextAlignment.Center,
                 HeightRequest = TopHeight,
             };
 
@@ -147,8 +147,8 @@ namespace NControl.Controls
             for (var d = 0; d < 7; d++) {
                 var label = new Label {
                     BackgroundColor = Color.Transparent,
-                    XAlign = TextAlignment.Center,
-                    YAlign = TextAlignment.Center,
+                    HorizontalTextAlignment = TextAlignment.Center,
+                    VerticalTextAlignment = TextAlignment.Center,
                     Text = dayNames[(int)currentWeekDay]
                 };
 
@@ -234,8 +234,8 @@ namespace NControl.Controls
                 for (var c = 0; c < 7; c++) {
 
                     var dayLabel = new Label{
-                        XAlign = TextAlignment.Center,
-                        YAlign = TextAlignment.Center,
+                        HorizontalTextAlignment = TextAlignment.Center,
+                        VerticalTextAlignment = TextAlignment.Center,
 						HorizontalOptions = LayoutOptions.CenterAndExpand,
 						VerticalOptions = LayoutOptions.CenterAndExpand,
                         TextColor = Color.Black,
@@ -347,8 +347,8 @@ namespace NControl.Controls
 
 				// Update text
                 var label = _dayNumberLabels[d];
-				label.XAlign = TextAlignment.Center;
-				label.YAlign = TextAlignment.Center;
+				label.HorizontalTextAlignment = TextAlignment.Center;
+				label.VerticalTextAlignment = TextAlignment.Center;
 
                 if (hasEmptyRow || (date.DayOfWeek == firstWeekDay && date >= _currentMonth.AddMonths(1)))
                 {
@@ -365,32 +365,32 @@ namespace NControl.Controls
                     {
                         _dayNumberLabels[d].TextColor = DisabledColor;
                         canvas.DrawRectangle (new NGraphics.Rect (col * colWidth, row * rowHeight,
-                            colWidth, rowHeight), null, disabledBrush);
+                            colWidth, rowHeight), new NGraphics.Size(0, 0), null, disabledBrush);
                     }
                     else if (IsSameDay (SelectedDate, date))
                     {
                         // Selected date
                         _dayNumberLabels[d].TextColor = SelectedColor;
                         canvas.DrawRectangle (new NGraphics.Rect (col * colWidth, row * rowHeight,
-                            colWidth, rowHeight), null, selectedBrush);
+                            colWidth, rowHeight), new NGraphics.Size(0, 0), null, selectedBrush);
                     }
                     else if (date.Month != _currentMonth.Month)
                     {
                         // Prev/next month
                         _dayNumberLabels[d].TextColor = NotInMonthColor;
-                        canvas.DrawRectangle(new NGraphics.Rect(col * colWidth, row * rowHeight, colWidth, rowHeight), null, notInMonthBrush);
+                        canvas.DrawRectangle(new NGraphics.Rect(col * colWidth, row * rowHeight, colWidth, rowHeight), new NGraphics.Size(0, 0), null, notInMonthBrush);
                     }
                     else if (date.DayOfWeek == DayOfWeek.Sunday || date.DayOfWeek == DayOfWeek.Saturday)
                     {
                         // Weekends
                         _dayNumberLabels[d].TextColor = WeekendColor;
-                        canvas.DrawRectangle(new NGraphics.Rect(col * colWidth, row * rowHeight, colWidth, rowHeight), null, weekendBrush);
+                        canvas.DrawRectangle(new NGraphics.Rect(col * colWidth, row * rowHeight, colWidth, rowHeight), new NGraphics.Size(0, 0), null, weekendBrush);
                     }
                     else
                     {
                         // Regular days
                         _dayNumberLabels [d].TextColor = RegularColor; 
-                        canvas.DrawRectangle (new NGraphics.Rect (col * colWidth, row * rowHeight, colWidth, rowHeight), null, regularBrush);
+                        canvas.DrawRectangle (new NGraphics.Rect (col * colWidth, row * rowHeight, colWidth, rowHeight), new NGraphics.Size(0, 0), null, regularBrush);
                     }
 
 

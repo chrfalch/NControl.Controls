@@ -158,7 +158,7 @@ namespace NControl.Controls
 			_shadow = new NControlView {				
 				DrawingFunction = (canvas, rect)=> {
 
-					canvas.DrawRectangle(rect, null, new NGraphics.LinearGradientBrush(
+                    canvas.DrawRectangle(rect, new NGraphics.Size(0, 0), null, new NGraphics.LinearGradientBrush(
 						new NGraphics.Point(0.5, 0.0), new NGraphics.Point(0.5, 1.0),
 						Color.Black.MultiplyAlpha(0.3).ToNColor(), NGraphics.Colors.Clear, 
 						NGraphics.Colors.Clear));

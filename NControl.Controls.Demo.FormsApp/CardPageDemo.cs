@@ -90,8 +90,8 @@ namespace NControl.Controls.Demo.FormsApp
 					};
 
 					var label = new Label {
-						XAlign = TextAlignment.Center,
-						YAlign = TextAlignment.Center 
+						HorizontalTextAlignment = TextAlignment.Center,
+                        VerticalTextAlignment = TextAlignment.Center 
 					};
 
                     label.SetBinding (Label.TextProperty, "Title");
@@ -119,8 +119,8 @@ namespace NControl.Controls.Demo.FormsApp
 								label,
 								new Label { 
 									Text = "This is a page",
-									XAlign = TextAlignment.Center,
-									YAlign = TextAlignment.Center 
+									HorizontalTextAlignment= TextAlignment.Center,
+                                    VerticalTextAlignment = TextAlignment.Center 
 								},
 								showModalViewButton,
                                 touchButton,

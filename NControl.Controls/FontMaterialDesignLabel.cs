@@ -20,8 +20,8 @@ namespace NControl.Controls
 		{
 			FontFamily = FontName;
 			FontSize = 18;
-			XAlign = TextAlignment.Center;
-			YAlign = TextAlignment.Center;
+			HorizontalTextAlignment= TextAlignment.Center;
+            VerticalTextAlignment = TextAlignment.Center;
 		}
 
 		// http://zavoloklom.github.io/material-design-iconic-font/cheatsheet.html

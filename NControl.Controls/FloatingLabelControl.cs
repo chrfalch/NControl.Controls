@@ -104,8 +104,8 @@ namespace NControl.Controls
 				BackgroundColor = Color.Transparent,
 				Text = Placeholder,
 				FontAttributes = FontAttributes.Bold,
-				XAlign = TextAlignment.Start,
-				YAlign = TextAlignment.Center,
+				HorizontalTextAlignment= TextAlignment.Start,
+                VerticalTextAlignment = TextAlignment.Center,
                 FontSize = LabelFontSize,
 				Opacity = 0.0,
                 TextColor = PlaceholderColor,
@@ -143,8 +143,8 @@ namespace NControl.Controls
             // Postfix
             _postFix = new Label{
 				BackgroundColor = Color.Transparent,                
-				XAlign = TextAlignment.Center,
-                YAlign = TextAlignment.Center,                
+				HorizontalTextAlignment= TextAlignment.Center,
+                VerticalTextAlignment = TextAlignment.Center,                
 				TextColor = PostfixColor,
                 InputTransparent = true
             };
