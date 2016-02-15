@@ -7,7 +7,7 @@ Some of this controls are just conceptual demos of things that can be accomplish
 ### SvgImage
 Control that can read svg files using the SvgReader class found in NGraphics. The control handles resizing and redrawing within Xamarin.Forms. Uses embedded resources for svg files. To load an svg file, set the SvgAssemblyType property to a type defined in the assembly where the svg file is embedded, and provide the full resouce path for the embedded svg file to the SvgResource property.
 
-*Thanks to Veridit IT As for support*
+*Thanks to Veridit As for sponsorship*
 
 ### BlurImageView (conceptual)
 Simple but full implementation of a Xamarin.Forms Image that blurs the image. 
