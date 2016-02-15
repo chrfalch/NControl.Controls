@@ -19,6 +19,11 @@ namespace NControl.Controls
 		/// </summary>
 		private Graphic _graphics;
 
+		/// <summary>
+		/// The size.
+		/// </summary>
+		private NGraphics.Size _size;
+
 		#endregion
 
 		/// <summary>
@@ -97,9 +102,8 @@ namespace NControl.Controls
 
 					var svgReader = new SvgReader (new StreamReader (stream));
 					_graphics = svgReader.Graphic;
-					_graphics.Size = new NGraphics.Size(Width, Height);
+					_size = new NGraphics.Size(Width, Height);
 				}
-					
 			} 
 			catch (Exception ex) 
 			{
@@ -120,10 +124,17 @@ namespace NControl.Controls
 		{
 			base.Draw (canvas, rect);
 
-			if (_graphics != null)
+			if (_graphics != null) {
 				// Draw the graphics if it is set
-				_graphics.Draw (canvas);
-			
+				if (rect.Width != Width) {
+					var scale = rect.Width / Width;
+					_graphics.Size = new NGraphics.Size (_size.Width * scale, _size.Height * scale);
+				} else
+					_graphics.Size = _size;
+				
+				_graphics.Draw (canvas);			
+			}
+
 			else {
 				// Draw a placeholder - indicates that we are missing an icon
 				#if DEBUG
@@ -157,8 +168,6 @@ namespace NControl.Controls
 				var height = retVal.Request.Height;
 
 				// Ratio 
-
-
 				if (heightConstraint != double.PositiveInfinity) 
 				{
 					// Find height from ratio and height
@@ -183,7 +192,7 @@ namespace NControl.Controls
 				retVal.Request = new Xamarin.Forms.Size(width, height);
 
 				// Update graphics size
-				_graphics.Size = new NGraphics.Size(width, height);
+				_size = new NGraphics.Size(width, height);
 			}
 
 			return retVal;
