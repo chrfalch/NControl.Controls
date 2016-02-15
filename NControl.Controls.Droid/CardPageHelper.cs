@@ -40,8 +40,8 @@ namespace NControl.Controls.Droid
 		/// <returns>The async.</returns>
 		/// <param name="page">Page.</param>
 		public Task ShowAsync (CardPage page)
-		{
-			return Xamarin.Forms.Application.Current.MainPage.Navigation.PushModalAsync (page);
+		{			
+			return Xamarin.Forms.Application.Current.MainPage.Navigation.PushModalAsync (new DroidCardPageNavigationPage(page), false);
 		}
 
 		/// <summary>
@@ -51,7 +51,7 @@ namespace NControl.Controls.Droid
 		/// <param name="page">Page.</param>
 		public Task CloseAsync (CardPage page)
 		{
-			return Xamarin.Forms.Application.Current.MainPage.Navigation.PopModalAsync ();
+			return Xamarin.Forms.Application.Current.MainPage.Navigation.PopModalAsync (false);
 		}
 
 		/// <summary>
@@ -79,6 +79,29 @@ namespace NControl.Controls.Droid
 		}
 
 		#endregion
+	}
+
+	/// <summary>
+	/// Droid card page navigation page.
+	/// </summary>
+	public class DroidCardPageNavigationPage : NavigationPage
+	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="NControl.Controls.Droid.DroidCardPageNavigationPage"/> class.
+		/// </summary>
+		public DroidCardPageNavigationPage ()
+		{
+			
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="NControl.Controls.Droid.DroidCardPageNavigationPage"/> class.
+		/// </summary>
+		/// <param name="rootPage">Root page.</param>
+		public DroidCardPageNavigationPage (Page rootPage): base(rootPage)
+		{
+			
+		}
 	}
 }
 

@@ -72,7 +72,7 @@ namespace NControl.Controls
 			BackgroundColor = Color.Transparent;
             _hasHaddow = true;
 
-			NavigationPage.SetHasNavigationBar (this, false);
+			NavigationPage.SetHasNavigationBar (this, true);
 			NavigationPage.SetHasBackButton (this, false);
 
 			_layout = new RelativeLayout ();
