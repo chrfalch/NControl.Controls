@@ -38,7 +38,7 @@ namespace NControl.Controls.Demo.FormsApp
 							Orientation = StackOrientation.Horizontal,
 							Children = {
 								new SvgImage{
-									SvgAssembly = this.GetType().GetTypeInfo().Assembly,
+									SvgAssemblyType = this.GetType(),
 									SvgResource = "NControl.Controls.Demo.FormsApp.Resources.Svg.Smile.svg",
 								},
 								new SvgImage{
@@ -59,6 +59,7 @@ namespace NControl.Controls.Demo.FormsApp
 									Content = 
 										new SvgImage{
 											WidthRequest = 100,
+											VerticalOptions = LayoutOptions.Center,
 											SvgAssembly = this.GetType().GetTypeInfo().Assembly,
 											SvgResource = "NControl.Controls.Demo.FormsApp.Resources.Svg.SpaceShips.svg",
 										}
@@ -70,9 +71,9 @@ namespace NControl.Controls.Demo.FormsApp
 									Padding = 2,
 									Content = 
 										new SvgImage{
-										WidthRequest = 100,
-										SvgAssembly = this.GetType().GetTypeInfo().Assembly,
-										SvgResource = "NControl.Controls.Demo.FormsApp.Resources.Svg.SpaceShips.svg",
+											WidthRequest = 100,
+											SvgAssembly = this.GetType().GetTypeInfo().Assembly,
+											SvgResource = "NControl.Controls.Demo.FormsApp.Resources.Svg.SpaceShips.svg",
 									}
 								}
 							}

@@ -53,6 +53,9 @@ namespace NControl.Controls
 		public string SvgResource {
 			get{ return (string)GetValue (SvgResourceProperty); }
 			set {
+				if (value == SvgResource)
+					return;
+				
 				SetValue (SvgResourceProperty, value);
 				UpdateSvg ();
 				Invalidate ();
@@ -77,7 +80,38 @@ namespace NControl.Controls
 		public Assembly SvgAssembly {
 			get{ return (Assembly)GetValue (SvgAssemblyProperty); }
 			set {
+				if (value == SvgAssembly)
+					return;
+				
 				SetValue (SvgAssemblyProperty, value);
+				UpdateSvg ();
+				Invalidate ();
+			}
+		}
+
+		/// <summary>
+		/// The AssemblyType property.
+		/// </summary>
+		public static BindableProperty SvgAssemblyTypeProperty = 
+			BindableProperty.Create<SvgImage, Type> (p => p.SvgAssemblyType, null,
+				defaultBindingMode: BindingMode.TwoWay,
+				propertyChanged: (bindable, oldValue, newValue) => {
+					var ctrl = (SvgImage)bindable;
+					ctrl.SvgAssemblyType = newValue;
+		});
+
+		/// <summary>
+		/// Gets or sets the AssemblyType of the SvgImage instance. The type will be used
+		/// to retrieve the assembly to read svgs from
+		/// </summary>
+		/// <value>The color of the buton.</value>
+		public Type SvgAssemblyType {
+			get{ return (Type)GetValue (SvgAssemblyTypeProperty); }
+			set {
+				if (value == SvgAssemblyType)
+					return;
+				
+				SetValue (SvgAssemblyTypeProperty, value);
 				UpdateSvg ();
 				Invalidate ();
 			}
@@ -93,12 +127,16 @@ namespace NControl.Controls
 		{
 			_graphics = null;
 
-			if (SvgAssembly == null || string.IsNullOrEmpty (SvgResource))
+			if ((SvgAssembly == null && SvgAssemblyType == null) || string.IsNullOrEmpty (SvgResource))
 				return;
 
 			try 
 			{
-				using (var stream = SvgAssembly.GetManifestResourceStream (SvgResource)) {
+				var assembly = SvgAssembly;
+				if(assembly == null && SvgAssemblyType != null) 
+					assembly = SvgAssemblyType.GetTypeInfo().Assembly;
+				
+				using (var stream = assembly.GetManifestResourceStream (SvgResource)) {
 
 					var svgReader = new SvgReader (new StreamReader (stream));
 					_graphics = svgReader.Graphic;
@@ -166,27 +204,30 @@ namespace NControl.Controls
 
 				var width = retVal.Request.Width;
 				var height = retVal.Request.Height;
+				var sizeRatio = 1.0;
 
-				// Ratio 
-				if (heightConstraint != double.PositiveInfinity) 
+				if(heightConstraint != double.PositiveInfinity && widthConstraint != double.PositiveInfinity)
 				{
-					// Find height from ratio and height
-					var sizeRatio = heightConstraint == 0 ? _graphics.ViewBox.Size.Height : 
-						heightConstraint/_graphics.ViewBox.Size.Height;
-					
-					height = heightConstraint;
-					width = _graphics.ViewBox.Size.Width * sizeRatio;
+					if(heightConstraint < widthConstraint)
+						sizeRatio = heightConstraint == 0 ? _graphics.ViewBox.Size.Height : 
+							heightConstraint/_graphics.ViewBox.Size.Height;
+					else 
+						sizeRatio = widthConstraint == 0 ? _graphics.ViewBox.Size.Width :
+							widthConstraint/_graphics.ViewBox.Size.Width;
 				}
-
-				if (widthConstraint != double.PositiveInfinity) 
+				else if (heightConstraint != double.PositiveInfinity) 
 				{
-					// Find width from ratio and height
-					var sizeRatio = widthConstraint == 0 ? _graphics.ViewBox.Size.Width :
-						widthConstraint/_graphics.ViewBox.Size.Width;
-
-					height = _graphics.ViewBox.Size.Height * sizeRatio;
-					width = widthConstraint;
+					sizeRatio = heightConstraint == 0 ? _graphics.ViewBox.Size.Height : 
+						heightConstraint/_graphics.ViewBox.Size.Height;					
+				}
+				else if (widthConstraint != double.PositiveInfinity) 
+				{
+					sizeRatio = widthConstraint == 0 ? _graphics.ViewBox.Size.Width :
+						widthConstraint/_graphics.ViewBox.Size.Width;					
 				} 
+
+				height = _graphics.ViewBox.Size.Height * sizeRatio;
+				width = _graphics.ViewBox.Size.Width * sizeRatio;
 
 				// Update retVal
 				retVal.Request = new Xamarin.Forms.Size(width, height);
