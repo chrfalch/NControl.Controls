@@ -25,6 +25,7 @@ namespace NControl.Controls.iOS
 				s.Read (data, 0, data.Length);
 
 				var dataProvider = new CGDataProvider (data, 0, data.Length);
+				var familyNames = UIFont.FamilyNames; //fixes app freeze in some cases: https://alpha.app.net/jaredsinclair/post/18555292
 				var cgFont = CGFont.CreateFromProvider (dataProvider);
 				NSError error;
 
