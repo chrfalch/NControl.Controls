@@ -114,7 +114,7 @@ namespace NControl.Controls.Demo.FormsApp
 							BackgroundColor = Color.Aqua,
 							Orientation = StackOrientation.Vertical,
 							HorizontalOptions = LayoutOptions.FillAndExpand,
-							VerticalOptions = LayoutOptions.CenterAndExpand,
+							VerticalOptions = LayoutOptions.FillAndExpand,
 							Children = {
 								label,
 								new Label { 
