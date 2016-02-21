@@ -81,7 +81,7 @@ namespace NControl.Controls
 			// Shadow 
 			_shadowLayer = new Frame{
 				BackgroundColor = Color.White,
-				HasShadow = true,
+				HasShadow = Device.OnPlatform<bool>(true, false, false),
 			};
 
 			_overlay = new BoxView {
@@ -236,10 +236,7 @@ namespace NControl.Controls
                 if (_hasHaddow == value) return;
                 _hasHaddow = value;
 
-                if (_hasHaddow)
-                    _layout.Children.Add(_shadowLayer, () => this.LayerPosition);
-                else
-                    _layout.Children.Remove(_shadowLayer);
+				_shadowLayer.IsVisible = value;
             }
         }
 

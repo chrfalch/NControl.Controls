@@ -41,7 +41,7 @@ namespace NControl.Controls.Droid
 		/// <param name="page">Page.</param>
 		public Task ShowAsync (CardPage page)
 		{			
-			return Xamarin.Forms.Application.Current.MainPage.Navigation.PushModalAsync (new DroidCardPageNavigationPage(page), false);
+			return Xamarin.Forms.Application.Current.MainPage.Navigation.PushModalAsync (page, false);
 		}
 
 		/// <summary>

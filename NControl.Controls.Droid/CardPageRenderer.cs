@@ -3,9 +3,11 @@ using Xamarin.Forms.Platform.Android;
 using Xamarin.Forms;
 using NControl.Controls;
 using NControl.Controls.Droid;
+using Xamarin.Forms.Platform.Android.AppCompat;
+using Android.Views;
+using System.Threading.Tasks;
 
 [assembly: ExportRenderer(typeof(CardPage), typeof(CardPageRenderer))]
-[assembly: ExportRenderer(typeof(DroidCardPageNavigationPage), typeof(DroidNavigationPageRenderer))]
 namespace NControl.Controls.Droid
 {
 	/// <summary>
@@ -31,26 +33,13 @@ namespace NControl.Controls.Droid
 
 			Background = null;
 			SetBackgroundColor (Android.Graphics.Color.Transparent);
-		}
-	}
 
-	public class DroidNavigationPageRenderer: NavigationRenderer
-	{
-		/// <Docs>This is called when the view is attached to a window.</Docs>
-		/// <summary>
-		/// Raises the attached to window event.
-		/// </summary>
-		protected override void OnAttachedToWindow ()
-		{
-			base.OnAttachedToWindow ();
-
-			Background = null;
-			ViewGroup.Background = null;
-			SetBackgroundColor (Android.Graphics.Color.Transparent);
-			ViewGroup.SetBackgroundColor (Android.Graphics.Color.Transparent);
-			ViewGroup.GetChildAt (0).Background = null;
-			ViewGroup.GetChildAt (0).SetBackgroundColor(Android.Graphics.Color.Transparent);
-		}
+			var parent = (Parent as Android.Views.ViewGroup);
+			if (parent != null) {
+				for (var i = 0; i < parent.ChildCount; i++)
+					parent.GetChildAt (i).SetBackgroundColor (Android.Graphics.Color.Transparent);
+			}
+		}	
 	}
 }
 
