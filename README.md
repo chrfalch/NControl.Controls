@@ -1,6 +1,10 @@
 # NControl.Controls
 Sample Control implementations using the [NControl](https://github.com/chrfalch/NControl) library. Implementations for iOS/Android/Windows Phone 8/8.1 is included.
 
+## Initialization
+
+Call ```NControls.Init ()``` in your app startup code.
+
 ## Controls
 Some of this controls are just conceptual demos of things that can be accomplished with NControl and Xamarin.Forms. Other controls are complete.
 
