@@ -26,6 +26,7 @@ namespace NControl.Controls.Demo.FormsApp
 				new TabStripPage(),
 				new SvgImagePage(),
                 new CalendarPage(),
+				new WizardPage(),
             };
 
 			BindingContext = new ViewModel("Should say CardPage");
