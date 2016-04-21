@@ -58,6 +58,7 @@
     <Compile Include="Fonts\OTFFont.cs" />
     <Compile Include="Fonts\BaseFont.cs" />
     <Compile Include="SvgImage.cs" />
+    <Compile Include="WizardLayout.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>

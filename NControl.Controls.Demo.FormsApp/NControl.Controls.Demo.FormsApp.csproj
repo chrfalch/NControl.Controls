@@ -50,6 +50,7 @@
     <Compile Include="MaterialDesignIconsPage.cs" />
     <Compile Include="TabStripPage.cs" />
     <Compile Include="SvgImagePage.cs" />
+    <Compile Include="WizardPage.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
