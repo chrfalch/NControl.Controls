@@ -462,10 +462,10 @@ namespace NControl.Controls
 		/// The FontFamily property.
 		/// </summary>
 		public static BindableProperty FontFamilyProperty = 
-			BindableProperty.Create<CalendarView, string> (p => p.FontFamily, null,
+			BindableProperty.Create(nameof(FontFamily), typeof(string), typeof(CalendarView), null,
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (CalendarView)bindable;
-					ctrl.FontFamily = newValue;
+					ctrl.FontFamily = (string)newValue;
 				});
 
 		/// <summary>
@@ -489,8 +489,8 @@ namespace NControl.Controls
 		/// <summary>
 		/// The SelectedDate property.
 		/// </summary>
-		public static BindableProperty SelectedDateProperty = BindableProperty.Create<CalendarView, DateTime> (
-            p => p.SelectedDate, DateTime.MinValue, BindingMode.TwoWay,
+		public static BindableProperty SelectedDateProperty = BindableProperty.Create(nameof(SelectedDate), typeof(DateTime), typeof(CalendarView), 
+            DateTime.MinValue, BindingMode.TwoWay,
             propertyChanged: (b, o, n) => { ((CalendarView)b).UpdateCalendar(); });
 
 		/// <summary>
@@ -502,8 +502,7 @@ namespace NControl.Controls
 			set { SetValue(SelectedDateProperty, value); }
 		}
 
-        public static BindableProperty MinDateProperty = BindableProperty.Create<CalendarView, DateTime>(
-            p => p.MinDate, DateTime.MinValue,
+        public static BindableProperty MinDateProperty = BindableProperty.Create(nameof(MinDate), typeof(DateTime), typeof(CalendarView), DateTime.MinValue,
             propertyChanged: (b, o, n) => { ((CalendarView)b).UpdateCalendar(); });
 
         public DateTime MinDate
@@ -512,8 +511,7 @@ namespace NControl.Controls
             set  { SetValue(MinDateProperty, value); } 
         }
 
-        public static BindableProperty MaxDateProperty = BindableProperty.Create<CalendarView, DateTime>(
-            p => p.MaxDate, DateTime.MaxValue,
+        public static BindableProperty MaxDateProperty = BindableProperty.Create(nameof(MaxDate), typeof(DateTime), typeof(CalendarView), DateTime.MaxValue,
             propertyChanged: (b, o, n) => { ((CalendarView)b).UpdateCalendar(); });
 
         public DateTime MaxDate
@@ -522,8 +520,7 @@ namespace NControl.Controls
             set  { SetValue(MaxDateProperty, value); } 
         }
 
-        public static BindableProperty HighlightDisabledProperty = BindableProperty.Create<CalendarView, bool>(
-            p => p.HighlightDisabled, true,
+        public static BindableProperty HighlightDisabledProperty = BindableProperty.Create(nameof(HighlightDisabled), typeof(bool), typeof(CalendarView), true,
             propertyChanged: (b, o, n) => { ((CalendarView)b).UpdateCalendar(); });
 
         public bool HighlightDisabled
@@ -532,8 +529,7 @@ namespace NControl.Controls
             set { SetValue(HighlightDisabledProperty, value); }
         }
 
-        public static BindableProperty DisabledColorProperty = BindableProperty.Create<CalendarView, Color>(
-            p => p.DisabledColor, Color.White,
+        public static BindableProperty DisabledColorProperty = BindableProperty.Create(nameof(DisabledColor), typeof(Color), typeof(CalendarView), Color.White,
             propertyChanged: (b, o, n) => { ((CalendarView)b).UpdateCalendar(); });
         
         #region Colors
@@ -544,8 +540,7 @@ namespace NControl.Controls
             set { SetValue(DisabledColorProperty, value); }
         }
 
-        public static BindableProperty DisabledBackgroundProperty = BindableProperty.Create<CalendarView, Color>(
-            p => p.DisabledBackground, Color.Gray,
+        public static BindableProperty DisabledBackgroundProperty = BindableProperty.Create(nameof(DisabledBackground), typeof(Color), typeof(CalendarView), Color.Gray,
             propertyChanged: (b, o, n) => { ((CalendarView)b).UpdateCalendar(); });
 
         public Color DisabledBackground
@@ -554,8 +549,7 @@ namespace NControl.Controls
             set { SetValue(DisabledBackgroundProperty, value); }
         }
 
-        public static BindableProperty SelectedColorProperty = BindableProperty.Create<CalendarView, Color>(
-            p => p.SelectedColor, Color.White,
+        public static BindableProperty SelectedColorProperty = BindableProperty.Create(nameof(SelectedColor), typeof(Color), typeof(CalendarView), Color.White,
             propertyChanged: (b, o, n) => { ((CalendarView)b).UpdateCalendar(); });
 
         public Color SelectedColor
@@ -564,8 +558,7 @@ namespace NControl.Controls
             set { SetValue(SelectedColorProperty, value); }
         }
 
-        public static BindableProperty SelectedBackgroundProperty = BindableProperty.Create<CalendarView, Color>(
-            p => p.SelectedBackground, Color.Accent,
+        public static BindableProperty SelectedBackgroundProperty = BindableProperty.Create(nameof(SelectedBackground), typeof(Color), typeof(CalendarView), Color.Accent,
             propertyChanged: (b, o, n) => { ((CalendarView)b).UpdateCalendar(); });
 
         public Color SelectedBackground
@@ -574,8 +567,7 @@ namespace NControl.Controls
             set { SetValue(SelectedBackgroundProperty, value); }
         }
 
-        public static BindableProperty TodayColorProperty = BindableProperty.Create<CalendarView, Color>(
-            p => p.TodayColor, Color.White,
+        public static BindableProperty TodayColorProperty = BindableProperty.Create(nameof(TodayColor), typeof(Color), typeof(CalendarView), Color.White,
             propertyChanged: (b, o, n) => { ((CalendarView)b).UpdateCalendar(); });
         
         public Color TodayColor
@@ -584,8 +576,7 @@ namespace NControl.Controls
             set { SetValue(TodayColorProperty, value); }
         }
 
-        public static BindableProperty TodayBackgroundProperty = BindableProperty.Create<CalendarView, Color>(
-            p => p.TodayBackground, Color.FromHex("#fc3d39"),
+        public static BindableProperty TodayBackgroundProperty = BindableProperty.Create(nameof(TodayBackground), typeof(Color), typeof(CalendarView), Color.FromHex("#fc3d39"),
             propertyChanged: (b, o, n) => { ((CalendarView)b).UpdateCalendar(); });
 
         public Color TodayBackground
@@ -594,8 +585,7 @@ namespace NControl.Controls
             set { SetValue(TodayBackgroundProperty, value); }
         }
 
-        public static BindableProperty WeekendColorProperty = BindableProperty.Create<CalendarView, Color>(
-            p => p.WeekendColor, Color.FromHex("#fc3d39"),
+        public static BindableProperty WeekendColorProperty = BindableProperty.Create(nameof(WeekendColor), typeof(Color), typeof(CalendarView), Color.FromHex("#fc3d39"),
             propertyChanged: (b, o, n) => { ((CalendarView)b).UpdateCalendar(); });
 
         public Color WeekendColor
@@ -604,8 +594,8 @@ namespace NControl.Controls
             set { SetValue(WeekendColorProperty, value); }
         }
 
-        public static BindableProperty WeekendBackgroundProperty = BindableProperty.Create<CalendarView, Color>(
-            p => p.WeekendBackground, Color.FromHex("#EEEEEE"),
+        public static BindableProperty WeekendBackgroundProperty = BindableProperty.Create(nameof(WeekendBackground), typeof(Color), typeof(CalendarView), 
+            Color.FromHex("#EEEEEE"),
             propertyChanged: (b, o, n) => { ((CalendarView)b).UpdateCalendar(); });
 
         public Color WeekendBackground
@@ -614,8 +604,7 @@ namespace NControl.Controls
             set { SetValue(WeekendBackgroundProperty, value); }
         }
 
-        public static BindableProperty RegularColorProperty = BindableProperty.Create<CalendarView, Color>(
-            p => p.RegularColor, Color.Black,
+        public static BindableProperty RegularColorProperty = BindableProperty.Create(nameof(RegularColor), typeof(Color), typeof(CalendarView), Color.Black,
             propertyChanged: (b, o, n) => { ((CalendarView)b).UpdateCalendar(); });
 
         public Color RegularColor
@@ -624,8 +613,7 @@ namespace NControl.Controls
             set { SetValue(RegularColorProperty, value); }
         }
 
-        public static BindableProperty RegularBackgroundProperty = BindableProperty.Create<CalendarView, Color>(
-            p => p.RegularBackground, Color.FromHex("#EEEEEE"),
+        public static BindableProperty RegularBackgroundProperty = BindableProperty.Create(nameof(RegularBackground), typeof(Color), typeof(CalendarView), Color.FromHex("#EEEEEE"),
             propertyChanged: (b, o, n) => { ((CalendarView)b).UpdateCalendar(); });
 
         public Color RegularBackground
@@ -634,8 +622,7 @@ namespace NControl.Controls
             set { SetValue(RegularBackgroundProperty, value); }
         }
 
-        public static BindableProperty NotInMonthColorProperty = BindableProperty.Create<CalendarView, Color>(
-            p => p.NotInMonthColor, Color.FromHex("#CECECE"),
+        public static BindableProperty NotInMonthColorProperty = BindableProperty.Create(nameof(NotInMonthColor), typeof(Color), typeof(CalendarView), Color.FromHex("#CECECE"),
             propertyChanged: (b, o, n) => { ((CalendarView)b).UpdateCalendar(); });
 
         public Color NotInMonthColor
@@ -644,8 +631,7 @@ namespace NControl.Controls
             set { SetValue(NotInMonthColorProperty, value); }
         }
 
-        public static BindableProperty NotInMonthBackgroundProperty = BindableProperty.Create<CalendarView, Color>(
-            p => p.NotInMonthBackground, Color.White,
+        public static BindableProperty NotInMonthBackgroundProperty = BindableProperty.Create(nameof(NotInMonthBackground), typeof(Color), typeof(CalendarView), Color.White,
             propertyChanged: (b, o, n) => { ((CalendarView)b).UpdateCalendar(); });
 
         public Color NotInMonthBackground
@@ -654,8 +640,7 @@ namespace NControl.Controls
             set { SetValue(NotInMonthBackgroundProperty, value); }
         }
 
-        public static BindableProperty GridColorProperty = BindableProperty.Create<CalendarView, Color>(
-            p => p.GridColor, Color.White,
+        public static BindableProperty GridColorProperty = BindableProperty.Create(nameof(GridColor), typeof(Color), typeof(CalendarView), Color.White,
             propertyChanged: (b, o, n) => { ((CalendarView)b).UpdateCalendar(); });
 
         public Color GridColor
@@ -668,10 +653,10 @@ namespace NControl.Controls
 		/// The BorderColor property.
 		/// </summary>
 		public static BindableProperty BorderColorProperty = 
-			BindableProperty.Create<CalendarView, Color> (p => p.BorderColor, Color.Gray,
+			BindableProperty.Create(nameof(BorderColor), typeof(Color), typeof(CalendarView), Color.Gray,
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (CalendarView)bindable;
-					ctrl.BorderColor = newValue;
+					ctrl.BorderColor = (Color)newValue;
 				});
 
 		/// <summary>

@@ -38,7 +38,7 @@ namespace NControl.Controls.iOS
 		{
 			base.OnElementPropertyChanged (sender, e);
 
-			if (e.PropertyName == ExtendedEntry.XAlignProperty.PropertyName)
+			if (e.PropertyName == ExtendedEntry.HorizontalTextAlignment.PropertyName)
 				UpdateTextAlignment ();		
 			else if (e.PropertyName == ExtendedEntry.FontFamilyProperty.PropertyName)
                 UpdateFont (Element as ExtendedEntry);            

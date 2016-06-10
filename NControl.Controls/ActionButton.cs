@@ -131,10 +131,10 @@ namespace NControl.Controls
 		/// The command property.
 		/// </summary>
 		public static BindableProperty CommandProperty = 
-			BindableProperty.Create<ActionButton, ICommand> (p => p.Command, null,
+			BindableProperty.Create(nameof(Command), typeof(ICommand), typeof(ActionButton), null,
 				BindingMode.TwoWay, null, (bindable, oldValue, newValue) => {
 					var ctrl = (ActionButton)bindable;
-					ctrl.Command = newValue;
+					ctrl.Command = (ICommand)newValue;
 				});
 
 		/// <summary>
@@ -161,7 +161,7 @@ namespace NControl.Controls
 		/// The command parameter property.
 		/// </summary>
 		public static BindableProperty CommandParameterProperty = 
-			BindableProperty.Create<ActionButton, object> (p => p.CommandParameter, null,
+			BindableProperty.Create(nameof(CommandParameter), typeof(object), typeof(ActionButton), null,
 				BindingMode.TwoWay, null, (bindable, oldValue, newValue) => {
 					var ctrl = (ActionButton)bindable;
 					ctrl.CommandParameter = newValue;
@@ -183,10 +183,10 @@ namespace NControl.Controls
 		/// The button color property.
 		/// </summary>
 		public static BindableProperty ButtonColorProperty = 
-			BindableProperty.Create<ActionButton, Color> (p => p.ButtonColor, Color.Gray,
+			BindableProperty.Create(nameof(ButtonColor), typeof(Color), typeof(ActionButton), Color.Gray,
 				BindingMode.TwoWay, null, (bindable, oldValue, newValue) => {
 					var ctrl = (ActionButton)bindable;
-					ctrl.ButtonColor = newValue;
+					ctrl.ButtonColor = (Color)newValue;
 				});
 
 		/// <summary>
@@ -206,10 +206,10 @@ namespace NControl.Controls
 		/// The button font family property.
 		/// </summary>
 		public static BindableProperty ButtonFontFamilyProperty = 
-			BindableProperty.Create<ActionButton, string> (p => p.ButtonFontFamily, null,
+			BindableProperty.Create(nameof(ButtonFontFamily), typeof(string), typeof(ActionButton), null,
 				BindingMode.TwoWay, null, (bindable, oldValue, newValue) => {
 					var ctrl = (ActionButton)bindable;
-					ctrl.ButtonFontFamily = newValue;
+					ctrl.ButtonFontFamily = (string)newValue;
 				});
 
 		/// <summary>
@@ -229,10 +229,10 @@ namespace NControl.Controls
 		/// The button icon property.
 		/// </summary>
 		public static BindableProperty ButtonIconProperty = 
-			BindableProperty.Create<ActionButton, string> (p => p.ButtonIcon, FontAwesomeLabel.FAPlus,
+			BindableProperty.Create(nameof(ButtonIcon), typeof(string), typeof(ActionButton), FontAwesomeLabel.FAPlus,
 				BindingMode.TwoWay, null, (bindable, oldValue, newValue) => {
 					var ctrl = (ActionButton)bindable;
-					ctrl.ButtonIcon = newValue;
+					ctrl.ButtonIcon = (string)newValue;
 				});
 
 		/// <summary>
@@ -252,10 +252,10 @@ namespace NControl.Controls
 		/// The button icon property.
 		/// </summary>
 		public static BindableProperty HasShadowProperty = 
-			BindableProperty.Create<ActionButton, bool> (p => p.HasShadow, true,
+			BindableProperty.Create(nameof(HasShadow), typeof(bool), typeof(ActionButton), true,
 				BindingMode.TwoWay, null, (bindable, oldValue, newValue) => {
 					var ctrl = (ActionButton)bindable;
-					ctrl.HasShadow = newValue;
+					ctrl.HasShadow = (bool)newValue;
 				});
 
 		/// <summary>
@@ -279,10 +279,10 @@ namespace NControl.Controls
 		/// The button icon color property.
 		/// </summary>
 		public static BindableProperty ButtonIconColorProperty = 
-			BindableProperty.Create<ActionButton, Color> (p => p.ButtonColor, Color.White,
+			BindableProperty.Create(nameof(ButtonIconColor), typeof(Color), typeof(ActionButton), Color.White,
 				BindingMode.TwoWay, null, (bindable, oldValue, newValue) => {
 					var ctrl = (ActionButton)bindable;
-					ctrl.ButtonIconColor = newValue;
+					ctrl.ButtonIconColor = (Color)newValue;
 				});
 
 		/// <summary>
@@ -389,25 +389,26 @@ namespace NControl.Controls
 			return true;
 		}
 
-	    #endregion
+        #endregion
 
-		/// <param name="widthConstraint">The available width for the element to use.</param>
-		/// <param name="heightConstraint">The available height for the element to use.</param>
-		/// <summary>
-		/// This method is called during the measure pass of a layout cycle to get the desired size of an element.
-		/// </summary>
-		protected override SizeRequest OnSizeRequest (double widthConstraint, double heightConstraint)
-		{
-			var retVal = base.OnSizeRequest (widthConstraint, heightConstraint);
+        /// <summary>
+        /// On Measure
+        /// </summary>
+        /// <param name="widthConstraint"></param>
+        /// <param name="heightConstraint"></param>
+        /// <returns></returns>
+        protected override SizeRequest OnMeasure(double widthConstraint, double heightConstraint)
+        {
+            var retVal = base.OnMeasure(widthConstraint, heightConstraint);
 
-			if (retVal.Request.Width > retVal.Request.Height)
-				retVal.Request = new Xamarin.Forms.Size (retVal.Request.Width, retVal.Request.Width);
-			else if (retVal.Request.Height > retVal.Request.Width)
-				retVal.Request = new Xamarin.Forms.Size (retVal.Request.Height, retVal.Request.Height);
+            if (retVal.Request.Width > retVal.Request.Height)
+                retVal.Request = new Xamarin.Forms.Size(retVal.Request.Width, retVal.Request.Width);
+            else if (retVal.Request.Height > retVal.Request.Width)
+                retVal.Request = new Xamarin.Forms.Size(retVal.Request.Height, retVal.Request.Height);
 
             retVal.Minimum = retVal.Request;
-			return retVal;
-		}		
+            return retVal;
+        }	
 	}
 }
 

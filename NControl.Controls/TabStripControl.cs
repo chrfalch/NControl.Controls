@@ -337,10 +337,10 @@ namespace NControl.Controls
 		/// The FontSize property.
 		/// </summary>
 		public static BindableProperty FontSizeProperty =
-			BindableProperty.Create<TabStripControl, double>(p => p.FontSize, 14,
+			BindableProperty.Create(nameof(FontSize), typeof(double), typeof(TabStripControl), 14,
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (TabStripControl)bindable;
-					ctrl.FontSize = newValue;
+					ctrl.FontSize = (double)newValue;
 				});
 
 		/// <summary>
@@ -362,10 +362,10 @@ namespace NControl.Controls
 		/// The FontFamily property.
 		/// </summary>
 		public static BindableProperty FontFamilyProperty = 
-			BindableProperty.Create<TabStripControl, string> (p => p.FontFamily, null,
+			BindableProperty.Create(nameof(FontFamily), typeof(string), typeof(TabStripControl), null,
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (TabStripControl)bindable;
-					ctrl.FontFamily = newValue;
+					ctrl.FontFamily = (string)newValue;
 				});
 
 		/// <summary>
@@ -385,10 +385,10 @@ namespace NControl.Controls
 		/// The TabIndicatorColor property.
 		/// </summary>
 		public static BindableProperty TabIndicatorColorProperty = 
-			BindableProperty.Create<TabStripControl, Color> (p => p.TabIndicatorColor, Color.Accent,
+			BindableProperty.Create(nameof(TabIndicatorColor), typeof(Color), typeof(TabStripControl), Color.Accent,
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (TabStripControl)bindable;
-					ctrl.TabIndicatorColor = newValue;
+					ctrl.TabIndicatorColor = (Color)newValue;
 				});
 
 		/// <summary>
@@ -407,10 +407,10 @@ namespace NControl.Controls
 		/// The TabHeight property.
 		/// </summary>
 		public static BindableProperty TabHeightProperty = 
-			BindableProperty.Create<TabStripControl, double> (p => p.TabHeight, 40,
+			BindableProperty.Create(nameof(TabHeight), typeof(double), typeof(TabStripControl), 40,
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (TabStripControl)bindable;
-					ctrl.TabHeight = newValue;
+					ctrl.TabHeight = (double)newValue;
 				});
 
 		/// <summary>
@@ -428,10 +428,10 @@ namespace NControl.Controls
 		/// The TabBackColor property.
 		/// </summary>
 		public static BindableProperty TabBackColorProperty = 
-			BindableProperty.Create<TabStripControl, Color> (p => p.TabBackColor, Color.White,
+			BindableProperty.Create(nameof(TabBackColor), typeof(Color), typeof(TabStripControl), Color.White,
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (TabStripControl)bindable;
-					ctrl.TabBackColor = newValue;
+					ctrl.TabBackColor = (Color)newValue;
 				});
 
 		/// <summary>
@@ -450,11 +450,11 @@ namespace NControl.Controls
 		/// The Shadow property.
 		/// </summary>
 		public static BindableProperty ShadowProperty = 
-			BindableProperty.Create<TabStripControl, bool>(p => p.Shadow, false,
+			BindableProperty.Create(nameof(Shadow), typeof(bool), typeof(TabStripControl), false,
 				BindingMode.TwoWay,
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (TabStripControl)bindable;
-					ctrl.Shadow = newValue;
+					ctrl.Shadow = (bool)newValue;
 				});
 
 		/// <summary>
@@ -563,11 +563,11 @@ namespace NControl.Controls
 		/// The ButtonText property.
 		/// </summary>
 		public static BindableProperty ButtonTextProperty = 
-			BindableProperty.Create<TabBarButton, string> (p => p.ButtonText, null,
+			BindableProperty.Create(nameof(ButtonText), typeof(string), typeof(TabBarButton), null,
 				defaultBindingMode: BindingMode.TwoWay,
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (TabBarButton)bindable;
-					ctrl.ButtonText = newValue;
+					ctrl.ButtonText = (string)newValue;
 				});
 
 		/// <summary>
@@ -586,10 +586,10 @@ namespace NControl.Controls
 		/// The SelectedColor property.
 		/// </summary>
 		public static BindableProperty SelectedColorProperty = 
-			BindableProperty.Create<TabBarButton, Color> (p => p.SelectedColor, Color.Accent,
+			BindableProperty.Create(nameof(SelectedColor), typeof(Color), typeof(TabBarButton), Color.Accent,
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (TabBarButton)bindable;
-					ctrl.SelectedColor = newValue;
+					ctrl.SelectedColor = (Color)newValue;
 				});
 
 		/// <summary>
@@ -608,10 +608,10 @@ namespace NControl.Controls
 		/// The FontSize property.
 		/// </summary>
 		public static BindableProperty FontSizeProperty =
-			BindableProperty.Create<TabBarButton, double>(p => p.FontSize, 14,
+			BindableProperty.Create(nameof(FontSize), typeof(double), typeof(TabBarButton), 14,
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (TabBarButton)bindable;
-					ctrl.FontSize = newValue;
+					ctrl.FontSize = (double)newValue;
 				});
 
 		/// <summary>
@@ -628,14 +628,14 @@ namespace NControl.Controls
 			}
 		}
 
-		/// <summary>
-		/// The FontFamily property.
-		/// </summary>
-		public static BindableProperty FontFamilyProperty = 
-			BindableProperty.Create<TabBarButton, string> (p => p.FontFamily, null,
+        /// <summary>
+        /// The FontFamily property.
+        /// </summary>
+        public static BindableProperty FontFamilyProperty =
+            BindableProperty.Create(nameof(FontFamily), typeof(string), typeof(TabBarButton), null,
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (TabBarButton)bindable;
-					ctrl.FontFamily = newValue;
+					ctrl.FontFamily = (string)newValue;
 				});
 
 		/// <summary>

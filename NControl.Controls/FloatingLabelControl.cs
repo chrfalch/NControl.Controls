@@ -243,11 +243,11 @@ namespace NControl.Controls
 		/// The TextColor property.
 		/// </summary>
 		public static BindableProperty TextColorProperty =
-            BindableProperty.Create<FloatingLabelControl, Color>(p => p.TextColor, Color.Black, propertyChanged:
+            BindableProperty.Create(nameof(TextColor), typeof(Color), typeof(FloatingLabelControl), Color.Black, propertyChanged:
                 (bindable, oldValue, newValue) =>
                 {
                     var ctrl = (FloatingLabelControl)bindable;
-                    ctrl.TextColor = newValue;
+                    ctrl.TextColor = (Color)newValue;
                 });
 
 		/// <summary>
@@ -267,10 +267,10 @@ namespace NControl.Controls
 		/// The LabelFontSize property.
 		/// </summary>
 		public static BindableProperty LabelFontSizeProperty = 
-			BindableProperty.Create<FloatingLabelControl, int> (p => p.LabelFontSize, Device.OnPlatform<int>(10, 10, 12),
+			BindableProperty.Create(nameof(LabelFontSize), typeof(int), typeof(FloatingLabelControl), Device.OnPlatform<int>(10, 10, 12),
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (FloatingLabelControl)bindable;
-					ctrl.LabelFontSize = newValue;
+					ctrl.LabelFontSize = (int)newValue;
 				});
 
 		/// <summary>
@@ -289,10 +289,10 @@ namespace NControl.Controls
 		/// The LabelFontFamily property.
 		/// </summary>
 		public static BindableProperty LabelFontFamilyProperty = 
-			BindableProperty.Create<FloatingLabelControl, string> (p => p.LabelFontFamily, null,
+			BindableProperty.Create(nameof(LabelFontFamily), typeof(string), typeof(FloatingLabelControl), null,
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (FloatingLabelControl)bindable;
-					ctrl.LabelFontFamily = newValue;
+					ctrl.LabelFontFamily = (string)newValue;
 				});
 
 		/// <summary>
@@ -311,10 +311,10 @@ namespace NControl.Controls
 		/// The FontFamily property.
 		/// </summary>
 		public static BindableProperty FontFamilyProperty = 
-			BindableProperty.Create<FloatingLabelControl, string> (p => p.FontFamily, null,
+			BindableProperty.Create(nameof(FontFamily), typeof(string), typeof(FloatingLabelControl), null,
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (FloatingLabelControl)bindable;
-					ctrl.FontFamily = newValue;
+					ctrl.FontFamily = (string)newValue;
 				});
 
 		/// <summary>
@@ -333,10 +333,10 @@ namespace NControl.Controls
 		/// The PostfixFontFamily property.
 		/// </summary>
 		public static BindableProperty PostfixFontFamilyProperty = 
-			BindableProperty.Create<FloatingLabelControl, string> (p => p.PostfixFontFamily, null,
+			BindableProperty.Create(nameof(PostfixFontFamily), typeof(string), typeof(FloatingLabelControl), null,
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (FloatingLabelControl)bindable;
-					ctrl.PostfixFontFamily = newValue;
+					ctrl.PostfixFontFamily = (string)newValue;
 				});
 
 		/// <summary>
@@ -355,10 +355,10 @@ namespace NControl.Controls
 		/// The keyboard property.
 		/// </summary>
 		public static BindableProperty KeyboardProperty = 
-			BindableProperty.Create<FloatingLabelControl, Keyboard> (p => p.Keyboard, Xamarin.Forms.Keyboard.Default,
+			BindableProperty.Create(nameof(Keyboard), typeof(Keyboard), typeof(FloatingLabelControl), Xamarin.Forms.Keyboard.Default,
                 BindingMode.Default, null, (bindable, oldValue, newValue) => {
                     var ctrl = (FloatingLabelControl)bindable;
-                    ctrl._textEntry.Keyboard = newValue;
+                    ctrl._textEntry.Keyboard = (Keyboard)newValue;
                 });
 
 		/// <summary>
@@ -374,12 +374,11 @@ namespace NControl.Controls
 		/// <summary>
 		/// The XAlign property.
 		/// </summary>
-		public static BindableProperty XAlignProperty = 
-			BindableProperty.Create<FloatingLabelControl, TextAlignment> (p => p.XAlign, 
-				TextAlignment.Start, BindingMode.TwoWay,
+		public static BindableProperty HorizontalTextAlignment = 
+			BindableProperty.Create(nameof(XAlign), typeof(TextAlignment), typeof(FloatingLabelControl), TextAlignment.Start, BindingMode.TwoWay,
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (FloatingLabelControl)bindable;
-					ctrl.XAlign = newValue;
+					ctrl.XAlign = (TextAlignment)newValue;
 				});
 
 		/// <summary>
@@ -387,10 +386,10 @@ namespace NControl.Controls
 		/// </summary>
 		/// <value>The color of the buton.</value>
 		public TextAlignment XAlign {
-			get{ return (TextAlignment)GetValue (XAlignProperty); }
+			get{ return (TextAlignment)GetValue (HorizontalTextAlignment); }
 			set {
-				SetValue (XAlignProperty, value);
-				_textEntry.XAlign = value;
+				SetValue (HorizontalTextAlignment, value);
+				_textEntry.HorizontalTextAlignment = value;
 			}
 		}
 
@@ -398,10 +397,10 @@ namespace NControl.Controls
 		/// The placeholder property.
 		/// </summary>
 		public static BindableProperty PlaceholderProperty = 
-			BindableProperty.Create<FloatingLabelControl, string> (p => p.Placeholder, string.Empty,
+			BindableProperty.Create(nameof(Placeholder), typeof(string), typeof(FloatingLabelControl), string.Empty,
 				BindingMode.Default, null, (bindable, oldValue, newValue) => {
                 var ctrl = (FloatingLabelControl)bindable;
-                ctrl.Placeholder = newValue;
+                ctrl.Placeholder = (string)newValue;
             });
 
 		/// <summary>
@@ -423,10 +422,10 @@ namespace NControl.Controls
 		/// The text property.
 		/// </summary>
 		public static BindableProperty TextProperty = 
-			BindableProperty.Create<FloatingLabelControl, string>(p => p.Text, string.Empty,
+			BindableProperty.Create(nameof(Text), typeof(string), typeof(FloatingLabelControl), string.Empty,
 				BindingMode.TwoWay, propertyChanged: (bindable, oldValue, newValue) =>{
                 var ctrl = (FloatingLabelControl)bindable;
-                ctrl.Text = newValue;
+                ctrl.Text = (string)newValue;
             });
 		
 
@@ -446,10 +445,10 @@ namespace NControl.Controls
         /// The postfix color property.
         /// </summary>
 		public static BindableProperty PostfixColorProperty = 
-			BindableProperty.Create<FloatingLabelControl, Color>(p => p.PostfixColor, Color.FromHex("#CCCCCC"),
+			BindableProperty.Create(nameof(PostfixColor), typeof(Color), typeof(FloatingLabelControl), Color.FromHex("#CCCCCC"),
                 propertyChanged: (bindable, oldValue, newValue) =>{
                 var ctrl = (FloatingLabelControl)bindable;
-                ctrl.PostfixColor = newValue;
+                ctrl.PostfixColor = (Color)newValue;
             });
 
 
@@ -471,10 +470,10 @@ namespace NControl.Controls
 		/// The postfix property.
 		/// </summary>
 		public static BindableProperty PostfixProperty = 
-			BindableProperty.Create<FloatingLabelControl, string>(p => p.Postfix, string.Empty,
+			BindableProperty.Create(nameof(Postfix), typeof(string), typeof(FloatingLabelControl), string.Empty,
 				propertyChanged: (bindable, oldValue, newValue) =>{
 					var ctrl = (FloatingLabelControl)bindable;
-					ctrl.Postfix = newValue;
+					ctrl.Postfix = (string)newValue;
 				});
 
 
@@ -498,10 +497,10 @@ namespace NControl.Controls
 		/// The postfix property.
 		/// </summary>
 		public static BindableProperty PostfixIconProperty = 
-			BindableProperty.Create<FloatingLabelControl, string>(p => p.PostfixIcon, string.Empty,
+			BindableProperty.Create(nameof(PostfixIcon), typeof(string), typeof(FloatingLabelControl), string.Empty,
 				propertyChanged: (bindable, oldValue, newValue) =>{
 					var ctrl = (FloatingLabelControl)bindable;
-					ctrl.PostfixIcon = newValue;
+					ctrl.PostfixIcon = (string)newValue;
 				});
 
 
@@ -523,10 +522,10 @@ namespace NControl.Controls
 		/// The placeholder color property.
 		/// </summary>
         public static BindableProperty PlaceholderFocusedColorProperty =
-            BindableProperty.Create<FloatingLabelControl, Color>(p => p.PlaceholderFocusedColor, Color.Accent,
+            BindableProperty.Create(nameof(PlaceholderFocusedColor), typeof(Color), typeof(FloatingLabelControl), Color.Accent,
                 BindingMode.Default, null, (bindable, oldValue, newValue) => {
                 var ctrl = (FloatingLabelControl)bindable;
-                ctrl.PlaceholderFocusedColor = newValue;	
+                ctrl.PlaceholderFocusedColor = (Color)newValue;	
             });
 
 
@@ -548,11 +547,11 @@ namespace NControl.Controls
         /// The placeholder color property.
         /// </summary>
         public static BindableProperty PlaceholderColorProperty =
-            BindableProperty.Create<FloatingLabelControl, Color>(p => p.PlaceholderColor, Color.FromHex("#CCCCCC"),
+            BindableProperty.Create(nameof(PlaceholderColor), typeof(Color), typeof(FloatingLabelControl), Color.FromHex("#CCCCCC"),
                 BindingMode.Default, null, (bindable, oldValue, newValue) =>
                 {
                     var ctrl = (FloatingLabelControl)bindable;
-                    ctrl.PlaceholderColor = newValue;
+                    ctrl.PlaceholderColor = (Color)newValue;
                 });
 
 
@@ -574,10 +573,10 @@ namespace NControl.Controls
 		/// The is password property.
 		/// </summary>
 		public static readonly BindableProperty IsPasswordProperty = 
-			BindableProperty.Create<FloatingLabelControl, bool> (p => p.IsPassword, false, 
+			BindableProperty.Create(nameof(IsPassword), typeof(bool), typeof(FloatingLabelControl), false, 
 				BindingMode.Default, null, (bindable, oldValue, newValue) => {
 				var ctrl = (FloatingLabelControl)bindable;
-				ctrl.IsPassword = newValue;
+				ctrl.IsPassword = (bool)newValue;
 			});
 
 		//

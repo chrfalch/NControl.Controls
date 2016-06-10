@@ -99,11 +99,10 @@ namespace NControl.Controls
 		/// The ImagePosition property.
 		/// </summary>
 		public static BindableProperty ImagePositionProperty = 
-			BindableProperty.Create<RippleButton, ImagePosition> (p => p.ImagePosition, 
-				ImagePosition.Left, BindingMode.TwoWay, propertyChanged: 
+			BindableProperty.Create(nameof(ImagePosition), typeof(ImagePosition), typeof(RippleButton), ImagePosition.Left, BindingMode.TwoWay, propertyChanged: 
 				(bindable, oldValue, newValue) => {
 					var ctrl = (RippleButton)bindable;
-					ctrl.ImagePosition = newValue;
+					ctrl.ImagePosition = (ImagePosition)newValue;
 				});
 
 		/// <summary>
@@ -176,10 +175,10 @@ namespace NControl.Controls
 		/// The Icon property.
 		/// </summary>
 		public static BindableProperty IconProperty = 
-			BindableProperty.Create<RippleButton, string> (p => p.Icon, string.Empty,
+			BindableProperty.Create(nameof(Icon), typeof(string), typeof(RippleButton), string.Empty,
 				BindingMode.TwoWay, propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (RippleButton)bindable;
-					ctrl.Icon = newValue;
+					ctrl.Icon = (string)newValue;
 				});
 
 		/// <summary>
@@ -198,10 +197,10 @@ namespace NControl.Controls
 		/// The IconColor property.
 		/// </summary>
 		public static BindableProperty IconColorProperty = 
-			BindableProperty.Create<RippleButton, Color> (p => p.IconColor, Color.FromHex("#BBBBBB"),
+			BindableProperty.Create(nameof(IconColor), typeof(Color), typeof(RippleButton), Color.FromHex("#BBBBBB"),
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (RippleButton)bindable;
-					ctrl.IconColor = newValue;
+					ctrl.IconColor = (Color)newValue;
 				});
 
 		/// <summary>
@@ -217,14 +216,14 @@ namespace NControl.Controls
 		}
 
 
-		/// <summary>
-		/// The Text property.
-		/// </summary>
-		public static BindableProperty TextProperty = 
-			BindableProperty.Create<RippleButton, string> (p => p.Text, string.Empty,
+        /// <summary>
+        /// The Text property.
+        /// </summary>
+        public static BindableProperty TextProperty =
+            BindableProperty.Create(nameof(Text), typeof(string), typeof(RippleButton), string.Empty,
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (RippleButton)bindable;
-					ctrl.Text = newValue;
+					ctrl.Text = (string)newValue;
 				});
 
 		/// <summary>
@@ -244,10 +243,10 @@ namespace NControl.Controls
 		/// The FontFamily property.
 		/// </summary>
 		public static BindableProperty FontFamilyProperty = 
-			BindableProperty.Create<RippleButton, string> (p => p.FontFamily, null,
+			BindableProperty.Create(nameof(FontFamily), typeof(string), typeof(RippleButton), null,
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (RippleButton)bindable;
-					ctrl.FontFamily = newValue;
+					ctrl.FontFamily = (string)newValue;
 				});
 
 		/// <summary>
@@ -266,10 +265,10 @@ namespace NControl.Controls
 		/// The Command property.
 		/// </summary>
 		public static BindableProperty CommandProperty = 
-			BindableProperty.Create<RippleButton, ICommand> (p => p.Command, null,
+			BindableProperty.Create(nameof(Command), typeof(ICommand), typeof(RippleButton), null,
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (RippleButton)bindable;
-					ctrl.Command = newValue;
+					ctrl.Command = (ICommand)newValue;
 				});
 
 		/// <summary>
@@ -285,7 +284,7 @@ namespace NControl.Controls
 		/// The CommandParameter property.
 		/// </summary>
 		public static BindableProperty CommandParameterProperty = 
-			BindableProperty.Create<RippleButton, object> (p => p.CommandParameter, null,
+			BindableProperty.Create(nameof(CommandParameter), typeof(object), typeof(RippleButton), null,
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (RippleButton)bindable;
 					ctrl.CommandParameter = newValue;
@@ -304,10 +303,10 @@ namespace NControl.Controls
 		/// The TextColor property.
 		/// </summary>
 		public static BindableProperty TextColorProperty = 
-			BindableProperty.Create<RippleButton, Color> (p => p.TextColor, Color.Black,
+			BindableProperty.Create(nameof(TextColor), typeof(Color), typeof(RippleButton), Color.Black,
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (RippleButton)bindable;
-					ctrl.TextColor = newValue;
+					ctrl.TextColor = (Color)newValue;
 				});
 					
 		/// <summary>
@@ -326,10 +325,10 @@ namespace NControl.Controls
 		/// The FontSize property.
 		/// </summary>
 		public static BindableProperty FontSizeProperty = 
-			BindableProperty.Create<RippleButton, double> (p => p.FontSize, Font.Default.FontSize,
+			BindableProperty.Create(nameof(FontSize), typeof(double), typeof(RippleButton), Font.Default.FontSize,
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (RippleButton)bindable;
-					ctrl.FontSize = newValue;
+					ctrl.FontSize = (double)newValue;
 				});
 
 		/// <summary>
@@ -349,10 +348,10 @@ namespace NControl.Controls
 		/// The IconFontFamily property.
 		/// </summary>
 		public static BindableProperty IconFontFamilyProperty = 
-			BindableProperty.Create<RippleButton, string> (p => p.IconFontFamily, null,
+			BindableProperty.Create(nameof(IconFontFamily), typeof(string), typeof(RippleButton), null,
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (RippleButton)bindable;
-					ctrl.IconFontFamily = newValue;
+					ctrl.IconFontFamily = (string)newValue;
 				});
 
 		/// <summary>
@@ -372,10 +371,10 @@ namespace NControl.Controls
 		/// The RippleColor property.
 		/// </summary>
 		public static BindableProperty RippleColorProperty = 
-			BindableProperty.Create<RippleButton, Color> (p => p.RippleColor, Color.FromHex("#DDDDDD"),
+			BindableProperty.Create(nameof(RippleColor), typeof(Color), typeof(RippleButton), Color.FromHex("#DDDDDD"),
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (RippleButton)bindable;
-					ctrl.RippleColor = newValue;
+					ctrl.RippleColor = (Color)newValue;
 				});
 
 		/// <summary>
@@ -552,10 +551,10 @@ namespace NControl.Controls
 		/// The ShouldRipple property.
 		/// </summary>
 		public static BindableProperty ShouldRippleProperty = 
-			BindableProperty.Create<RippleControl, bool> (p => p.ShouldRipple, true,
+			BindableProperty.Create(nameof(ShouldRipple), typeof(bool), typeof(RippleControl), true,
 				BindingMode.TwoWay, propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (RippleControl)bindable;
-					ctrl.ShouldRipple = newValue;
+					ctrl.ShouldRipple = (bool)newValue;
 				});
 
 		/// <summary>
@@ -573,10 +572,10 @@ namespace NControl.Controls
 		/// The RippleColor property.
 		/// </summary>
 		public static BindableProperty RippleColorProperty = 
-			BindableProperty.Create<RippleControl, Color> (p => p.RippleColor, Color.FromHex("#DDDDDD"),
+			BindableProperty.Create(nameof(RippleColor), typeof(Color), typeof(RippleControl), Color.FromHex("#DDDDDD"),
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (RippleControl)bindable;
-					ctrl.RippleColor = newValue;
+					ctrl.RippleColor = (Color)newValue;
 				});
 
 		/// <summary>

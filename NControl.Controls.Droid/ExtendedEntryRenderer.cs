@@ -22,7 +22,7 @@ namespace NControl.Controls.Droid
 		protected override void OnElementPropertyChanged (object sender, System.ComponentModel.PropertyChangedEventArgs e)
 		{
 			base.OnElementPropertyChanged (sender, e);
-			if (e.PropertyName == ExtendedEntry.XAlignProperty.PropertyName)
+			if (e.PropertyName == ExtendedEntry.HorizontalTextAlignment.PropertyName)
 				UpdateGravity ();
 			else if (e.PropertyName == ExtendedEntry.FontFamilyProperty.PropertyName)
 				UpdateFont ();

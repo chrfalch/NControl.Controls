@@ -54,10 +54,10 @@ namespace NControl.Controls
 		/// The PageCount property.
 		/// </summary>
 		public static BindableProperty PageCountProperty = 
-			BindableProperty.Create<PagingView, int> (p => p.PageCount, 0,
+			BindableProperty.Create(nameof(PageCount), typeof(int), typeof(PagingView), 0,
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (PagingView)bindable;
-					ctrl.PageCount = newValue;
+					ctrl.PageCount = (int)newValue;
 				});
 
 		/// <summary>
@@ -76,10 +76,10 @@ namespace NControl.Controls
 		/// The Page property.
 		/// </summary>
 		public static BindableProperty PageProperty = 
-			BindableProperty.Create<PagingView, int> (p => p.Page, 0, BindingMode.TwoWay,
+			BindableProperty.Create(nameof(Page), typeof(int), typeof(PagingView), 0, BindingMode.TwoWay,
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (PagingView)bindable;
-					ctrl.Page = newValue;
+					ctrl.Page = (int)newValue;
 				});
 
 		/// <summary>
@@ -98,10 +98,10 @@ namespace NControl.Controls
 		/// The IndicatorColor property.
 		/// </summary>
 		public static BindableProperty IndicatorColorProperty = 
-			BindableProperty.Create<PagingView, Color> (p => p.IndicatorColor, Color.Gray,
+			BindableProperty.Create(nameof(IndicatorColor), typeof(Color), typeof(PagingView), Color.Gray,
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (PagingView)bindable;
-					ctrl.IndicatorColor = newValue;
+					ctrl.IndicatorColor = (Color)newValue;
 				});
 
 		/// <summary>

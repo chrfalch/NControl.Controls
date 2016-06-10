@@ -217,10 +217,10 @@ namespace NControl.Controls
 		/// The ButtonPadding property.
 		/// </summary>
 		public static BindableProperty ButtonPaddingProperty = 
-			BindableProperty.Create<ExpandableActionButton, double> (p => p.ButtonPadding, 0,
+			BindableProperty.Create(nameof(ButtonPadding), typeof(double), typeof(ExpandableActionButton), 0,
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (ExpandableActionButton)bindable;
-					ctrl.ButtonPadding = newValue;
+					ctrl.ButtonPadding = (double)newValue;
 				});
 
 		/// <summary>
@@ -237,10 +237,10 @@ namespace NControl.Controls
 		/// The button color property.
 		/// </summary>
 		public static BindableProperty ButtonColorProperty = 
-			BindableProperty.Create<ExpandableActionButton, Color> (p => p.ButtonColor, Color.Gray,
+			BindableProperty.Create(nameof(ButtonColor), typeof(Color), typeof(ExpandableActionButton), Color.Gray,
 				BindingMode.Default, null, (bindable, oldValue, newValue) => {
 					var ctrl = (ExpandableActionButton)bindable;
-					ctrl.ButtonColor = newValue;
+					ctrl.ButtonColor = (Color)newValue;
 				});
 
 		/// <summary>

@@ -56,10 +56,10 @@ namespace NControl.Controls
 		/// The border width property.
 		/// </summary>
 		public static BindableProperty BorderWidthProperty = 
-			BindableProperty.Create<RoundCornerView, double> (p => p.BorderWidth, 0, 
+			BindableProperty.Create(nameof(BorderWidth), typeof(double), typeof(RoundCornerView), 0, 
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (RoundCornerView)bindable;
-					ctrl.BorderWidth = newValue;
+					ctrl.BorderWidth = (double)newValue;
 				});
 
 		/// <summary>
@@ -80,11 +80,11 @@ namespace NControl.Controls
 		/// The border color property.
 		/// </summary>
 		public static BindableProperty BorderColorProperty = 
-			BindableProperty.Create<RoundCornerView, Xamarin.Forms.Color> (p => p.BorderColor, 
+			BindableProperty.Create(nameof(BorderColor), typeof(Xamarin.Forms.Color), typeof(RoundCornerView), 
 				Xamarin.Forms.Color.Transparent, 
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (RoundCornerView)bindable;
-					ctrl.BorderColor = newValue;
+					ctrl.BorderColor = (Xamarin.Forms.Color)newValue;
 				});
 
 		/// <summary>
@@ -105,10 +105,10 @@ namespace NControl.Controls
         /// The corner radius property.
         /// </summary>
         public static BindableProperty CornerRadiusProperty = 
-            BindableProperty.Create<RoundCornerView, int> (p => p.CornerRadius, 4, 				
+            BindableProperty.Create(nameof(CornerRadius), typeof(int), typeof(RoundCornerView), 4, 				
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (RoundCornerView)bindable;
-					ctrl.CornerRadius = newValue;
+					ctrl.CornerRadius = (int)newValue;
 				});
 
         /// <summary>

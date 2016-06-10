@@ -39,11 +39,11 @@ namespace NControl.Controls
 		/// The resource name property.
 		/// </summary>
 		public static BindableProperty SvgResourceProperty = 
-			BindableProperty.Create<SvgImage, string> (p => p.SvgResource, null,
+			BindableProperty.Create(nameof(SvgResource), typeof(string), typeof(SvgImage), null,
 				defaultBindingMode: Xamarin.Forms.BindingMode.TwoWay,
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (SvgImage)bindable;
-					ctrl.SvgResource = newValue;
+					ctrl.SvgResource = (string)newValue;
 				});
 
 		/// <summary>
@@ -66,11 +66,11 @@ namespace NControl.Controls
 		/// The SvgAssembly property.
 		/// </summary>
 		public static BindableProperty SvgAssemblyProperty = 
-			BindableProperty.Create<SvgImage, Assembly> (p => p.SvgAssembly, null,
+			BindableProperty.Create(nameof(SvgAssembly), typeof(Assembly), typeof(SvgImage), null,
 				defaultBindingMode: BindingMode.TwoWay,
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (SvgImage)bindable;
-					ctrl.SvgAssembly = newValue;
+					ctrl.SvgAssembly = (Assembly)newValue;
 				});
 
 		/// <summary>
@@ -93,11 +93,11 @@ namespace NControl.Controls
 		/// The AssemblyType property.
 		/// </summary>
 		public static BindableProperty SvgAssemblyTypeProperty = 
-			BindableProperty.Create<SvgImage, Type> (p => p.SvgAssemblyType, null,
+			BindableProperty.Create(nameof(SvgAssemblyType), typeof(Type), typeof(SvgImage), null,
 				defaultBindingMode: BindingMode.TwoWay,
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (SvgImage)bindable;
-					ctrl.SvgAssemblyType = newValue;
+					ctrl.SvgAssemblyType = (Type)newValue;
 		});
 
 		/// <summary>
@@ -190,7 +190,7 @@ namespace NControl.Controls
 		#endregion
 
 		#region Overrides
-
+        
 		/// <param name="widthConstraint">The available width for the element to use.</param>
 		/// <param name="heightConstraint">The available height for the element to use.</param>
 		/// <summary>

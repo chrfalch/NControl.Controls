@@ -37,10 +37,10 @@ namespace NControl.Controls
 		/// The toggled property.
 		/// </summary>
 		public static BindableProperty IsToggledProperty = 
-			BindableProperty.Create<ToggleActionButton, bool> (p => p.IsToggled, false,
+			BindableProperty.Create(nameof(IsToggled), typeof(bool), typeof(ToggleActionButton), false,
 				BindingMode.Default, null, (bindable, oldValue, newValue) => {
 					var ctrl = (ToggleActionButton)bindable;
-					ctrl.IsToggled = newValue;
+					ctrl.IsToggled = (bool)newValue;
 				});
 
 		/// <summary>
