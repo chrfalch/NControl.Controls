@@ -196,9 +196,9 @@ namespace NControl.Controls
 		/// <summary>
 		/// This method is called during the measure pass of a layout cycle to get the desired size of an element.
 		/// </summary>
-		protected override SizeRequest OnSizeRequest (double widthConstraint, double heightConstraint)
+		protected override SizeRequest OnMeasure (double widthConstraint, double heightConstraint)
 		{
-			var retVal = base.OnSizeRequest (widthConstraint, heightConstraint);
+			var retVal = base.Measure (widthConstraint, heightConstraint);
 
 			if (_graphics != null) {
 
@@ -206,23 +206,23 @@ namespace NControl.Controls
 				var height = retVal.Request.Height;
 				var sizeRatio = 1.0;
 
-				if(heightConstraint != double.PositiveInfinity && widthConstraint != double.PositiveInfinity)
+				if(!double.IsPositiveInfinity(heightConstraint) && !double.IsPositiveInfinity(widthConstraint))
 				{
 					if(heightConstraint < widthConstraint)
-						sizeRatio = heightConstraint == 0 ? _graphics.ViewBox.Size.Height : 
+						sizeRatio = Math.Abs(heightConstraint) < double.Epsilon ? _graphics.ViewBox.Size.Height : 
 							heightConstraint/_graphics.ViewBox.Size.Height;
 					else 
-						sizeRatio = widthConstraint == 0 ? _graphics.ViewBox.Size.Width :
+						sizeRatio = Math.Abs(widthConstraint) < double.Epsilon ? _graphics.ViewBox.Size.Width :
 							widthConstraint/_graphics.ViewBox.Size.Width;
 				}
-				else if (heightConstraint != double.PositiveInfinity) 
+				else if (!double.IsPositiveInfinity(heightConstraint)) 
 				{
-					sizeRatio = heightConstraint == 0 ? _graphics.ViewBox.Size.Height : 
+					sizeRatio = Math.Abs(heightConstraint) < double.Epsilon ? _graphics.ViewBox.Size.Height : 
 						heightConstraint/_graphics.ViewBox.Size.Height;					
 				}
-				else if (widthConstraint != double.PositiveInfinity) 
+				else if (!double.IsPositiveInfinity(widthConstraint)) 
 				{
-					sizeRatio = widthConstraint == 0 ? _graphics.ViewBox.Size.Width :
+					sizeRatio = Math.Abs(widthConstraint) < double.Epsilon ? _graphics.ViewBox.Size.Width :
 						widthConstraint/_graphics.ViewBox.Size.Width;					
 				} 
 

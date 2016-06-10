@@ -399,10 +399,10 @@ namespace NControl.Controls
 		/// Gets the size request.
 		/// </summary>
 		/// <returns>The size request.</returns>
-		protected override SizeRequest OnSizeRequest (double widthConstraint, double heightConstraint)
+		protected override SizeRequest OnMeasure (double widthConstraint, double heightConstraint)
 		{							
-			var retVal = new Button().GetSizeRequest (widthConstraint, heightConstraint);
-            var labelSize = _labelText.GetSizeRequest(widthConstraint, heightConstraint);
+			var retVal = new Button().Measure (widthConstraint, heightConstraint);
+            var labelSize = _labelText.Measure(widthConstraint, heightConstraint);
 
             return new SizeRequest (new Size (labelSize.Request.Width + 8, retVal.Request.Height), 
 				retVal.Minimum);

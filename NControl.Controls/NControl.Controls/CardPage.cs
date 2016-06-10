@@ -293,8 +293,11 @@ namespace NControl.Controls
 		{
 			if (_platformHelper.ControlAnimatesItself) {
 
-                _shadowLayer.TranslateTo(0.0,
-                    _platformHelper.GetScreenSize().Height - (CardPadding.Top), 250, Easing.CubicInOut);
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+				_shadowLayer.TranslateTo(0.0,
+
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+_platformHelper.GetScreenSize().Height - (CardPadding.Top), 250, Easing.CubicInOut);
 
                 await _contentView.TranslateTo(0.0,
                     _platformHelper.GetScreenSize().Height - (CardPadding.Top), 250, Easing.CubicInOut);
