@@ -7,7 +7,7 @@ using NControl.Controls.WP81RT;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.WinRT;
 using Size = Xamarin.Forms.Size;
-
+/*
 [assembly: ExportRenderer(typeof(BlurImageView), typeof(BlurViewRenderer))]
 namespace NControl.Controls.WP81RT
 {
@@ -246,6 +246,8 @@ namespace NControl.Controls.WP81RT
                     return Stretch.Uniform;
             }
         }
+        
 
     }
 }
+*/

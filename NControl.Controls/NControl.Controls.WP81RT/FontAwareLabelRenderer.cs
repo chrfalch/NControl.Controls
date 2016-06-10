@@ -40,7 +40,7 @@ namespace NControl.Controls.WP81RT
 
             fontName = fontName.ToLowerInvariant();
             if (NControls.Typefaces.ContainsKey(fontName))
-                Control.ApplyFont(NControls.Typefaces[fontName]);
+                Control.FontFamily = NControls.Typefaces[fontName];
         }
 
     }

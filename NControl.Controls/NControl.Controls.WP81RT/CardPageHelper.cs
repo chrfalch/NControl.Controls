@@ -4,23 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Media;
-using System.Windows.Shapes;
-using Microsoft.Phone.Controls;
 using NControl.Controls.WP81RT;
 using NGraphics;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.WinRT;
-using Application = System.Windows.Application;
-using Colors = System.Windows.Media.Colors;
-using Grid = System.Windows.Controls.Grid;
-using Rectangle = System.Windows.Shapes.Rectangle;
 using Coding4Fun.Toolkit.Controls;
-using NControl.Win;
 
-[assembly: Dependency(typeof(CardPageHelper))]
+/*[assembly: Dependency(typeof(CardPageHelper))]
 namespace NControl.Controls.WP81RT
 {
     /// <summary>
@@ -127,3 +117,4 @@ namespace NControl.Controls.WP81RT
     }
 
 }
+*/

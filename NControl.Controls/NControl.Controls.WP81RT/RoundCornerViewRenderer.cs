@@ -2,6 +2,7 @@
 using NControl.Controls.WP81RT;
 using Xamarin.Forms.Platform.WinRT;
 using NControl.WindowsPhone;
+using NControl.Abstractions;
 
 [assembly: ExportRenderer(typeof(RoundCornerView), typeof(RoundCornerViewRenderer))]
 namespace NControl.Controls.WP81RT
@@ -10,6 +11,7 @@ namespace NControl.Controls.WP81RT
     {
         protected override void OnElementChanged(ElementChangedEventArgs<NControlView> e)
         {
+            
             base.OnElementChanged(e);
 
             if (e.NewElement != null)
@@ -38,7 +40,7 @@ namespace NControl.Controls.WP81RT
         /// <summary>
         /// Updates the clip rectangle
         /// </summary>
-        protected override void UpdateClip()
+        /*protected override void UpdateClip()
         {
             base.UpdateClip();
 
@@ -80,7 +82,7 @@ namespace NControl.Controls.WP81RT
 
                 Clip = null;
             }
-        }
+        }*/
 
         /// <summary>
         /// Updates the element.
@@ -88,14 +90,14 @@ namespace NControl.Controls.WP81RT
         /// <param name="element">Element.</param>
         private void UpdateElement(RoundCornerView element)
         {
-            var colorConverter = new ColorConverter();
+            /*var colorConverter = new ColorConverter();
 
             Control.Background = (Brush)colorConverter.Convert(element.BackgroundColor, null, null, null);
             Control.BorderBrush = (Brush)colorConverter.Convert(element.BorderColor, null, null, null);
             Control.BorderThickness = new System.Windows.Thickness(element.BorderWidth);
             Control.CornerRadius = new CornerRadius(element.CornerRadius);
 
-            UpdateClip();
+            UpdateClip();*/
         }
     }
 }

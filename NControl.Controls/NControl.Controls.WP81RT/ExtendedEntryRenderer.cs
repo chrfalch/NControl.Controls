@@ -1,22 +1,7 @@
-﻿using System;
-using System.ComponentModel;
-using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
-using Microsoft.Phone.Controls;
-using NGraphics;
-using Xamarin.Forms.Platform.WinRT;
+﻿using Xamarin.Forms.Platform.WinRT;
 using NControl.Controls;
 using Xamarin.Forms;
 using NControl.Controls.WP81RT;
-using Application = System.Windows.Application;
-using Color = System.Windows.Media.Color;
-using Colors = System.Windows.Media.Colors;
-using Grid = System.Windows.Controls.Grid;
-using Setter = System.Windows.Setter;
-using Style = System.Windows.Style;
-using Thickness = System.Windows.Thickness;
 
 [assembly: ExportRenderer(typeof(ExtendedEntry), typeof(ExtendedEntryRenderer))]
 
@@ -24,7 +9,7 @@ namespace NControl.Controls.WP81RT
 {
     public class ExtendedEntryRenderer : EntryRenderer
     {
-        protected override void OnElementChanged(ElementChangedEventArgs<Entry> e)
+        /*protected override void OnElementChanged(ElementChangedEventArgs<Entry> e)
         {
             base.OnElementChanged(e);
 
@@ -75,6 +60,7 @@ namespace NControl.Controls.WP81RT
             style.Setters.Add(new Setter(System.Windows.Controls.Control.ForegroundProperty, new SolidColorBrush(hintColor)));
             textBox.HintStyle = style;
         }
+        */
     }
 }
 
