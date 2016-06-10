@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using NControl.Controls.WP81RT;
 using Xamarin.Forms;
-using Xamarin.Forms.Platform.WinPhone;
+using Xamarin.Forms.Platform.WinRT;
 
 [assembly: ExportRenderer(typeof(Button), typeof(FontAwareButtonRenderer))]
 namespace NControl.Controls.WP81RT

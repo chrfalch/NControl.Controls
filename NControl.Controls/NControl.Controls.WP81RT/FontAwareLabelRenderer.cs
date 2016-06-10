@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using NControl.Controls.WP81RT;
 using Xamarin.Forms;
-using Xamarin.Forms.Platform.WinPhone;
+using Xamarin.Forms.Platform.WinRT;
 
 [assembly: ExportRenderer(typeof(Label), typeof(FontAwareLabelRenderer))]
 namespace NControl.Controls.WP81RT
@@ -40,7 +40,7 @@ namespace NControl.Controls.WP81RT
 
             fontName = fontName.ToLowerInvariant();
             if (NControls.Typefaces.ContainsKey(fontName))
-                Control.FontSource = NControls.Typefaces[fontName];
+                Control.ApplyFont(NControls.Typefaces[fontName]);
         }
 
     }

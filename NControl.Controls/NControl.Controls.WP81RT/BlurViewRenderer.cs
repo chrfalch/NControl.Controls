@@ -1,18 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using NControl.Controls;
 using NControl.Controls.WP81RT;
 using Xamarin.Forms;
-using Xamarin.Forms.Platform.WinPhone;
+using Xamarin.Forms.Platform.WinRT;
 using Size = Xamarin.Forms.Size;
 
 [assembly: ExportRenderer(typeof(BlurImageView), typeof(BlurViewRenderer))]

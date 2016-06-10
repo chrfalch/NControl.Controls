@@ -12,7 +12,7 @@ using Microsoft.Phone.Controls;
 using NControl.Controls.WP81RT;
 using NGraphics;
 using Xamarin.Forms;
-using Xamarin.Forms.Platform.WinPhone;
+using Xamarin.Forms.Platform.WinRT;
 using Application = System.Windows.Application;
 using Colors = System.Windows.Media.Colors;
 using Grid = System.Windows.Controls.Grid;

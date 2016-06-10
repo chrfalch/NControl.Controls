@@ -6,7 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using Microsoft.Phone.Controls;
 using NGraphics;
-using Xamarin.Forms.Platform.WinPhone;
+using Xamarin.Forms.Platform.WinRT;
 using NControl.Controls;
 using Xamarin.Forms;
 using NControl.Controls.WP81RT;
