@@ -46,10 +46,10 @@ namespace NControl.Controls.Demo.FormsApp
 		/// The Page property.
 		/// </summary>
 		public static BindableProperty PageProperty = 
-			BindableProperty.Create<PagingViewPage, int> (p => p.Page, 0,
+			BindableProperty.Create(nameof(Page), typeof(int), typeof(PagingViewPage), 0,
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (PagingViewPage)bindable;
-					ctrl.Page = newValue;
+					ctrl.Page = (int)newValue;
 				});
 
 		/// <summary>
