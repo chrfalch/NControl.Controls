@@ -56,7 +56,7 @@ namespace NControl.Controls
 		/// The border width property.
 		/// </summary>
 		public static BindableProperty BorderWidthProperty = 
-			BindableProperty.Create(nameof(BorderWidth), typeof(double), typeof(RoundCornerView), 0, 
+			BindableProperty.Create(nameof(BorderWidth), typeof(double), typeof(RoundCornerView), 0.0, 
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (RoundCornerView)bindable;
 					ctrl.BorderWidth = (double)newValue;

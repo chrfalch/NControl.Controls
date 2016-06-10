@@ -217,7 +217,7 @@ namespace NControl.Controls
 		/// The ButtonPadding property.
 		/// </summary>
 		public static BindableProperty ButtonPaddingProperty = 
-			BindableProperty.Create(nameof(ButtonPadding), typeof(double), typeof(ExpandableActionButton), 0,
+			BindableProperty.Create(nameof(ButtonPadding), typeof(double), typeof(ExpandableActionButton), 0.0,
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (ExpandableActionButton)bindable;
 					ctrl.ButtonPadding = (double)newValue;

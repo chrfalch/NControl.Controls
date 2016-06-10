@@ -56,10 +56,10 @@ namespace NControl.Controls.Demo.FormsApp
 		/// The IsToggled property.
 		/// </summary>
 		public static BindableProperty IsToggledProperty = 
-			BindableProperty.Create<ActionButtonPage, bool> (p => p.IsToggled, false,
+			BindableProperty.Create(nameof(IsToggled), typeof(bool), typeof(ActionButtonPage), false,
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (ActionButtonPage)bindable;
-					ctrl.IsToggled = newValue;
+					ctrl.IsToggled = (bool)newValue;
 				});
 
 		/// <summary>

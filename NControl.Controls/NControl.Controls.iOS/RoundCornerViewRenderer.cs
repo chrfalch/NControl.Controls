@@ -32,7 +32,7 @@ namespace NControl.Controls.iOS
 		{
 			base.OnElementPropertyChanged (sender, e);
 
-			if (e.PropertyName == RoundCornerView.BackgroundColorProperty.PropertyName ||
+			if (e.PropertyName == VisualElement.BackgroundColorProperty.PropertyName ||
 				e.PropertyName == RoundCornerView.BorderColorProperty.PropertyName ||
 				e.PropertyName == RoundCornerView.BorderWidthProperty.PropertyName ||
 				e.PropertyName == RoundCornerView.CornerRadiusProperty.PropertyName )

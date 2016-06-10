@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-using Foundation;
-using UIKit;
+﻿using Foundation;
 using NControl.Controls.iOS;
+using UIKit;
 
 namespace NControl.Controls.Demo.FormsApp.iOS
 {
