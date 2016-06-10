@@ -22,9 +22,9 @@ namespace NControl.Controls.Droid
 		protected override void OnElementPropertyChanged (object sender, System.ComponentModel.PropertyChangedEventArgs e)
 		{
 			base.OnElementPropertyChanged (sender, e);
-			if (e.PropertyName == ExtendedEntry.HorizontalTextAlignment.PropertyName)
+			if (e.PropertyName == Entry.HorizontalTextAlignmentProperty.PropertyName)
 				UpdateGravity ();
-			else if (e.PropertyName == ExtendedEntry.FontFamilyProperty.PropertyName)
+			else if (e.PropertyName == Entry.FontFamilyProperty.PropertyName)
 				UpdateFont ();
 		}
 
@@ -44,11 +44,11 @@ namespace NControl.Controls.Droid
 			var element = (ExtendedEntry)Element;
 
 			GravityFlags gravityFlags = GravityFlags.AxisSpecified;
-			if (element.XAlign == Xamarin.Forms.TextAlignment.Start) {
+			if (element.HorizontalTextAlignment == Xamarin.Forms.TextAlignment.Start) {
 				gravityFlags = GravityFlags.Left;
 			}
 			else {
-				if (element.XAlign == Xamarin.Forms.TextAlignment.End) {
+				if (element.HorizontalTextAlignment == Xamarin.Forms.TextAlignment.End) {
 					gravityFlags = GravityFlags.Right;
 				}
 			}
