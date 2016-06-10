@@ -337,7 +337,7 @@ namespace NControl.Controls
 		/// The FontSize property.
 		/// </summary>
 		public static BindableProperty FontSizeProperty =
-			BindableProperty.Create(nameof(FontSize), typeof(double), typeof(TabStripControl), 14,
+			BindableProperty.Create(nameof(FontSize), typeof(double), typeof(TabStripControl), 14.0,
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (TabStripControl)bindable;
 					ctrl.FontSize = (double)newValue;
@@ -407,7 +407,7 @@ namespace NControl.Controls
 		/// The TabHeight property.
 		/// </summary>
 		public static BindableProperty TabHeightProperty = 
-			BindableProperty.Create(nameof(TabHeight), typeof(double), typeof(TabStripControl), 40,
+			BindableProperty.Create(nameof(TabHeight), typeof(double), typeof(TabStripControl), 40.0,
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (TabStripControl)bindable;
 					ctrl.TabHeight = (double)newValue;
@@ -608,7 +608,7 @@ namespace NControl.Controls
 		/// The FontSize property.
 		/// </summary>
 		public static BindableProperty FontSizeProperty =
-			BindableProperty.Create(nameof(FontSize), typeof(double), typeof(TabBarButton), 14,
+			BindableProperty.Create(nameof(FontSize), typeof(double), typeof(TabBarButton), 14.0,
 				propertyChanged: (bindable, oldValue, newValue) => {
 					var ctrl = (TabBarButton)bindable;
 					ctrl.FontSize = (double)newValue;
