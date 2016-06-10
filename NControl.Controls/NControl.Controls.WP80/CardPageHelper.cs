@@ -107,15 +107,14 @@ namespace NControl.Controls.WP80
             pi.SetValue(_card, val);
 
             // Set renderer
-            if (Xamarin.Forms.Platform.WinPhone.ViewExtensions.GetRenderer(_card) == null)
-                Xamarin.Forms.Platform.WinPhone.ViewExtensions.SetRenderer(_card,
-                    RendererFactory.GetRenderer(_card));
+            if (Xamarin.Forms.Platform.WinPhone.Platform.GetRenderer(_card) == null)
+                Xamarin.Forms.Platform.WinPhone.Platform.CreateRenderer(_card);
 
             // Layout
             _card.Layout(new Xamarin.Forms.Rectangle(0.0, 0.0, Application.Current.Host.Content.ActualWidth - 45,
                 _card.RequestedHeight));
 
-            var el = (UIElement)Xamarin.Forms.Platform.WinPhone.ViewExtensions.GetRenderer(_card);
+            var el = (UIElement)Xamarin.Forms.Platform.WinPhone.Platform.GetRenderer(_card);
 
             this.Body = new Border
             {

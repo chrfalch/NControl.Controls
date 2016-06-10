@@ -31,10 +31,8 @@ namespace NControl.Controls.WP80
             if (e.NewElement == null)
                 return;
 
-            var grid = Control;
-            var textBox = (PhoneTextBox)grid.Children[0];
-            var passwordBox = (PasswordBox)grid.Children[1];
-
+            var textBox = (FormsPhoneTextBox)Control;
+            
             var foregroundColor = Colors.Black;
             var hintColor = Colors.DarkGray;
 
@@ -49,24 +47,17 @@ namespace NControl.Controls.WP80
             textBox.BorderThickness = new Thickness(0);
             textBox.BorderBrush = new SolidColorBrush(Colors.Transparent);
             textBox.Background = new SolidColorBrush(Colors.Transparent);
-            passwordBox.BorderThickness = new Thickness(0);
-            passwordBox.BorderBrush = new SolidColorBrush(Colors.Transparent);
-            passwordBox.Background = new SolidColorBrush(Colors.Transparent);
-
+            
             // Foregrounds
             textBox.Foreground = new SolidColorBrush(foregroundColor);
             textBox.SelectionForeground = new SolidColorBrush(foregroundColor);
-            passwordBox.Foreground = new SolidColorBrush(foregroundColor);
-            passwordBox.SelectionForeground = new SolidColorBrush(foregroundColor);
-
+            
             // Focus handling
             textBox.GotFocus += (sender, evt) =>
             {
                 textBox.Background = new SolidColorBrush(Colors.Transparent);
                 textBox.CaretBrush = new SolidColorBrush(foregroundColor);
-                passwordBox.Background = new SolidColorBrush(Colors.Transparent);
-                passwordBox.CaretBrush = new SolidColorBrush(foregroundColor);
-
+            
                 textBox.ActualHintVisibility = string.IsNullOrWhiteSpace(textBox.Text)
                     ? Visibility.Visible
                     : Visibility.Collapsed;
