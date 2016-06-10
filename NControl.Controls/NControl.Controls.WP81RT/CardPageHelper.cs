@@ -9,7 +9,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using Microsoft.Phone.Controls;
-using NControl.Controls.WP80;
+using NControl.Controls.WP81RT;
 using NGraphics;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.WinPhone;
@@ -21,7 +21,7 @@ using Coding4Fun.Toolkit.Controls;
 using NControl.Win;
 
 [assembly: Dependency(typeof(CardPageHelper))]
-namespace NControl.Controls.WP80
+namespace NControl.Controls.WP81RT
 {
     /// <summary>
     /// CardPage helper implementation

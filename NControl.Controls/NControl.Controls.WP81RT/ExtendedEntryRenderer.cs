@@ -9,7 +9,7 @@ using NGraphics;
 using Xamarin.Forms.Platform.WinPhone;
 using NControl.Controls;
 using Xamarin.Forms;
-using NControl.Controls.WP80;
+using NControl.Controls.WP81RT;
 using Application = System.Windows.Application;
 using Color = System.Windows.Media.Color;
 using Colors = System.Windows.Media.Colors;
@@ -20,7 +20,7 @@ using Thickness = System.Windows.Thickness;
 
 [assembly: ExportRenderer(typeof(ExtendedEntry), typeof(ExtendedEntryRenderer))]
 
-namespace NControl.Controls.WP80
+namespace NControl.Controls.WP81RT
 {
     public class ExtendedEntryRenderer : EntryRenderer
     {

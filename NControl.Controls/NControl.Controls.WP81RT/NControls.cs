@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows.Documents;
 
-namespace NControl.Controls.WP80
+namespace NControl.Controls.WP81RT
 {
     /// <summary>
     /// NControls.

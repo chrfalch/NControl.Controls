@@ -10,13 +10,13 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using NControl.Controls;
-using NControl.Controls.WP80;
+using NControl.Controls.WP81RT;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.WinPhone;
 using Size = Xamarin.Forms.Size;
 
 [assembly: ExportRenderer(typeof(BlurImageView), typeof(BlurViewRenderer))]
-namespace NControl.Controls.WP80
+namespace NControl.Controls.WP81RT
 {
     public class BlurViewRenderer : ViewRenderer<BlurImageView, System.Windows.Controls.Image>
     {

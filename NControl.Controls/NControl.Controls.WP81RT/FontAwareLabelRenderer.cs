@@ -1,11 +1,11 @@
 ﻿using System;
 using System.ComponentModel;
-using NControl.Controls.WP80;
+using NControl.Controls.WP81RT;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.WinPhone;
 
 [assembly: ExportRenderer(typeof(Label), typeof(FontAwareLabelRenderer))]
-namespace NControl.Controls.WP80
+namespace NControl.Controls.WP81RT
 {
     /// <summary>
     /// Custom font label renderer.

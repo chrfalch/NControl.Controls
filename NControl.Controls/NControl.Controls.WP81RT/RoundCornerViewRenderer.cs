@@ -7,13 +7,13 @@ using System.Windows;
 using System.Windows.Media;
 using NControl.Abstractions;
 using NControl.Controls;
-using NControl.Controls.WP80;
+using NControl.Controls.WP81RT;
 using NControl.WP80;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.WinPhone;
 
 [assembly: ExportRenderer(typeof(RoundCornerView), typeof(RoundCornerViewRenderer))]
-namespace NControl.Controls.WP80
+namespace NControl.Controls.WP81RT
 {
     public class RoundCornerViewRenderer : NControlViewRenderer
     {
