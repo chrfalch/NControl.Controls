@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Windows.Documents;
 
 namespace NControl.Controls.WP81RT
 {
@@ -13,7 +12,7 @@ namespace NControl.Controls.WP81RT
         /// <summary>
         /// The typefaces.
         /// </summary>
-        public static readonly Dictionary<string, FontSource> Typefaces = new Dictionary<string, FontSource>();
+        public static readonly Dictionary<string, Font> Typefaces = new Dictionary<string, FontSource>();
 
         /// <summary>
         /// Init this instance to 

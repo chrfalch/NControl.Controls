@@ -1,16 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Media;
-using NControl.Abstractions;
-using NControl.Controls;
+﻿using NControl.Controls;
 using NControl.Controls.WP81RT;
-using NControl.WP80;
-using Xamarin.Forms;
-using Xamarin.Forms.Platform.WinPhone;
+using Xamarin.Forms.Platform.WinRT;
+using NControl.WindowsPhone;
 
 [assembly: ExportRenderer(typeof(RoundCornerView), typeof(RoundCornerViewRenderer))]
 namespace NControl.Controls.WP81RT
