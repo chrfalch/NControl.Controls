@@ -198,7 +198,7 @@ namespace NControl.Controls
 		/// </summary>
 		protected override SizeRequest OnMeasure (double widthConstraint, double heightConstraint)
 		{
-			var retVal = base.Measure (widthConstraint, heightConstraint);
+			var retVal = base.OnMeasure (widthConstraint, heightConstraint);
 
 			if (_graphics != null) {
 
