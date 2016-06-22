@@ -3,8 +3,9 @@ using System.ComponentModel;
 using NControl.Controls.WP81RT;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.WinRT;
+using NControl.Controls;
 
-[assembly: ExportRenderer(typeof(Label), typeof(FontAwareLabelRenderer))]
+[assembly: ExportRenderer(typeof(FontAwesomeLabel), typeof(FontAwareLabelRenderer))]
 namespace NControl.Controls.WP81RT
 {
     /// <summary>
@@ -38,7 +39,7 @@ namespace NControl.Controls.WP81RT
             if (string.IsNullOrWhiteSpace(fontName))
                 return;
 
-            fontName = fontName.ToLowerInvariant();
+            fontName = fontName.ToLowerInvariant();            
             if (NControls.Typefaces.ContainsKey(fontName))
                 Control.FontFamily = NControls.Typefaces[fontName];
         }

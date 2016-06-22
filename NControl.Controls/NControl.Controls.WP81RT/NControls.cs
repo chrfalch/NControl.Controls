@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -23,24 +24,41 @@ namespace NControl.Controls.WP81RT
         /// </summary>
         public static void Init()
         {
+            var r = Xamarin.Forms.Platform.WinRT.Platform.CreateRenderer(new Xamarin.Forms.Label());
             var assemblies = GetAssemblies();
             FontLoader.LoadFonts(assemblies, (fontName, s) =>
             {
                 fontName = fontName.ToLowerInvariant();
 
                 // Create folder
-                var folder = Package.Current.InstalledLocation.GetFolderAsync("Fonts").GetResults();
-                if (folder == null)
-                    folder = Package.Current.InstalledLocation.CreateFolderAsync("Fonts").GetResults();
+                StorageFolder folder = null;
+                try
+                {
+                    folder = ApplicationData.Current.LocalFolder.GetFolderAsync("Fonts").GetAwaiter().GetResult();
+                }
+                catch (Exception ex)
+                {
+                    folder = ApplicationData.Current.LocalFolder.CreateFolderAsync("Fonts").GetAwaiter().GetResult();
+                }
+
+                var fontFilename = Path.ChangeExtension(fontName, ".ttf");
 
                 // Save Font
-                if (folder.GetFileAsync(fontName) == null)
-                    using (var targetStream = folder.OpenStreamForWriteAsync(fontName, CreationCollisionOption.FailIfExists).Result)
+                try
+                {
+                    using (var targetStream = folder.OpenStreamForWriteAsync(fontFilename, CreationCollisionOption.FailIfExists).Result)
                     {
-                        s.CopyTo(targetStream);
-                        var fontFamily = new Windows.UI.Xaml.Media.FontFamily(Path.Combine(folder.Path, fontName));
-                        Typefaces[fontName] = fontFamily;
+                        s.CopyTo(targetStream);                        
                     }
+                }
+                catch (Exception ex)
+                {
+                    //var fontFamily = new Windows.UI.Xaml.Media.FontFamily(Path.Combine(folder.Path, fontFilename));
+                    //Typefaces[fontName] = fontFamily;
+                }
+
+                var fontFamily = new Windows.UI.Xaml.Media.FontFamily("/Local/Fonts/" + fontFilename);
+                Typefaces[fontName] = fontFamily;
             });
         }
 
@@ -48,7 +66,8 @@ namespace NControl.Controls.WP81RT
         {
             var retVal = new List<Assembly>();
             var folder = Package.Current.InstalledLocation;
-            foreach (var file in folder.GetFilesAsync().GetResults())
+            var files = folder.GetFilesAsync();
+            foreach (var file in files.GetAwaiter().GetResult())
             {
                 if (file.FileType == ".dll")
                 {
