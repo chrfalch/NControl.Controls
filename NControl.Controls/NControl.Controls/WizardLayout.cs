@@ -36,10 +36,8 @@ namespace NControl.Controls
             var layout = new RelativeLayout();
             Children.Add(layout);
 
-            // Content
-            _contentStack = new WizardStackLayout  { 
-                VerticalOptions = LayoutOptions.Center
-            };
+			// Content
+			_contentStack = new WizardStackLayout();
 
             // Pager
             _pager = new PagingView();
@@ -149,7 +147,7 @@ namespace NControl.Controls
                 
                 _pager.PageCount = _contentStack.Children.Count;
 
-                FocusFirstEntry();
+				FocusFirstEntry();
             }
             else
             {
@@ -211,7 +209,7 @@ namespace NControl.Controls
     /// </summary>
     public class WizardStackLayout : Layout<View>
     {
-        /// <summary>
+		/// <summary>
         /// Layouts the children.
         /// </summary>
         /// <returns>The children.</returns>
