@@ -592,7 +592,7 @@ namespace NControl.Controls
 			}
 		}
 
-		#endregion       
+		#endregion
 
         #region Private Members
 

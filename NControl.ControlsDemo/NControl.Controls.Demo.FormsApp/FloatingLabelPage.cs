@@ -17,6 +17,7 @@ namespace NControl.Controls.Demo.FormsApp
 			var entry1 = new FloatingLabelControl{ Placeholder = "Email", Keyboard = Keyboard.Email };
 			entry1.SetBinding (FloatingLabelControl.TextProperty, "Title", BindingMode.TwoWay);
 			entry1.BindingContext = this;
+			entry1.Focus();
 
             var entry2 = new FloatingLabelControl { Placeholder = "First name", Keyboard = Keyboard.Text };
             var entry3 = new FloatingLabelControl { Placeholder = "Last name", Keyboard = Keyboard.Text };
