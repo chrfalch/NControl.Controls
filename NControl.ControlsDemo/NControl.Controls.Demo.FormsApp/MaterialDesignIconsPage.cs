@@ -19,8 +19,8 @@ namespace NControl.Controls.Demo.FormsApp
 				Children = {
 					new FontMaterialDesignLabel {
 						Text = 
-							FontMaterialDesignLabel.MD3dRotation + " " + 
-							FontMaterialDesignLabel.MDAccountBox + " " + 
+							//FontMaterialDesignLabel.MD3 + " " + 
+							FontMaterialDesignLabel.MDDumbbell + " " + 
 							FontMaterialDesignLabel.MDGasStation + " " + 
 							FontMaterialDesignLabel.MDMenu
 					}
