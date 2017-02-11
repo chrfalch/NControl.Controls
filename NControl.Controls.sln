@@ -5,7 +5,7 @@ VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Library", "Library", "{22E1FF9D-8646-4D0D-8E8F-001F26C8EDF9}"
 	ProjectSection(SolutionItems) = preProject
-		NControl.Controls.nuspec = NControl.Controls.nuspec
+		NControl.Controls\NControl.Controls.nuspec = NControl.Controls\NControl.Controls.nuspec
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NControl.Controls.iOS", "NControl.Controls\NControl.Controls.iOS\NControl.Controls.iOS.csproj", "{CF27E017-266D-4AFE-9D47-4E15AC78C049}"
