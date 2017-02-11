@@ -14,7 +14,7 @@ namespace NControl.Controls.Demo.FormsApp
 		{
 			base.OnAppearing ();
 
-		    const int count = 0xf196 - 0xf000;
+		    const int count = 0xf2e0 - 0xf000;
             const int colCount = 10;
 
 		    var rowLayout = new StackLayout() { 			                
@@ -43,7 +43,7 @@ namespace NControl.Controls.Demo.FormsApp
                 rowLayout.Children.Add(colLayout);
 			}
 
-            Content = new ScrollView { Content = rowLayout };
+            Content = new ScrollView { Margin = 14, Content = rowLayout };
 		}
 	}
 }
