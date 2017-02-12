@@ -86,7 +86,7 @@ namespace NControl.Controls
         /// <value>The pages.</value>
         public IList<View> Pages
 		{
-			get { return _pages; }
+			get { return _pages; } 
 		}
 
         #endregion
