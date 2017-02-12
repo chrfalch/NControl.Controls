@@ -14,8 +14,9 @@ namespace NControl.Controls.Demo.FormsApp
 		{
 			base.OnAppearing ();
 
-			var wizard = new WizardLayout ();
-			wizard.Pages = new View[]{
+			WizardLayout wizard = null;
+			wizard = new WizardLayout {
+				Pages = {
 				new Button {
 					Command = new Command((obj)=>wizard.Page++),
 					Text = "Page 2",
@@ -33,6 +34,7 @@ namespace NControl.Controls.Demo.FormsApp
 
 				new Button {
 					Text = "Done",
+				}
 				}
 			};
 

@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Specialized;
 using System.Collections.Generic;
 using System.Linq;
+using System.Collections.ObjectModel;
 
 namespace NControl.Controls
 {
@@ -15,15 +16,9 @@ namespace NControl.Controls
     {
         #region Private Members
 
-        /// <summary>
-        /// The page.
-        /// </summary>
-        private readonly WizardStackLayout _contentStack;
-
-        /// <summary>
-        /// The pager.
-        /// </summary>
-        private readonly PagingView _pager;
+        readonly WizardStackLayout _contentStack;
+        readonly PagingView _pager;
+		readonly ObservableCollection<View> _pages = new ObservableCollection<View>();
 
         #endregion
 
@@ -32,6 +27,8 @@ namespace NControl.Controls
         /// </summary>
         public WizardLayout()
         {
+			_pages.CollectionChanged += PagesChanged;
+
             // Wrapping layout
             var layout = new RelativeLayout();
             Children.Add(layout);
@@ -84,34 +81,13 @@ namespace NControl.Controls
         }
 
         /// <summary>
-        /// The pages property.
-        /// </summary>
-        public static BindableProperty PagesProperty = BindableProperty.Create(nameof(Pages),
-            typeof(IEnumerable<View>), typeof(WizardLayout), null, propertyChanged: (bindable, oldValue, newValue) => {
-                var ctrl = (WizardLayout)bindable;
-                ctrl.Pages = (IEnumerable<View>)newValue;
-            });
-
-        /// <summary>
         /// Gets or sets the pages.
         /// </summary>
         /// <value>The pages.</value>
-        public IEnumerable<View> Pages
-        {
-            get { return (IEnumerable<View>)GetValue(PagesProperty); }
-            set
-            {
-                if (Pages != null && Pages is INotifyCollectionChanged)
-                    (Pages as INotifyCollectionChanged).CollectionChanged -= PagesChanged;
-                
-                SetValue(PagesProperty, value);
-
-                if (Pages != null && Pages is INotifyCollectionChanged)
-                    (Pages as INotifyCollectionChanged).CollectionChanged += PagesChanged;
-
-                UpdatePages();
-            }
-        }
+        public IList<View> Pages
+		{
+			get { return _pages; } 
+		}
 
         #endregion
 

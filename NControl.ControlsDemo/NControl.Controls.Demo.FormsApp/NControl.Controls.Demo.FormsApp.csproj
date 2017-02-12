@@ -52,6 +52,9 @@
     <Compile Include="SvgImagePage.cs" />
     <Compile Include="WizardPage.cs" />
     <Compile Include="RepeaterPage.cs" />
+    <Compile Include="WizardPageXaml.xaml.cs">
+      <DependentUpon>WizardPageXaml.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
@@ -65,6 +68,9 @@
     <EmbeddedResource Include="Resources\Svg\Smile.svg" />
     <EmbeddedResource Include="Resources\Svg\Arrows.svg" />
     <EmbeddedResource Include="Resources\Svg\SpaceShips.svg" />
+    <EmbeddedResource Include="WizardPageXaml.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="NGraphics">
