@@ -27,6 +27,7 @@ namespace NControl.Controls.Demo.FormsApp
 				new SvgImagePage(),
                 new CalendarPage(),
 				new WizardPage(),
+				new WizardPageXaml(),
 				new RepeaterPage(),
             };
 
