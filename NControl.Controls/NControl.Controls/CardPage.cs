@@ -94,7 +94,7 @@ namespace NControl.Controls
                 // Card 
                 _contentView = new RoundCornerView {
                     BackgroundColor = Color.White,
-                    CornerRadius = 4,
+                    CornerRadius = 2,
                 };
 
                 _layout.Children.Add(_overlay, () => _layout.Bounds);
