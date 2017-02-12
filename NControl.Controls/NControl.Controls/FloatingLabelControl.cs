@@ -129,8 +129,8 @@ namespace NControl.Controls
                 if(Focused != null)
                     Focused(this, e);
             };
-                
-            _textEntry.Unfocused += (object sender, FocusEventArgs e) =>
+
+			_textEntry.Unfocused += (object sender, FocusEventArgs e) =>
             {
                 UpdatePlaceholderColor();
 
@@ -234,6 +234,26 @@ namespace NControl.Controls
 
 			UpdatePlaceholderColor ();
 
+		}
+
+		#endregion
+
+		#region Public Members
+
+		/// <summary>
+		/// Focus this instance.
+		/// </summary>
+		public new void Focus()
+		{
+			_textEntry.Focus();
+		}
+
+		/// <summary>
+		/// Unfocus this instance.
+		/// </summary>
+		public new void Unfocus()
+		{
+			_textEntry.Unfocus();
 		}
 
 		#endregion
