@@ -45,7 +45,7 @@ namespace NControl.Controls
 	/// 
 	/// 
 	/// </summary>
-	public class ActionButton: NControlView
+	public class ActionButton : NControlView
 	{
 		#region Protected Members
 
@@ -70,11 +70,13 @@ namespace NControl.Controls
 		/// Initializes a new instance of the <see cref="NControl.Controls.ActionButton"/> class.
 		/// </summary>
 		public ActionButton()
-		{            
-			var layout = new Grid{Padding = 0, ColumnSpacing = 0, RowSpacing = 0};
+		{
+			var layout = new Grid { Padding = 0, ColumnSpacing = 0, RowSpacing = 0 };
 
-			ButtonShadowElement = new NControlView{ 
-				DrawingFunction = (canvas, rect) => {
+			ButtonShadowElement = new NControlView
+			{
+				DrawingFunction = (canvas, rect) =>
+				{
 
 					// Draw shadow
 					rect.Inflate(new NGraphics.Size(-4));
@@ -83,34 +85,37 @@ namespace NControl.Controls
 					Device.OnPlatform(
 
 						//iOS
-						() => canvas.DrawEllipse (rect, null, new NGraphics.RadialGradientBrush (
+						() => canvas.DrawEllipse(rect, null, new NGraphics.RadialGradientBrush(
 							new NGraphics.Color(0, 0, 0, 200), NGraphics.Colors.Clear)),
-						
+
 						// Android
-						() => canvas.DrawEllipse (rect, null, new NGraphics.RadialGradientBrush (
-							new NGraphics.Point(rect.Width/2, (rect.Height/2)+2),
+						() => canvas.DrawEllipse(rect, null, new NGraphics.RadialGradientBrush(
+							new NGraphics.Point(rect.Width / 2, (rect.Height / 2) + 2),
 							new NGraphics.Size(rect.Width, rect.Height),
 							new NGraphics.Color(0, 0, 0, 200), NGraphics.Colors.Clear)),
-						
+
 						// WP
-						() => canvas.DrawEllipse (rect, null, new NGraphics.RadialGradientBrush (
+						() => canvas.DrawEllipse(rect, null, new NGraphics.RadialGradientBrush(
 							new NGraphics.Color(0, 0, 0, 200), NGraphics.Colors.Clear)),
-						
+
 						null
 					);
 				},
 			};
 
-			ButtonElement = new NControlView{ 
-				DrawingFunction = (canvas, rect) => {
+			ButtonElement = new NControlView
+			{
+				DrawingFunction = (canvas, rect) =>
+				{
 
 					// Draw button circle
-					rect.Inflate (new NGraphics.Size (-8));
-					canvas.DrawEllipse (rect, null, new NGraphics.SolidBrush(ButtonColor.ToNColor()));
+					rect.Inflate(new NGraphics.Size(-8));
+					canvas.DrawEllipse(rect, null, new NGraphics.SolidBrush(ButtonColor.ToNColor()));
 				}
 			};
 
-			ButtonIconLabel = new FontAwesomeLabel{
+			ButtonIconLabel = new FontAwesomeLabel
+			{
 				HorizontalTextAlignment = TextAlignment.Center,
 				VerticalTextAlignment = TextAlignment.Center,
 				TextColor = Color.White,
@@ -118,9 +123,9 @@ namespace NControl.Controls
 				FontSize = 14,
 			};
 
-			layout.Children.Add (ButtonShadowElement);
-			layout.Children.Add (ButtonElement);
-			layout.Children.Add (ButtonIconLabel);
+			layout.Children.Add(ButtonShadowElement);
+			layout.Children.Add(ButtonElement);
+			layout.Children.Add(ButtonIconLabel);
 
 			Content = layout;
 		}
@@ -130,97 +135,105 @@ namespace NControl.Controls
 		/// <summary>
 		/// The command property.
 		/// </summary>
-		public static BindableProperty CommandProperty = 
+		public static BindableProperty CommandProperty =
 			BindableProperty.Create(nameof(Command), typeof(ICommand), typeof(ActionButton), null,
-				BindingMode.TwoWay, null, (bindable, oldValue, newValue) => {
+				BindingMode.TwoWay, null, (bindable, oldValue, newValue) =>
+				{
 					var ctrl = (ActionButton)bindable;
 					ctrl.Command = (ICommand)newValue;
 				});
 
 		/// <summary>
-		/// Gets or sets the color of the buton.
+		/// Gets or sets the command.
 		/// </summary>
-		/// <value>The color of the buton.</value>
+		/// <value>The command.</value>
 		public ICommand Command
 		{
-			get {  return (ICommand)GetValue (CommandProperty);}
-			set {
+			get { return (ICommand)GetValue(CommandProperty); }
+			set
+			{
 
 				if (Command != null)
 					Command.CanExecuteChanged -= HandleCanExecuteChanged;
-				
-				SetValue (CommandProperty, value);
+
+				SetValue(CommandProperty, value);
 
 				if (Command != null)
 					Command.CanExecuteChanged += HandleCanExecuteChanged;
-				
+
 			}
 		}
 
 		/// <summary>
 		/// The command parameter property.
 		/// </summary>
-		public static BindableProperty CommandParameterProperty = 
+		public static BindableProperty CommandParameterProperty =
 			BindableProperty.Create(nameof(CommandParameter), typeof(object), typeof(ActionButton), null,
-				BindingMode.TwoWay, null, (bindable, oldValue, newValue) => {
+				BindingMode.TwoWay, null, (bindable, oldValue, newValue) =>
+				{
 					var ctrl = (ActionButton)bindable;
 					ctrl.CommandParameter = newValue;
 				});
 
 		/// <summary>
-		/// Gets or sets the color of the buton.
+		/// Gets or sets the command parameter.
 		/// </summary>
-		/// <value>The color of the buton.</value>
+		/// <value>The command parameter.</value>
 		public object CommandParameter
 		{
-			get {  return GetValue (CommandParameterProperty);}
-			set {
-				SetValue (CommandParameterProperty, value);
+			get { return GetValue(CommandParameterProperty); }
+			set
+			{
+				SetValue(CommandParameterProperty, value);
 			}
 		}
 
 		/// <summary>
 		/// The button color property.
 		/// </summary>
-		public static BindableProperty ButtonColorProperty = 
+		public static BindableProperty ButtonColorProperty =
 			BindableProperty.Create(nameof(ButtonColor), typeof(Color), typeof(ActionButton), Color.Gray,
-				BindingMode.TwoWay, null, (bindable, oldValue, newValue) => {
+				BindingMode.TwoWay, null, (bindable, oldValue, newValue) =>
+				{
 					var ctrl = (ActionButton)bindable;
 					ctrl.ButtonColor = (Color)newValue;
 				});
 
 		/// <summary>
-		/// Gets or sets the color of the buton.
+		/// Gets or sets the color of the button.
 		/// </summary>
-		/// <value>The color of the buton.</value>
+		/// <value>The color of the button.</value>
 		public Color ButtonColor
 		{
-			get {  return (Color)GetValue (ButtonColorProperty);}
-			set {
-				SetValue (ButtonColorProperty, value);
-				ButtonElement.Invalidate ();
+			get { return (Color)GetValue(ButtonColorProperty); }
+			set
+			{
+				SetValue(ButtonColorProperty, value);
+				ButtonElement.Invalidate();
 			}
 		}
 
 		/// <summary>
 		/// The button font family property.
 		/// </summary>
-		public static BindableProperty ButtonFontFamilyProperty = 
+		public static BindableProperty ButtonFontFamilyProperty =
 			BindableProperty.Create(nameof(ButtonFontFamily), typeof(string), typeof(ActionButton), null,
-				BindingMode.TwoWay, null, (bindable, oldValue, newValue) => {
+				BindingMode.TwoWay, null, (bindable, oldValue, newValue) =>
+				{
 					var ctrl = (ActionButton)bindable;
 					ctrl.ButtonFontFamily = (string)newValue;
 				});
 
 		/// <summary>
-		/// Gets or sets the color of the buton.
+		/// Gets or sets the button font family.
 		/// </summary>
-		/// <value>The color of the buton.</value>
+		/// <value>The button font family.</value>
 		public string ButtonFontFamily
 		{
-			get {  return (string)GetValue (ButtonFontFamilyProperty);}
-			set {
-				SetValue (ButtonFontFamilyProperty, value);
+			get { return (string)GetValue(ButtonFontFamilyProperty); }
+			set
+			{
+				SetValue(ButtonFontFamilyProperty, value);
 				ButtonIconLabel.FontFamily = value;
 			}
 		}
@@ -228,9 +241,10 @@ namespace NControl.Controls
 		/// <summary>
 		/// The button icon property.
 		/// </summary>
-		public static BindableProperty ButtonIconProperty = 
+		public static BindableProperty ButtonIconProperty =
 			BindableProperty.Create(nameof(ButtonIcon), typeof(string), typeof(ActionButton), FontAwesomeLabel.FAPlus,
-				BindingMode.TwoWay, null, (bindable, oldValue, newValue) => {
+				BindingMode.TwoWay, null, (bindable, oldValue, newValue) =>
+				{
 					var ctrl = (ActionButton)bindable;
 					ctrl.ButtonIcon = (string)newValue;
 				});
@@ -241,19 +255,70 @@ namespace NControl.Controls
 		/// <value>The button icon.</value>
 		public string ButtonIcon
 		{
-			get {  return (string)GetValue (ButtonIconProperty);}
-			set {
-				SetValue (ButtonIconProperty, value);
+			get { return (string)GetValue(ButtonIconProperty); }
+			set
+			{
+				SetValue(ButtonIconProperty, value);
 				ButtonIconLabel.Text = value;
 			}
 		}
 
 		/// <summary>
-		/// The button icon property.
+		/// The button icon font size property.
 		/// </summary>
-		public static BindableProperty HasShadowProperty = 
+		public static BindableProperty ButtonIconFontSizeProperty =
+			BindableProperty.Create(nameof(ButtonIconFontSize), typeof(double), typeof(ActionButton), (double)14,
+				BindingMode.TwoWay, null, (bindable, oldValue, newValue) =>
+				{
+					var ctrl = (ActionButton)bindable;
+					ctrl.ButtonIconFontSize = (double)newValue;
+				});
+
+		/// <summary>
+		/// Gets or sets the size of the button icon font.
+		/// </summary>
+		/// <value>The size of the button icon font.</value>
+		public double ButtonIconFontSize
+		{
+			get { return (double)GetValue(ButtonIconFontSizeProperty); }
+			set
+			{
+				SetValue(ButtonIconFontSizeProperty, value);
+				ButtonIconLabel.FontSize = (double)value;
+			}
+		}
+
+		/// <summary>
+		/// The button icon font size property.
+		/// </summary>
+		public static BindableProperty ButtonIconFontSizeAutoProperty =
+			BindableProperty.Create(nameof(ButtonIconFontSizeAuto), typeof(bool), typeof(ActionButton), (bool)false,
+				BindingMode.TwoWay, null, (bindable, oldValue, newValue) =>
+				{
+					var ctrl = (ActionButton)bindable;
+					ctrl.ButtonIconFontSizeAuto = (bool)newValue;
+				});
+
+		/// <summary>
+		/// Gets or sets the automatic sizing of the button icon font size.
+		/// </summary>
+		/// <value>The size of the button icon auto font.</value>
+		public bool ButtonIconFontSizeAuto
+		{
+			get { return (bool)GetValue(ButtonIconFontSizeAutoProperty); }
+			set
+			{
+				SetValue(ButtonIconFontSizeAutoProperty, value);
+			}
+		}
+
+		/// <summary>
+		/// The has shadow property.
+		/// </summary>
+		public static BindableProperty HasShadowProperty =
 			BindableProperty.Create(nameof(HasShadow), typeof(bool), typeof(ActionButton), true,
-				BindingMode.TwoWay, null, (bindable, oldValue, newValue) => {
+				BindingMode.TwoWay, null, (bindable, oldValue, newValue) =>
+				{
 					var ctrl = (ActionButton)bindable;
 					ctrl.HasShadow = (bool)newValue;
 				});
@@ -264,23 +329,25 @@ namespace NControl.Controls
 		/// <value><c>true</c> if this instance has shadow; otherwise, <c>false</c>.</value>
 		public bool HasShadow
 		{
-			get {  return (bool)GetValue (HasShadowProperty);}
-			set {
-				SetValue (HasShadowProperty, value);
+			get { return (bool)GetValue(HasShadowProperty); }
+			set
+			{
+				SetValue(HasShadowProperty, value);
 
-				if(value)
-					ButtonShadowElement.FadeTo (1.0, 250);
+				if (value)
+					ButtonShadowElement.FadeTo(1.0, 250);
 				else
-					ButtonShadowElement.FadeTo (0.0, 250);
+					ButtonShadowElement.FadeTo(0.0, 250);
 			}
 		}
 
 		/// <summary>
 		/// The button icon color property.
 		/// </summary>
-		public static BindableProperty ButtonIconColorProperty = 
+		public static BindableProperty ButtonIconColorProperty =
 			BindableProperty.Create(nameof(ButtonIconColor), typeof(Color), typeof(ActionButton), Color.White,
-				BindingMode.TwoWay, null, (bindable, oldValue, newValue) => {
+				BindingMode.TwoWay, null, (bindable, oldValue, newValue) =>
+				{
 					var ctrl = (ActionButton)bindable;
 					ctrl.ButtonIconColor = (Color)newValue;
 				});
@@ -291,13 +358,14 @@ namespace NControl.Controls
 		/// <value>The button icon.</value>
 		public Color ButtonIconColor
 		{
-			get {  return (Color)GetValue (ButtonIconColorProperty);}
-			set {
-				SetValue (ButtonIconColorProperty, value);
+			get { return (Color)GetValue(ButtonIconColorProperty); }
+			set
+			{
+				SetValue(ButtonIconColorProperty, value);
 				ButtonIconLabel.TextColor = value;
 			}
 		}
-			
+
 		#endregion
 
 		#region Private Members
@@ -309,7 +377,7 @@ namespace NControl.Controls
 		/// <param name="args">Arguments.</param>
 		private void HandleCanExecuteChanged(object sender, EventArgs args)
 		{
-			IsEnabled = Command.CanExecute (CommandParameter);
+			IsEnabled = Command.CanExecute(CommandParameter);
 		}
 		#endregion
 
@@ -319,21 +387,22 @@ namespace NControl.Controls
 		/// Toucheses the began.
 		/// </summary>
 		/// <param name="points">Points.</param>
-		public override bool TouchesBegan (System.Collections.Generic.IEnumerable<NGraphics.Point> points)
+		public override bool TouchesBegan(System.Collections.Generic.IEnumerable<NGraphics.Point> points)
 		{
-			base.TouchesBegan (points);
+			base.TouchesBegan(points);
 
 			if (!IsEnabled)
 				return false;
 
-			ButtonElement.ScaleTo (1.15, 140, Easing.CubicInOut);
+			ButtonElement.ScaleTo(1.15, 140, Easing.CubicInOut);
 
-			ButtonIconLabel.ScaleTo (1.2, 140, Easing.CubicInOut);
+			ButtonIconLabel.ScaleTo(1.2, 140, Easing.CubicInOut);
 
-			if (HasShadow) {
-				ButtonShadowElement.TranslateTo (0.0, 3, 140, Easing.CubicInOut);
-				ButtonShadowElement.ScaleTo (1.2, 140, Easing.CubicInOut);
-				ButtonShadowElement.FadeTo (0.44, 140, Easing.CubicInOut);
+			if (HasShadow)
+			{
+				ButtonShadowElement.TranslateTo(0.0, 3, 140, Easing.CubicInOut);
+				ButtonShadowElement.ScaleTo(1.2, 140, Easing.CubicInOut);
+				ButtonShadowElement.FadeTo(0.44, 140, Easing.CubicInOut);
 			}
 
 			return true;
@@ -343,21 +412,22 @@ namespace NControl.Controls
 		/// Toucheses the cancelled.
 		/// </summary>
 		/// <param name="points">Points.</param>
-		public override bool TouchesCancelled (System.Collections.Generic.IEnumerable<NGraphics.Point> points)
+		public override bool TouchesCancelled(System.Collections.Generic.IEnumerable<NGraphics.Point> points)
 		{
-			base.TouchesCancelled (points);
+			base.TouchesCancelled(points);
 
 			if (!IsEnabled)
 				return false;
 
-			ButtonElement.ScaleTo (1.0, 140, Easing.CubicInOut);
-			ButtonIconLabel.ScaleTo (1.0, 140, Easing.CubicInOut);
+			ButtonElement.ScaleTo(1.0, 140, Easing.CubicInOut);
+			ButtonIconLabel.ScaleTo(1.0, 140, Easing.CubicInOut);
 
-			if (HasShadow) {
-				ButtonShadowElement.TranslateTo (0.0, 0.0, 140, Easing.CubicInOut);
-				ButtonShadowElement.ScaleTo (1.0, 140, Easing.CubicInOut);
-				ButtonShadowElement.FadeTo (1.0, 140, Easing.CubicInOut);
-			}                		
+			if (HasShadow)
+			{
+				ButtonShadowElement.TranslateTo(0.0, 0.0, 140, Easing.CubicInOut);
+				ButtonShadowElement.ScaleTo(1.0, 140, Easing.CubicInOut);
+				ButtonShadowElement.FadeTo(1.0, 140, Easing.CubicInOut);
+			}
 
 			return true;
 		}
@@ -366,49 +436,79 @@ namespace NControl.Controls
 		/// Toucheses the ended.
 		/// </summary>
 		/// <param name="points">Points.</param>
-		public override bool TouchesEnded (System.Collections.Generic.IEnumerable<NGraphics.Point> points)
+		public override bool TouchesEnded(System.Collections.Generic.IEnumerable<NGraphics.Point> points)
 		{
-			base.TouchesEnded (points);
+			base.TouchesEnded(points);
 
 			if (!IsEnabled)
 				return false;
 
-			if (Command != null && Command.CanExecute (CommandParameter))
-				Command.Execute (CommandParameter);
+			if (Command != null && Command.CanExecute(CommandParameter))
+				Command.Execute(CommandParameter);
 
-			ButtonElement.ScaleTo (1.0, 140, Easing.CubicInOut);
+			ButtonElement.ScaleTo(1.0, 140, Easing.CubicInOut);
 
-			ButtonIconLabel.ScaleTo (1.0, 140, Easing.CubicInOut);
+			ButtonIconLabel.ScaleTo(1.0, 140, Easing.CubicInOut);
 
-			if (HasShadow) {
-				ButtonShadowElement.TranslateTo (0.0, 0.0, 140, Easing.CubicInOut);
-				ButtonShadowElement.ScaleTo (1.0, 140, Easing.CubicInOut);
-				ButtonShadowElement.FadeTo (1.0, 140, Easing.CubicInOut);
+			if (HasShadow)
+			{
+				ButtonShadowElement.TranslateTo(0.0, 0.0, 140, Easing.CubicInOut);
+				ButtonShadowElement.ScaleTo(1.0, 140, Easing.CubicInOut);
+				ButtonShadowElement.FadeTo(1.0, 140, Easing.CubicInOut);
 			}
 
 			return true;
 		}
 
-        #endregion
+		#endregion
 
-        /// <summary>
-        /// On Measure
-        /// </summary>
-        /// <param name="widthConstraint"></param>
-        /// <param name="heightConstraint"></param>
-        /// <returns></returns>
-        protected override SizeRequest OnMeasure(double widthConstraint, double heightConstraint)
-        {
-            var retVal = base.OnMeasure(widthConstraint, heightConstraint);
+		/// <summary>
+		/// Lays out the children.
+		/// </summary>
+		/// <returns>The children.</returns>
+		/// <param name="x">The x coordinate.</param>
+		/// <param name="y">The y coordinate.</param>
+		/// <param name="width">Width.</param>
+		/// <param name="height">Height.</param>
+		protected override void LayoutChildren(double x, double y, double width, double height)
+		{
+			base.LayoutChildren(x, y, width, height);
 
-            if (retVal.Request.Width > retVal.Request.Height)
-                retVal.Request = new Xamarin.Forms.Size(retVal.Request.Width, retVal.Request.Width);
-            else if (retVal.Request.Height > retVal.Request.Width)
-                retVal.Request = new Xamarin.Forms.Size(retVal.Request.Height, retVal.Request.Height);
+			if (ButtonIconFontSizeAuto)
+			{
+				//TODO: Improve the calculations for Auto FontSizing ratios
+				if (width > 0 && width < 32)
+					ButtonIconFontSize = width / 4;
+				if (width >= 32 && width < 64)
+					ButtonIconFontSize = width / 3.5;
+				if (width > 64 && width < 96)
+					ButtonIconFontSize = width / 3;
+				if (width >= 96 && width < 128)
+					ButtonIconFontSize = width / 2.5;
+				if (width >= 128)
+					ButtonIconFontSize = width / 2;
+			}
+		}
 
-            retVal.Minimum = retVal.Request;
-            return retVal;
-        }	
+		/// <summary>
+		/// On Measure
+		/// </summary>
+		/// <param name="widthConstraint"></param>
+		/// <param name="heightConstraint"></param>
+		/// <returns></returns>
+		protected override SizeRequest OnMeasure(double widthConstraint, double heightConstraint)
+		{
+			var retVal = base.OnMeasure(widthConstraint, heightConstraint);
+
+			if (retVal.Request.Width > retVal.Request.Height)
+				retVal.Request = new Xamarin.Forms.Size(retVal.Request.Width, retVal.Request.Width);
+			else if (retVal.Request.Height > retVal.Request.Width)
+				retVal.Request = new Xamarin.Forms.Size(retVal.Request.Height, retVal.Request.Height);
+
+			retVal.Minimum = retVal.Request;
+
+			return retVal;
+		}
 	}
 }
 
