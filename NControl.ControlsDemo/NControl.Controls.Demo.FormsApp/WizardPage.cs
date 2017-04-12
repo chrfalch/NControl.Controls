@@ -19,17 +19,17 @@ namespace NControl.Controls.Demo.FormsApp
 				Pages = {
 				new Button {
 					Command = new Command((obj)=>wizard.Page++),
+					Text = "Page 1",
+				},
+
+				new Button {
+					Command = new Command((obj)=>wizard.Page++),
 					Text = "Page 2",
 				},
 
 				new Button {
 					Command = new Command((obj)=>wizard.Page++),
 					Text = "Page 3",
-				},
-
-				new Button {
-					Command = new Command((obj)=>wizard.Page++),
-					Text = "Page 4",
 				},
 
 				new Button {
