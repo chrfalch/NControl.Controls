@@ -23,15 +23,17 @@ namespace NControl.Controls.Demo.FormsApp
 			var ab = new ActionButton {
 				ButtonColor = Color.FromHex("#E91E63"),
 				ButtonIcon = FontAwesomeLabel.FAThumbsUp,
+				ButtonIconFontSize = 18,
 			};
 			layout.Children.Add(ab, () => new Rectangle((layout.Width/4)-(56/2), (layout.Height/2)-(56/2), 56, 56));
 
 			var abtgl = new ToggleActionButton {
 				ButtonColor = Color.FromHex("#FF5722"),
 				ButtonIcon = FontAwesomeLabel.FAPlus,
+				ButtonIconFontSizeAuto = true,
 			};
 			abtgl.SetBinding (IsToggledProperty, "IsToggled");
-			layout.Children.Add(abtgl, () => new Rectangle((layout.Width/2)-(56/2), (layout.Height/2)-(56/2), 56, 56));
+			layout.Children.Add(abtgl, () => new Rectangle((layout.Width / 2) - (56 / 2), (layout.Height / 2) - (56 / 2), 84, 84));
 
 			_command = new Command ((obj) => {}, (obj) => abtgl.IsToggled);
 

@@ -213,9 +213,9 @@ namespace NControl.Controls
 				});
 
 		/// <summary>
-		/// Gets or sets the color of the buton.
+		/// Gets or sets the button font family.
 		/// </summary>
-		/// <value>The color of the buton.</value>
+		/// <value>The button font family.</value>
 		public string ButtonFontFamily
 		{
 			get {  return (string)GetValue (ButtonFontFamilyProperty);}
@@ -249,9 +249,58 @@ namespace NControl.Controls
 		}
 
 		/// <summary>
-		/// The button icon property.
+		/// The button icon font size property.
 		/// </summary>
-		public static BindableProperty HasShadowProperty = 
+		public static BindableProperty ButtonIconFontSizeProperty =
+			BindableProperty.Create(nameof(ButtonIconFontSize), typeof(double), typeof(ActionButton), (double)14,
+				BindingMode.TwoWay, null, (bindable, oldValue, newValue) =>
+				{
+					var ctrl = (ActionButton)bindable;
+					ctrl.ButtonIconFontSize = (double)newValue;
+				});
+
+		/// <summary>
+		/// Gets or sets the size of the button icon font.
+		/// </summary>
+		/// <value>The size of the button icon font.</value>
+		public double ButtonIconFontSize
+		{
+			get { return (double)GetValue(ButtonIconFontSizeProperty); }
+			set
+			{
+				SetValue(ButtonIconFontSizeProperty, value);
+				ButtonIconLabel.FontSize = (double)value;
+			}
+		}
+
+		/// <summary>
+		/// The button icon font size auto property.
+		/// </summary>
+		public static BindableProperty ButtonIconFontSizeAutoProperty =
+			BindableProperty.Create(nameof(ButtonIconFontSizeAuto), typeof(bool), typeof(ActionButton), (bool)false,
+				BindingMode.TwoWay, null, (bindable, oldValue, newValue) =>
+				{
+					var ctrl = (ActionButton)bindable;
+					ctrl.ButtonIconFontSizeAuto = (bool)newValue;
+				});
+
+		/// <summary>
+		/// Gets or sets the automatic sizing of the button icon font size.
+		/// </summary>
+		/// <value>The size of the button icon auto font.</value>
+		public bool ButtonIconFontSizeAuto
+		{
+			get { return (bool)GetValue(ButtonIconFontSizeAutoProperty); }
+			set
+			{
+				SetValue(ButtonIconFontSizeAutoProperty, value);
+			}
+		}
+
+		/// <summary>
+		/// The has shadow property.
+		/// </summary>
+		public static BindableProperty HasShadowProperty =
 			BindableProperty.Create(nameof(HasShadow), typeof(bool), typeof(ActionButton), true,
 				BindingMode.TwoWay, null, (bindable, oldValue, newValue) => {
 					var ctrl = (ActionButton)bindable;
@@ -391,7 +440,35 @@ namespace NControl.Controls
 
         #endregion
 
-        /// <summary>
+		/// <summary>
+		/// Lays out the children.
+		/// </summary>
+		/// <returns>The children.</returns>
+		/// <param name="x">The x coordinate.</param>
+		/// <param name="y">The y coordinate.</param>
+		/// <param name="width">Width.</param>
+		/// <param name="height">Height.</param>
+		protected override void LayoutChildren(double x, double y, double width, double height)
+		{
+			base.LayoutChildren(x, y, width, height);
+
+			if (ButtonIconFontSizeAuto)
+			{
+				//TODO: Improve the calculations for Auto FontSizing ratios
+				if (width > 0 && width < 32)
+					ButtonIconFontSize = width / 4;
+				if (width >= 32 && width < 64)
+					ButtonIconFontSize = width / 3.5;
+				if (width > 64 && width < 96)
+					ButtonIconFontSize = width / 3;
+				if (width >= 96 && width < 128)
+					ButtonIconFontSize = width / 2.5;
+				if (width >= 128)
+					ButtonIconFontSize = width / 2;
+			}
+		}
+
+		/// <summary>
         /// On Measure
         /// </summary>
         /// <param name="widthConstraint"></param>
