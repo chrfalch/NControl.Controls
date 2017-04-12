@@ -12,5 +12,10 @@ namespace NControl.Controls.Demo.FormsApp
 			InitializeComponent();
 			Title = "WizardLayout XAML";		
 		}
+
+		void Handle_Clicked(object sender, System.EventArgs e)
+		{
+			this.wizard.Page++;
+		}
 	}
 }
