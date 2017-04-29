@@ -291,6 +291,8 @@ namespace NControl.Controls
 		/// <returns>The async.</returns>
 		public virtual async Task CloseAsync()
 		{
+			 _overlay.GestureRecognizers?.Clear();
+			 
 			if (_platformHelper.ControlAnimatesItself) {
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
