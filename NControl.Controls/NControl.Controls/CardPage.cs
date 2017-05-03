@@ -13,6 +13,14 @@ namespace NControl.Controls
         Center
     }
 
+    public enum EdgePosition
+    {
+        Left,
+        Right,
+        Top,
+        Bottom
+    }
+
     /// <summary>
 	/// Card page. Based on custom transitions 
 	/// </summary>
@@ -102,12 +110,6 @@ namespace NControl.Controls
                 _layout.Children.Add(_shadowLayer, () => this.LayerPosition);
 
                 _layout.Children.Add(_contentView, () => this.LayerPosition);
-
-                if (_platformHelper.ControlAnimatesItself)
-                {
-                    _shadowLayer.TranslationY = _platformHelper.GetScreenSize().Height - (CardPadding.Top);
-                    _contentView.TranslationY = _platformHelper.GetScreenSize().Height - (CardPadding.Top);
-                }
 
                 // Add tap
                 _overlay.GestureRecognizers.Add(new TapGestureRecognizer
@@ -251,6 +253,51 @@ namespace NControl.Controls
             }
         }
 
+        private EdgePosition _edge = EdgePosition.Bottom;
+        public EdgePosition Edge
+        {
+            get { return _edge; }
+            set
+            {
+                if (_edge == value) return;
+                _edge = value;
+
+                if (_platformHelper.ControlAnimatesItself)
+                {
+                    switch (Edge)
+                    {
+                        case EdgePosition.Top:
+                            _shadowLayer.TranslationX = 0;
+                            _contentView.TranslationX = 0;
+                            _shadowLayer.TranslationY = 0 - _platformHelper.GetScreenSize().Height + (CardPadding.Bottom);
+                            _contentView.TranslationY = 0 - _platformHelper.GetScreenSize().Height + (CardPadding.Bottom);
+                            break;
+                        case EdgePosition.Bottom:
+                            _shadowLayer.TranslationX = 0;
+                            _contentView.TranslationX = 0;
+                            _shadowLayer.TranslationY = _platformHelper.GetScreenSize().Height - (CardPadding.Top);
+                            _contentView.TranslationY = _platformHelper.GetScreenSize().Height - (CardPadding.Top);
+                            break;
+                        case EdgePosition.Left:
+                            _shadowLayer.TranslationX = 0 - _platformHelper.GetScreenSize().Width + (CardPadding.Right);
+                            _contentView.TranslationX = 0 - _platformHelper.GetScreenSize().Width + (CardPadding.Right);
+                            _shadowLayer.TranslationY = 0;
+                            _contentView.TranslationY = 0;
+                            break;
+                        case EdgePosition.Right:
+                            _shadowLayer.TranslationX = _platformHelper.GetScreenSize().Width - (CardPadding.Left);
+                            _contentView.TranslationX = _platformHelper.GetScreenSize().Width - (CardPadding.Left);
+                            _shadowLayer.TranslationY = 0;
+                            _contentView.TranslationY = 0;
+                            break;
+                        default:
+                            throw new ArgumentException(nameof(Edge));
+                    }
+                }
+
+            }
+        }
+
         private Thickness _cardPadding;
         public Thickness CardPadding 
         {
@@ -292,18 +339,32 @@ namespace NControl.Controls
 		public virtual async Task CloseAsync()
 		{
 			if (_platformHelper.ControlAnimatesItself) {
+                var tasks = new Task[3];
+                switch (Edge)
+                {
+                    case EdgePosition.Top:
+                        tasks[0] = _shadowLayer.TranslateTo(0.0, 0 - _platformHelper.GetScreenSize().Height + (CardPadding.Bottom), 250, Easing.CubicInOut);
+                        tasks[1] = _contentView.TranslateTo(0.0, 0 - _platformHelper.GetScreenSize().Height + (CardPadding.Bottom), 250, Easing.CubicInOut);
+                        break;
+                    case EdgePosition.Bottom:
+                        tasks[0] = _shadowLayer.TranslateTo(0.0, _platformHelper.GetScreenSize().Height - (CardPadding.Top), 250, Easing.CubicInOut);
+                        tasks[1] = _contentView.TranslateTo(0.0, _platformHelper.GetScreenSize().Height - (CardPadding.Top), 250, Easing.CubicInOut);
+                        break;
+                    case EdgePosition.Left:
+                        tasks[0] = _shadowLayer.TranslateTo(0 - _platformHelper.GetScreenSize().Width + (CardPadding.Right), 0.0, 250, Easing.CubicInOut);
+                        tasks[1] = _contentView.TranslateTo(0 - _platformHelper.GetScreenSize().Width + (CardPadding.Right), 0.0, 250, Easing.CubicInOut);
+                        break;
+                    case EdgePosition.Right:
+                        tasks[0] = _shadowLayer.TranslateTo(_platformHelper.GetScreenSize().Width - (CardPadding.Left), 0.0, 250, Easing.CubicInOut);
+                        tasks[1] = _contentView.TranslateTo(_platformHelper.GetScreenSize().Width - (CardPadding.Left), 0.0, 250, Easing.CubicInOut);
+                        break;
+                    default:
+                        throw new ArgumentException(nameof(Edge));
+                }
 
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-				_shadowLayer.TranslateTo(0.0,
+                tasks[2] = _overlay.FadeTo(0.0F, 150, Easing.CubicInOut);
 
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-_platformHelper.GetScreenSize().Height - (CardPadding.Top), 250, Easing.CubicInOut);
-
-                await _contentView.TranslateTo(0.0,
-                    _platformHelper.GetScreenSize().Height - (CardPadding.Top), 250, Easing.CubicInOut);
-
-                await _overlay.FadeTo(0.0F, 150, Easing.CubicInOut);
-
+                await Task.WhenAll(tasks);
             }
 
             await _platformHelper.CloseAsync (this);
